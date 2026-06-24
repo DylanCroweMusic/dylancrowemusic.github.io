@@ -435,9 +435,9 @@
   <p class="asset-intro">Everything you need to promote the show. Click to download, copy, or grab it all at once.</p>
 
   <div class="assets-tabs">
-    <button class="assets-tab active" onclick="switchTab('photos')">Photos</button>
-    <button class="assets-tab" onclick="switchTab('copy')">Copy</button>
-    <button class="assets-tab" onclick="switchTab('docs')">Docs</button>
+    <button class="assets-tab active" onclick="switchTab('photos', this)">Photos</button>
+    <button class="assets-tab" onclick="switchTab('copy', this)">Copy</button>
+    <button class="assets-tab" onclick="switchTab('docs', this)">Docs</button>
   </div>
 
   <!-- Photos Category -->
@@ -637,10 +637,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
   /* Tab switching */
-  function switchTab(name) {
+  function switchTab(name, el) {
     document.querySelectorAll('.assets-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.assets-category').forEach(c => c.classList.remove('active'));
-    event.target.classList.add('active');
+    el.classList.add('active');
     document.getElementById('cat-' + name).classList.add('active');
   }
 
