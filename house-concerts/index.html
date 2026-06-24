@@ -28,67 +28,81 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Hero */
+  /* Hero — matches EPK brand banner */
   .hero {
-    min-height: 90vh;
+    position: relative;
+    min-height: 70vh;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    position: relative;
     overflow: hidden;
-    background: linear-gradient(170deg, #0D0D1A 0%, #1A1025 40%, #1A1520 100%);
-    padding: 3rem 1.5rem;
+    background: #1A1A3E url('../02-studio-performance.png') center/cover no-repeat;
+    padding: 2rem 1.5rem;
   }
   .hero::before {
     content: '';
     position: absolute;
-    top: 50%; left: 50%;
-    width: 700px; height: 700px;
-    background: radial-gradient(circle, var(--warm-glow) 0%, transparent 70%);
-    transform: translate(-50%, -50%);
-    z-index: 0;
-    pointer-events: none;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13,13,43,0.55) 0%, rgba(26,26,62,0.35) 50%, rgba(13,13,43,0.65) 100%);
+    z-index: 1;
   }
   .hero-content {
     position: relative;
-    z-index: 1;
-    max-width: 700px;
+    z-index: 2;
+    max-width: 800px;
+    padding: 2rem;
   }
-  .hero-badge {
-    display: inline-block;
-    padding: 0.5rem 1.5rem;
-    background: rgba(245,158,11,0.1);
-    border: 1px solid rgba(245,158,11,0.3);
-    border-radius: 100px;
-    color: var(--gold);
-    font-size: 0.85rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+  .hero-logo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--cyan);
+    box-shadow: 0 0 40px rgba(0,180,216,0.2);
     margin-bottom: 2rem;
   }
   .hero h1 {
-    font-size: clamp(2.8rem, 7vw, 4.5rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    margin-bottom: 1.5rem;
-    background: linear-gradient(135deg, var(--gold), #FDE68A, var(--amber));
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--text), var(--cyan));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    line-height: 1.1;
   }
-  .hero .sub {
-    font-size: 1.25rem;
+  .hero .tagline {
+    font-size: 1.2rem;
     color: var(--text-muted);
-    margin-bottom: 2.5rem;
-    max-width: 550px;
-    margin-left: auto;
-    margin-right: auto;
-    line-height: 1.7;
+    font-style: italic;
+    max-width: 500px;
+    margin: 0 auto 1.5rem;
   }
-  .hero .sub strong { color: var(--text); }
+  .hero .location {
+    display: inline-block;
+    padding: 0.4rem 1.2rem;
+    border: 1px solid var(--cyan);
+    border-radius: 100px;
+    color: var(--cyan);
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+  .hero-bridge {
+    position: relative;
+    z-index: 2;
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    max-width: 550px;
+    margin: 0 auto 1.5rem;
+    line-height: 1.6;
+  }
+  .hero-bridge strong { color: var(--text); }
   .btn-primary {
+    position: relative;
+    z-index: 2;
     display: inline-block;
     padding: 1rem 3rem;
     background: linear-gradient(135deg, var(--gold), var(--amber));
@@ -109,10 +123,12 @@
     box-shadow: 0 0 50px rgba(245,158,11,0.35);
   }
   .scroll-hint {
-    margin-top: 3rem;
+    margin-top: 2rem;
     color: var(--text-muted);
     font-size: 0.85rem;
     opacity: 0.7;
+    position: relative;
+    z-index: 2;
   }
 
   /* Sections */
@@ -455,9 +471,9 @@
 
   @media (max-width: 600px) {
     .section { padding: 3rem 1.2rem; }
-    .hero { min-height: 80vh; padding: 2rem 1rem; }
-    .hero h1 { font-size: 2.2rem; }
-    .hero .sub { font-size: 1.05rem; }
+    .hero { min-height: 60vh; padding: 2rem 1rem; }
+    .hero-logo { width: 90px; height: 90px; }
+    .hero h1 { font-size: 2rem; }
     .section-heading { font-size: 1.5rem; }
     .comparison { grid-template-columns: 1fr; }
     .steps-grid { grid-template-columns: 1fr; }
@@ -468,16 +484,14 @@
 </head>
 <body>
 
-<!-- HERO -->
+<!-- HERO — same banner as EPK -->
 <section class="hero">
   <div class="hero-content">
-    <div class="hero-badge">🏡 Host a Show</div>
-    <h1>Live Music in<br>Your Living Room</h1>
-    <p class="sub">
-      You bring the space and your friends.<br>
-      <strong>Dylan brings the show.</strong><br>
-      An unforgettable night — zero effort, all vibe.
-    </p>
+    <img class="hero-logo" src="../00-raven-logo.jpg" alt="Dylan Crowe — The Raven">
+    <h1>Dylan Crowe</h1>
+    <p class="tagline">"One guitar. One dog. Every town in Australia."</p>
+    <span class="location">Touring Australia</span>
+    <p class="hero-bridge">Want live music in <strong>your</strong> living room?<br>You host. Dylan plays. Legendary night.</p>
     <a href="#book" class="btn-primary">I Want to Host</a>
     <div class="scroll-hint">↓ Scroll to see how it works</div>
   </div>
