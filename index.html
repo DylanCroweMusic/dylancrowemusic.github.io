@@ -591,6 +591,14 @@
           <a href="00-raven-logo.jpg" download class="btn btn-small">Download</a>
         </div>
       </div>
+      <div class="download-card" style="max-width: 250px;">
+        <div class="card-body card-body-center">
+          <div class="card-icon">📄</div>
+          <div class="card-label">Terms &amp; Conditions</div>
+          <div class="card-meta">Booking &amp; performance terms</div>
+          <a href="terms-and-conditions.txt" download class="btn btn-small" style="margin-top:0.5rem;">Download</a>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -769,7 +777,8 @@
     const docFolder = zip.folder('dylan-crowe-docs');
     const files = [
       {url:'tech-rider.txt', name:'dylan-crowe-tech-rider.txt'},
-      {url:'00-raven-logo.jpg', name:'dylan-crowe-raven-logo.jpg'}
+      {url:'00-raven-logo.jpg', name:'dylan-crowe-raven-logo.jpg'},
+      {url:'terms-and-conditions.txt', name:'dylan-crowe-terms-and-conditions.txt'}
     ];
     for (const f of files) {
       const blob = await fetchBlob(f.url);
@@ -790,7 +799,8 @@
       {url:'03-live-stage-neon.jpg', name:'dylan-crowe-live-stage-neon.jpg', folder:photos},
       {url:'IMG_0803.JPG', name:'dylan-crowe-maverick.jpg', folder:photos},
       {url:'tech-rider.txt', name:'dylan-crowe-tech-rider.txt', folder:docs},
-      {url:'00-raven-logo.jpg', name:'dylan-crowe-raven-logo.jpg', folder:docs}
+      {url:'00-raven-logo.jpg', name:'dylan-crowe-raven-logo.jpg', folder:docs},
+      {url:'terms-and-conditions.txt', name:'dylan-crowe-terms-and-conditions.txt', folder:docs}
     ];
     const short = document.getElementById('blurb-short').textContent;
     const medium = document.getElementById('blurb-medium').textContent;
