@@ -436,7 +436,8 @@
 
   <div class="assets-tabs">
     <button class="assets-tab active" onclick="switchTab('photos', this)">Photos</button>
-    <button class="assets-tab" onclick="switchTab('copy', this)">Copy</button>
+    <button class="assets-tab" onclick="switchTab('bio', this)">Bio</button>
+    <button class="assets-tab" onclick="switchTab('videos', this)">Videos</button>
     <button class="assets-tab" onclick="switchTab('docs', this)">Docs</button>
   </div>
 
@@ -475,7 +476,7 @@
   </div>
 
   <!-- Copy Category -->
-  <div class="assets-category" id="cat-copy">
+  <div class="assets-category" id="cat-bio">
     <div class="category-header">
       <span class="cat-label">Bio Blurbs</span>
       <button class="btn-download-all" onclick="copyAllBlurbs()">&#128203; Copy All</button>
@@ -500,6 +501,48 @@
         <button class="copy-btn" onclick="copyBlurb(this,'long')">📋 Copy</button>
       </div>
       <div class="blurb-text" id="blurb-long">Dylan Crowe is a singer-songwriter living the Australian dream — touring the country from the seat of a van, with a guitar in the back and a border collie named Maverick riding shotgun. His music spans the spectrum from delicate acoustic ballads to full-throated rock covers, drawing from a deep well of influences including The Beatles, Foo Fighters, and classic Australian pub rock. Currently on a national tour crossing the Nullarbor twice, Dylan has built a following the old-fashioned way — one street corner, one busking session, one town at a time. He's a self-contained solo act who needs ten minutes to set up and can play anywhere from 45 minutes to two hours. No fuss. No ego. Just music.</div>
+    </div>
+  </div>
+
+  <!-- Videos Category -->
+  <div class="assets-category" id="cat-videos">
+    <div class="category-header">
+      <span class="cat-label">Videos</span>
+      <button class="btn-download-all" onclick="copyAllVideoLinks()">📋 Copy All Links</button>
+    </div>
+    <div class="download-grid">
+      <div class="download-card">
+        <img src="https://img.youtube.com/vi/WWHovUyvv0s/hqdefault.jpg" alt="Something — Beatles cover" loading="lazy" style="height:140px;">
+        <div class="card-body">
+          <div class="card-label">Something</div>
+          <div class="card-meta">Beatles cover</div>
+          <button class="btn btn-small" onclick="copyVideoLink('https://youtu.be/WWHovUyvv0s', this)">Copy Link</button>
+        </div>
+      </div>
+      <div class="download-card">
+        <img src="https://img.youtube.com/vi/1Nsnbw2xvew/hqdefault.jpg" alt="Got To Go — original" loading="lazy" style="height:140px;">
+        <div class="card-body">
+          <div class="card-label">Got To Go</div>
+          <div class="card-meta">Original</div>
+          <button class="btn btn-small" onclick="copyVideoLink('https://youtu.be/1Nsnbw2xvew', this)">Copy Link</button>
+        </div>
+      </div>
+      <div class="download-card">
+        <img src="https://img.youtube.com/vi/h_bSR6UdbqQ/hqdefault.jpg" alt="Fight the feeling — original" loading="lazy" style="height:140px;">
+        <div class="card-body">
+          <div class="card-label">Fight the feeling</div>
+          <div class="card-meta">Original (with Trinity Ashling)</div>
+          <button class="btn btn-small" onclick="copyVideoLink('https://youtu.be/h_bSR6UdbqQ', this)">Copy Link</button>
+        </div>
+      </div>
+      <div class="download-card">
+        <img src="https://img.youtube.com/vi/JxOxJFuXpu4/hqdefault.jpg" alt="Neon Lights — original" loading="lazy" style="height:140px;">
+        <div class="card-body">
+          <div class="card-label">Neon Lights</div>
+          <div class="card-meta">Original</div>
+          <button class="btn btn-small" onclick="copyVideoLink('https://youtu.be/JxOxJFuXpu4', this)">Copy Link</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -666,10 +709,47 @@
     const long = document.getElementById('blurb-long').textContent;
     const all = 'SHORT:\n' + short + '\n\nMEDIUM:\n' + medium + '\n\nLONG:\n' + long;
     navigator.clipboard.writeText(all).then(() => {
-      const btns = document.querySelectorAll('#cat-copy .btn-download-all');
+      const btns = document.querySelectorAll('#cat-bio .btn-download-all');
       btns.forEach(b => { b.textContent = '✓ Copied!'; b.style.color = '#fff'; b.style.background = 'var(--green)'; });
       setTimeout(() => {
         btns.forEach(b => { b.textContent = '📋 Copy All'; b.style.color = ''; b.style.background = ''; });
+      }, 2000);
+    });
+  }
+
+  /* Copy single video link */
+  function copyVideoLink(url, btn) {
+    navigator.clipboard.writeText(url).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copied!';
+      btn.style.background = 'var(--green)';
+      btn.style.borderColor = 'var(--green)';
+      btn.style.color = '#fff';
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.style.background = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }, 2000);
+    });
+  }
+
+  /* Copy all video links */
+  function copyAllVideoLinks() {
+    const links = [
+      'Something (Beatles cover): https://youtu.be/WWHovUyvv0s',
+      'Got To Go (original): https://youtu.be/1Nsnbw2xvew',
+      'Fight the feeling (with Trinity Ashling): https://youtu.be/h_bSR6UdbqQ',
+      'Neon Lights (original): https://youtu.be/JxOxJFuXpu4'
+    ];
+    const all = `DYLAN CROWE — VIDEO LINKS
+
+${links.join('\n')}`;
+    navigator.clipboard.writeText(all).then(() => {
+      const btns = document.querySelectorAll('#cat-videos .btn-download-all');
+      btns.forEach(b => { b.textContent = '✓ Copied!'; b.style.color = '#fff'; b.style.background = 'var(--green)'; });
+      setTimeout(() => {
+        btns.forEach(b => { b.textContent = '📋 Copy All Links'; b.style.color = ''; b.style.background = ''; });
       }, 2000);
     });
   }
