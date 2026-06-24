@@ -458,6 +458,68 @@
     font-size: 1rem;
   }
 
+  /* Promo Kit Preview */
+  .promo-kit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .promo-kit-card {
+    background: linear-gradient(145deg, rgba(0,180,216,0.06), rgba(0,180,216,0.02));
+    border: 1px solid rgba(0,180,216,0.12);
+    border-radius: 10px;
+    padding: 1.2rem;
+    text-align: center;
+    transition: border-color 0.3s, transform 0.2s;
+  }
+  .promo-kit-card:hover {
+    border-color: rgba(0,180,216,0.35);
+    transform: translateY(-2px);
+  }
+  .promo-kit-card .pk-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+  .promo-kit-card .pk-label { font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem; }
+  .promo-kit-card .pk-detail { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
+  .promo-preview-imgs {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .promo-preview-imgs img {
+    width: 70px;
+    height: 70px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .promo-preview-imgs img:hover {
+    border-color: var(--cyan);
+    transform: scale(1.08);
+  }
+  .btn-outline-cyan {
+    display: inline-block;
+    padding: 0.9rem 2rem;
+    border: 2px solid var(--cyan);
+    border-radius: 100px;
+    color: var(--cyan);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: background 0.3s, color 0.3s;
+    cursor: pointer;
+    background: transparent;
+    font-family: inherit;
+    text-align: center;
+  }
+  .btn-outline-cyan:hover {
+    background: var(--cyan);
+    color: var(--bg);
+  }
+
   /* Footer */
   .footer {
     text-align: center;
@@ -550,6 +612,63 @@
         </ul>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- YOUR PROMO KIT -->
+<section class="section">
+  <h2 class="section-title">Your Promo Kit</h2>
+  <h3 class="section-heading">Everything you need to fill the room.</h3>
+  <p class="section-sub">When you host, you get a full promo assets pack — copy-paste messages, social posts, photos, and more. Send them to your friends, post them on your Instagram, share them everywhere.</p>
+
+  <div class="promo-kit-grid">
+    <div class="promo-kit-card">
+      <div class="pk-icon">📱</div>
+      <div class="pk-label">Text Messages</div>
+      <div class="pk-detail">Casual & punchy copy — ready for WhatsApp, Messenger, SMS group chats</div>
+    </div>
+    <div class="promo-kit-card">
+      <div class="pk-icon">📸</div>
+      <div class="pk-label">Social Posts</div>
+      <div class="pk-detail">Instagram & Facebook posts + story templates — just paste & post</div>
+    </div>
+    <div class="promo-kit-card">
+      <div class="pk-icon">📧</div>
+      <div class="pk-label">Email Template</div>
+      <div class="pk-detail">Forward-ready email with subject line, date, ticket link & details</div>
+    </div>
+    <div class="promo-kit-card">
+      <div class="pk-icon">🔗</div>
+      <div class="pk-label">Invite Link</div>
+      <div class="pk-detail">Your custom event page — one link with date, time, tickets, everything</div>
+    </div>
+    <div class="promo-kit-card">
+      <div class="pk-icon">🖼️</div>
+      <div class="pk-label">Photos & Logo</div>
+      <div class="pk-detail">Press photos + The Raven logo — for your posts, posters & invites</div>
+    </div>
+    <div class="promo-kit-card">
+      <div class="pk-icon">💡</div>
+      <div class="pk-label">Quick Tips</div>
+      <div class="pk-detail">How to share, when to post, tagging strategy — make your night sell out</div>
+    </div>
+  </div>
+
+  <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; margin-bottom:1.2rem;">Preview of what's inside:</p>
+  <div class="promo-preview-imgs">
+    <img src="../02-studio-performance.png" alt="Studio Performance" loading="lazy">
+    <img src="../03-live-stage-neon.jpg" alt="Live Stage" loading="lazy">
+    <img src="../IMG_0803.JPG" alt="Dylan & Maverick" loading="lazy">
+    <img src="../00-raven-logo.jpg" alt="The Raven Logo" loading="lazy">
+  </div>
+
+  <p style="text-align:center; color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">
+    All your promo assets in one place. Copy. Paste. Room's full.<br>
+    <span style="font-size:0.8rem;">(You'll get this link after booking — bookmark it.)</span>
+  </p>
+
+  <div style="text-align:center;">
+    <a href="/house-concerts/host-media-pack" class="btn-outline-cyan">📦 View the Full Media Pack →</a>
   </div>
 </section>
 
