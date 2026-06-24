@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[Host Name]'s House Concert — Dylan Crowe</title>
+<style>
+  :root {
+    --bg: #0D0D1A;
+    --bg-warm: #1A1520;
+    --card: rgba(255,255,255,0.04);
+    --cyan: #00B4D8;
+    --magenta: #D946EF;
+    --amber: #D97706;
+    --gold: #F59E0B;
+    --text: #F5F0E8;
+    --text-muted: rgba(245,240,232,0.65);
+    --border: rgba(245,240,232,0.08);
+    --warm-glow: rgba(245,158,11,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hero — warm, intimate, guest-facing */
+  .hero {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(170deg, #0D0D1A 0%, #1A1025 40%, #1A1520 100%);
+    padding: 3rem 1.5rem;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, var(--warm-glow) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+  }
+  .hero-badge {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 100px;
+    color: var(--gold);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--gold), #FDE68A, var(--amber));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+  }
+  .hero .sub {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    font-style: italic;
+  }
+  .hero .detail-line {
+    font-size: 1.05rem;
+    color: var(--text);
+    margin-bottom: 0.3rem;
+  }
+  .hero .detail-line .accent {
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .hero .host-note {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+  .hero .host-note strong {
+    color: var(--gold);
+  }
+
+  /* Sections */
+  .section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+  .section-alt {
+    background: rgba(245,158,11,0.03);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .section-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  /* The Night */
+  .night-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .night-step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .night-step .step-icon {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+    width: 3rem;
+    text-align: center;
+  }
+  .night-step .step-body h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.2rem;
+  }
+  .night-step .step-body p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  /* Pricing */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .price-card {
+    background: linear-gradient(145deg, rgba(245,158,11,0.06), rgba(245,158,11,0.02));
+    border: 1px solid rgba(245,158,11,0.15);
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: border-color 0.3s, transform 0.2s;
+  }
+  .price-card:hover {
+    border-color: rgba(245,158,11,0.4);
+    transform: translateY(-2px);
+  }
+  .price-card.featured {
+    border-color: var(--gold);
+    background: linear-gradient(145deg, rgba(245,158,11,0.12), rgba(245,158,11,0.04));
+  }
+  .price-card .ticket-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--amber);
+    margin-bottom: 0.5rem;
+  }
+  .price-card .ticket-price {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--gold);
+    margin-bottom: 0.3rem;
+  }
+  .price-card .ticket-detail {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .pricing-note {
+    text-align: center;
+    margin-top: 1.2rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .pricing-note strong { color: var(--gold); }
+
+  /* About */
+  .about-flex {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
+  .about-text {
+    flex: 1;
+    font-size: 1.05rem;
+    color: var(--text);
+    line-height: 1.8;
+  }
+  .about-text strong { color: var(--gold); }
+  .about-image {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(245,158,11,0.3);
+    flex-shrink: 0;
+    background: var(--card);
+  }
+
+  /* CTA */
+  .cta-section {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: linear-gradient(180deg, transparent, rgba(245,158,11,0.05), transparent);
+  }
+  .cta-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+  .cta-section .cta-sub {
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+  }
+  .btn-ticket {
+    display: inline-block;
+    padding: 1rem 3rem;
+    background: linear-gradient(135deg, var(--gold), var(--amber));
+    color: #0D0D1A;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 100px;
+    letter-spacing: 0.03em;
+    transition: transform 0.2s, box-shadow 0.3s;
+    box-shadow: 0 0 30px rgba(245,158,11,0.2);
+  }
+  .btn-ticket:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 50px rgba(245,158,11,0.35);
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
+  }
+  .footer a { color: var(--gold); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 600px) {
+    .section { padding: 2.5rem 1.2rem; }
+    .hero { min-height: 70vh; padding: 2rem 1rem; }
+    .hero h1 { font-size: 2rem; }
+    .about-flex { flex-direction: column; text-align: center; }
+    .about-image { width: 140px; height: 140px; }
+    .btn-ticket { padding: 0.9rem 2rem; font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🎸 You're Invited</div>
+    <h1>Live Music<br>at [Host Name]'s</h1>
+    <p class="sub">An intimate acoustic night with Dylan Crowe</p>
+    <p class="detail-line"><span class="accent">[Date]</span> · Doors <span class="accent">[Door Time]</span> · Music from <span class="accent">[Start Time]</span></p>
+    <p class="detail-line">Hosted by <span class="accent">[Host Name]</span> in <span class="accent">[Suburb]</span></p>
+    <p class="host-note">Bring your own drinks & a plate to share 🍷🧀</p>
+  </div>
+</section>
+
+<!-- THE NIGHT -->
+<section class="section">
+  <h2 class="section-title">The Night</h2>
+  <div class="night-timeline">
+    <div class="night-step">
+      <div class="step-icon">🕖</div>
+      <div class="step-body">
+        <h4>Arrive & settle in</h4>
+        <p>Grab a drink, find a spot on the couch, say hi to Maverick. Casual, no rush.</p>
+      </div>
+    </div>
+    <div class="night-step">
+      <div class="step-icon">🎶</div>
+      <div class="step-body">
+        <h4>First set — 45 minutes</h4>
+        <p>Originals and covers. Beatles to Foo Fighters. Acoustic, raw, up close.</p>
+      </div>
+    </div>
+    <div class="night-step">
+      <div class="step-icon">🥂</div>
+      <div class="step-body">
+        <h4>Break — top up your drink</h4>
+        <p>Chat, grab food, say hi to Dylan. This is a house show, not a stadium.</p>
+      </div>
+    </div>
+    <div class="night-step">
+      <div class="step-icon">🔥</div>
+      <div class="step-body">
+        <h4>Second set — 45 minutes</h4>
+        <p>The energy peaks. Requests are welcome. This is where the night takes off.</p>
+      </div>
+    </div>
+    <div class="night-step">
+      <div class="step-icon">🌙</div>
+      <div class="step-body">
+        <h4>Wind down</h4>
+        <p>Stick around, grab a CD, take a photo. You just experienced something most people never do.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKETS -->
+<section class="section section-alt">
+  <div class="section" style="padding:0;">
+    <h2 class="section-title">Tickets</h2>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="ticket-label">Early Bird</div>
+        <div class="ticket-price">$20</div>
+        <div class="ticket-detail">First 10 tickets<br>Be quick — they go fast</div>
+      </div>
+      <div class="price-card featured">
+        <div class="ticket-label">General Admission</div>
+        <div class="ticket-price">$25</div>
+        <div class="ticket-detail">Standard ticket<br>Still an absolute steal</div>
+      </div>
+      <div class="price-card">
+        <div class="ticket-label">Door</div>
+        <div class="ticket-price">$30</div>
+        <div class="ticket-detail">If any left<br>Grab one now and save</div>
+      </div>
+    </div>
+    <p class="pricing-note">Limited to <strong>[Guest Count]</strong> spots — this is someone's living room, not a stadium.</p>
+  </div>
+</section>
+
+<!-- ABOUT DYLAN -->
+<section class="section">
+  <h2 class="section-title">Who's Playing?</h2>
+  <div class="about-flex">
+    <div class="about-text">
+      <p><strong>Dylan Crowe</strong> is a singer-songwriter touring Australia with a guitar, a van, and his dog Maverick. He's played street corners from the Sunshine Coast to Perth, pub stages in every state, and now — living rooms.</p>
+      <p>His sets span <strong>tender Beatles ballads to explosive Foo Fighters covers</strong>, all stripped down to one voice and one guitar. No backing tracks. No safety net. Just the kind of performance that <strong>hits different when you're ten feet away on a couch.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Ready for a night you'll actually remember?</h2>
+  <p class="cta-sub">This is what live music is supposed to feel like.</p>
+  <a href="[Ticket Link]" class="btn-ticket" target="_blank">Get Tickets</a>
+  <p style="margin-top:1.5rem;font-size:0.85rem;color:var(--text-muted);">
+    Questions? DM <strong>[Host Name]</strong> or Dylan at <a href="https://instagram.com/dylan_crowe_music" style="color:var(--gold);">@dylan_crowe_music</a>
+  </p>
+</section>
+
+<footer class="footer">
+  Dylan Crowe · Touring Australia · <a href="https://instagram.com/dylan_crowe_music">@dylan_crowe_music</a> · <a href="mailto:dylancrowemusic@gmail.com">dylancrowemusic@gmail.com</a>
+  <br><br>
+  Invitation by <a href="https://dylancrowemusic.github.io/house-concerts">Dylan Crowe House Concerts</a>
+</footer>
+
+</body>
+</html>
