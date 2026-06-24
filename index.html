@@ -120,39 +120,91 @@
   .bio-text p { margin-bottom: 1rem; }
   .bio-text .highlight { color: var(--cyan); }
 
-  /* Photo Gallery */
-  .gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-  }
-  .gallery img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  .gallery img:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 30px rgba(0,180,216,0.15);
-  }
-
-  /* Venue Assets / Downloads */
+  /* Assets Hub */
   .asset-intro {
     font-size: 1rem;
     color: var(--text-muted);
     max-width: 650px;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
-  .asset-subtitle {
+  .assets-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .assets-tab {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    border: none;
+    background: none;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+    font-family: inherit;
+  }
+  .assets-tab:hover { color: var(--text); }
+  .assets-tab.active {
+    color: var(--cyan);
+    border-bottom-color: var(--cyan);
+  }
+  .assets-category { display: none; }
+  .assets-category.active { display: block; }
+  .category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .category-header .cat-label {
     font-size: 0.78rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--magenta);
-    margin: 2.2rem 0 1rem;
   }
+  .assets-mega {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    margin-top: 2rem;
+    border: 2px solid var(--cyan);
+    border-radius: 10px;
+    color: var(--cyan);
+    font-size: 0.9rem;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: background 0.3s, color 0.3s;
+    cursor: pointer;
+    background: transparent;
+    font-family: inherit;
+  }
+  .assets-mega:hover {
+    background: var(--cyan);
+    color: var(--bg);
+  }
+  .btn-download-all {
+    padding: 0.4rem 0.9rem;
+    border: 1px solid rgba(0,180,216,0.4);
+    border-radius: 6px;
+    color: var(--cyan);
+    font-size: 0.75rem;
+    cursor: pointer;
+    background: rgba(0,180,216,0.08);
+    transition: all 0.3s;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .btn-download-all:hover { background: rgba(0,180,216,0.2); }
+
+  /* Download Cards (shared) */
   .download-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -377,99 +429,108 @@
   </div>
 </section>
 
-<!-- PHOTOS -->
+<!-- ASSETS HUB -->
 <section class="section">
-  <h2 class="section-title">Photos</h2>
-  <div class="gallery">
-    <img src="02-studio-performance.png" alt="Dylan Crowe — Studio Performance" loading="lazy">
-    <img src="03-live-stage-neon.jpg" alt="Dylan Crowe — Live Performance" loading="lazy">
-    <img src="IMG_0803.JPG" alt="Dylan Crowe & Maverick" loading="lazy">
-  </div>
-</section>
+  <h2 class="section-title">Assets</h2>
+  <p class="asset-intro">Everything you need to promote the show. Click to download, copy, or grab it all at once.</p>
 
-<!-- VENUE ASSETS -->
-<section class="section">
-  <h2 class="section-title">Venue Assets</h2>
-  <p class="asset-intro">Everything you need to promote the show. Photos, bios, logos — ready to download and use in your marketing.</p>
-
-  <!-- Photos -->
-  <h3 class="asset-subtitle">Photos</h3>
-  <div class="download-grid">
-    <div class="download-card">
-      <img src="02-studio-performance.png" alt="Studio Performance" loading="lazy">
-      <div class="card-body">
-        <div class="card-label">Studio Performance</div>
-        <div class="card-meta">1268×586 · PNG</div>
-        <a href="02-studio-performance.png" download class="btn btn-small">Download</a>
-      </div>
-    </div>
-    <div class="download-card">
-      <img src="03-live-stage-neon.jpg" alt="Live — Neon Stage" loading="lazy">
-      <div class="card-body">
-        <div class="card-label">Live — Neon Stage</div>
-        <div class="card-meta">960×1280 · JPG</div>
-        <a href="03-live-stage-neon.jpg" download class="btn btn-small">Download</a>
-      </div>
-    </div>
-    <div class="download-card">
-      <img src="IMG_0803.JPG" alt="Dylan & Maverick" loading="lazy">
-      <div class="card-body">
-        <div class="card-label">Dylan & Maverick</div>
-        <div class="card-meta">High-res · JPG</div>
-        <a href="IMG_0803.JPG" download class="btn btn-small">Download</a>
-      </div>
-    </div>
+  <div class="assets-tabs">
+    <button class="assets-tab active" onclick="switchTab('photos')">Photos</button>
+    <button class="assets-tab" onclick="switchTab('copy')">Copy</button>
+    <button class="assets-tab" onclick="switchTab('docs')">Docs</button>
   </div>
 
-  <!-- Logo -->
-  <h3 class="asset-subtitle">Logo</h3>
-  <div class="download-grid">
-    <div class="download-card" style="max-width: 250px;">
-      <img src="00-raven-logo.jpg" alt="The Raven Logo" loading="lazy">
-      <div class="card-body">
-        <div class="card-label">The Raven Logo</div>
-        <div class="card-meta">800×800 · JPG</div>
-        <a href="00-raven-logo.jpg" download class="btn btn-small">Download</a>
+  <!-- Photos Category -->
+  <div class="assets-category active" id="cat-photos">
+    <div class="category-header">
+      <span class="cat-label">Photos</span>
+      <button class="btn-download-all" onclick="downloadAllPhotos()">&#10515; Download All Photos</button>
+    </div>
+    <div class="download-grid">
+      <div class="download-card">
+        <img src="02-studio-performance.png" alt="Studio Performance" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">Studio Performance</div>
+          <div class="card-meta">1268×586 · PNG</div>
+          <a href="02-studio-performance.png" download class="btn btn-small">Download</a>
+        </div>
+      </div>
+      <div class="download-card">
+        <img src="03-live-stage-neon.jpg" alt="Live — Neon Stage" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">Live — Neon Stage</div>
+          <div class="card-meta">960×1280 · JPG</div>
+          <a href="03-live-stage-neon.jpg" download class="btn btn-small">Download</a>
+        </div>
+      </div>
+      <div class="download-card">
+        <img src="IMG_0803.JPG" alt="Dylan & Maverick" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">Dylan & Maverick</div>
+          <div class="card-meta">High-res · JPG</div>
+          <a href="IMG_0803.JPG" download class="btn btn-small">Download</a>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Bio Blurbs -->
-  <h3 class="asset-subtitle">Bio Blurbs</h3>
-  <div class="blurb-card">
-    <div class="blurb-label">
-      <span>Short — for event listings</span>
-      <button class="copy-btn" onclick="copyBlurb(this,'short')">📋 Copy</button>
+  <!-- Copy Category -->
+  <div class="assets-category" id="cat-copy">
+    <div class="category-header">
+      <span class="cat-label">Bio Blurbs</span>
+      <button class="btn-download-all" onclick="copyAllBlurbs()">&#128203; Copy All</button>
     </div>
-    <div class="blurb-text" id="blurb-short">Dylan Crowe is a singer-songwriter touring Australia with his guitar and dog Maverick. From delicate acoustic ballads to high-energy Foo Fighters covers — a self-contained solo act who shows up and plays.</div>
-  </div>
-  <div class="blurb-card">
-    <div class="blurb-label">
-      <span>Medium — for website features</span>
-      <button class="copy-btn" onclick="copyBlurb(this,'medium')">📋 Copy</button>
+    <div class="blurb-card">
+      <div class="blurb-label">
+        <span>Short — for event listings</span>
+        <button class="copy-btn" onclick="copyBlurb(this,'short')">📋 Copy</button>
+      </div>
+      <div class="blurb-text" id="blurb-short">Dylan Crowe is a singer-songwriter touring Australia with his guitar and dog Maverick. From delicate acoustic ballads to high-energy Foo Fighters covers — a self-contained solo act who shows up and plays.</div>
     </div>
-    <div class="blurb-text" id="blurb-medium">Dylan Crowe brings raw, road-worn music to every corner of Australia. Touring from a van with his dog Maverick by his side, Dylan delivers everything from tender Beatles covers to explosive Foo Fighters anthems — all on a single acoustic guitar. Self-contained, no-fuss, and road-tested on street corners from the Sunshine Coast to Perth. One guitar. One dog. Every town.</div>
-  </div>
-  <div class="blurb-card">
-    <div class="blurb-label">
-      <span>Long — for press & media</span>
-      <button class="copy-btn" onclick="copyBlurb(this,'long')">📋 Copy</button>
+    <div class="blurb-card">
+      <div class="blurb-label">
+        <span>Medium — for website features</span>
+        <button class="copy-btn" onclick="copyBlurb(this,'medium')">📋 Copy</button>
+      </div>
+      <div class="blurb-text" id="blurb-medium">Dylan Crowe brings raw, road-worn music to every corner of Australia. Touring from a van with his dog Maverick by his side, Dylan delivers everything from tender Beatles covers to explosive Foo Fighters anthems — all on a single acoustic guitar. Self-contained, no-fuss, and road-tested on street corners from the Sunshine Coast to Perth. One guitar. One dog. Every town.</div>
     </div>
-    <div class="blurb-text" id="blurb-long">Dylan Crowe is a singer-songwriter living the Australian dream — touring the country from the seat of a van, with a guitar in the back and a border collie named Maverick riding shotgun. His music spans the spectrum from delicate acoustic ballads to full-throated rock covers, drawing from a deep well of influences including The Beatles, Foo Fighters, and classic Australian pub rock. Currently on a national tour crossing the Nullarbor twice, Dylan has built a following the old-fashioned way — one street corner, one busking session, one town at a time. He's a self-contained solo act who needs ten minutes to set up and can play anywhere from 45 minutes to two hours. No fuss. No ego. Just music.</div>
+    <div class="blurb-card">
+      <div class="blurb-label">
+        <span>Long — for press & media</span>
+        <button class="copy-btn" onclick="copyBlurb(this,'long')">📋 Copy</button>
+      </div>
+      <div class="blurb-text" id="blurb-long">Dylan Crowe is a singer-songwriter living the Australian dream — touring the country from the seat of a van, with a guitar in the back and a border collie named Maverick riding shotgun. His music spans the spectrum from delicate acoustic ballads to full-throated rock covers, drawing from a deep well of influences including The Beatles, Foo Fighters, and classic Australian pub rock. Currently on a national tour crossing the Nullarbor twice, Dylan has built a following the old-fashioned way — one street corner, one busking session, one town at a time. He's a self-contained solo act who needs ten minutes to set up and can play anywhere from 45 minutes to two hours. No fuss. No ego. Just music.</div>
+    </div>
   </div>
 
-  <!-- Tech Rider -->
-  <h3 class="asset-subtitle">Tech Rider</h3>
-  <div class="download-grid">
-    <div class="download-card" style="max-width: 250px;">
-      <div class="card-body card-body-center">
-        <div class="card-icon">🎸</div>
-        <div class="card-label">Tech Rider</div>
-        <div class="card-meta">Setup, gear & requirements</div>
-        <a href="tech-rider.txt" download class="btn btn-small" style="margin-top:0.5rem;">Download</a>
+  <!-- Docs Category -->
+  <div class="assets-category" id="cat-docs">
+    <div class="category-header">
+      <span class="cat-label">Documents & Logo</span>
+      <button class="btn-download-all" onclick="downloadAllDocs()">&#10515; Download All Docs</button>
+    </div>
+    <div class="download-grid">
+      <div class="download-card" style="max-width: 250px;">
+        <div class="card-body card-body-center">
+          <div class="card-icon">🎸</div>
+          <div class="card-label">Tech Rider</div>
+          <div class="card-meta">Setup, gear & requirements</div>
+          <a href="tech-rider.txt" download class="btn btn-small" style="margin-top:0.5rem;">Download</a>
+        </div>
+      </div>
+      <div class="download-card" style="max-width: 250px;">
+        <img src="00-raven-logo.jpg" alt="The Raven Logo" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">The Raven Logo</div>
+          <div class="card-meta">800×800 · JPG</div>
+          <a href="00-raven-logo.jpg" download class="btn btn-small">Download</a>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Download Everything -->
+  <button class="assets-mega" onclick="downloadEverything()">&#128230; Download Everything (ZIP)</button>
 </section>
 
 <!-- VIDEOS -->
@@ -573,7 +634,17 @@
   Dylan Crowe © 2026 &nbsp;·&nbsp; Touring Australia &nbsp;·&nbsp; Bookings: dylancrowemusic@gmail.com
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
+  /* Tab switching */
+  function switchTab(name) {
+    document.querySelectorAll('.assets-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.assets-category').forEach(c => c.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('cat-' + name).classList.add('active');
+  }
+
+  /* Copy single blurb */
   function copyBlurb(btn, id) {
     const el = document.getElementById('blurb-' + id);
     const text = el.textContent;
@@ -586,6 +657,99 @@
         btn.classList.remove('copied');
       }, 2000);
     });
+  }
+
+  /* Copy all blurbs */
+  function copyAllBlurbs() {
+    const short = document.getElementById('blurb-short').textContent;
+    const medium = document.getElementById('blurb-medium').textContent;
+    const long = document.getElementById('blurb-long').textContent;
+    const all = 'SHORT:\n' + short + '\n\nMEDIUM:\n' + medium + '\n\nLONG:\n' + long;
+    navigator.clipboard.writeText(all).then(() => {
+      const btns = document.querySelectorAll('#cat-copy .btn-download-all');
+      btns.forEach(b => { b.textContent = '✓ Copied!'; b.style.color = '#fff'; b.style.background = 'var(--green)'; });
+      setTimeout(() => {
+        btns.forEach(b => { b.textContent = '📋 Copy All'; b.style.color = ''; b.style.background = ''; });
+      }, 2000);
+    });
+  }
+
+  /* Fetch file as blob */
+  async function fetchBlob(url) {
+    const r = await fetch(url);
+    return r.blob();
+  }
+
+  /* Download all photos as ZIP */
+  async function downloadAllPhotos() {
+    const zip = new JSZip();
+    const photoFolder = zip.folder('dylan-crowe-photos');
+    const files = [
+      {url:'02-studio-performance.png', name:'dylan-crowe-studio-performance.png'},
+      {url:'03-live-stage-neon.jpg', name:'dylan-crowe-live-stage-neon.jpg'},
+      {url:'IMG_0803.JPG', name:'dylan-crowe-maverick.jpg'}
+    ];
+    for (const f of files) {
+      const blob = await fetchBlob(f.url);
+      photoFolder.file(f.name, blob);
+    }
+    const content = await zip.generateAsync({type:'blob'});
+    triggerDownload(content, 'dylan-crowe-photos.zip');
+  }
+
+  /* Download all docs as ZIP */
+  async function downloadAllDocs() {
+    const zip = new JSZip();
+    const docFolder = zip.folder('dylan-crowe-docs');
+    const files = [
+      {url:'tech-rider.txt', name:'dylan-crowe-tech-rider.txt'},
+      {url:'00-raven-logo.jpg', name:'dylan-crowe-raven-logo.jpg'}
+    ];
+    for (const f of files) {
+      const blob = await fetchBlob(f.url);
+      docFolder.file(f.name, blob);
+    }
+    const content = await zip.generateAsync({type:'blob'});
+    triggerDownload(content, 'dylan-crowe-docs.zip');
+  }
+
+  /* Download everything as ZIP */
+  async function downloadEverything() {
+    const zip = new JSZip();
+    const root = zip.folder('dylan-crowe-epk-kit');
+    const photos = root.folder('photos');
+    const docs = root.folder('docs');
+    const allFiles = [
+      {url:'02-studio-performance.png', name:'dylan-crowe-studio-performance.png', folder:photos},
+      {url:'03-live-stage-neon.jpg', name:'dylan-crowe-live-stage-neon.jpg', folder:photos},
+      {url:'IMG_0803.JPG', name:'dylan-crowe-maverick.jpg', folder:photos},
+      {url:'tech-rider.txt', name:'dylan-crowe-tech-rider.txt', folder:docs},
+      {url:'00-raven-logo.jpg', name:'dylan-crowe-raven-logo.jpg', folder:docs}
+    ];
+    const short = document.getElementById('blurb-short').textContent;
+    const medium = document.getElementById('blurb-medium').textContent;
+    const long = document.getElementById('blurb-long').textContent;
+    root.file('bio-short.txt', short);
+    root.file('bio-medium.txt', medium);
+    root.file('bio-long.txt', long);
+    for (const f of allFiles) {
+      const blob = await fetchBlob(f.url);
+      f.folder.file(f.name, blob);
+    }
+    const content = await zip.generateAsync({type:'blob'});
+    triggerDownload(content, 'dylan-crowe-epk-kit.zip');
+  }
+
+  /* Trigger browser download */
+  function triggerDownload(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 </script>
 </body>
