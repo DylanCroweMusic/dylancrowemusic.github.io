@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dylan Crowe — EPK</title>
+<style>
+  :root {
+    --bg: #1A1A3E;
+    --bg-card: rgba(255,255,255,0.04);
+    --cyan: #00B4D8;
+    --magenta: #D946EF;
+    --amber: #D97706;
+    --green: #166534;
+    --text: #F5F0E8;
+    --text-muted: rgba(245,240,232,0.65);
+    --border: rgba(245,240,232,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(180deg, #0D0D2B 0%, var(--bg) 60%, #0D0D2B 100%);
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(0,180,216,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 60%, rgba(217,70,239,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, rgba(217,119,6,0.06) 0%, transparent 40%);
+    animation: drift 20s ease-in-out infinite alternate;
+  }
+  @keyframes drift {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(-2%, 2%) rotate(1deg); }
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 2rem;
+    max-width: 800px;
+  }
+  .hero-logo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--cyan);
+    box-shadow: 0 0 40px rgba(0,180,216,0.2);
+    margin-bottom: 2rem;
+  }
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--text), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero .tagline {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    font-style: italic;
+    max-width: 500px;
+    margin: 0 auto 1.5rem;
+  }
+  .hero .location {
+    display: inline-block;
+    padding: 0.4rem 1.2rem;
+    border: 1px solid var(--cyan);
+    border-radius: 100px;
+    color: var(--cyan);
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* Sections */
+  .section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+  .section-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--cyan);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Bio */
+  .bio-text {
+    font-size: 1.1rem;
+    color: var(--text);
+    max-width: 650px;
+  }
+  .bio-text p { margin-bottom: 1rem; }
+  .bio-text .highlight { color: var(--cyan); }
+
+  /* Photo Gallery */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+  .gallery img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .gallery img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 30px rgba(0,180,216,0.15);
+  }
+
+  /* Video Grid */
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .video-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .video-card:hover { border-color: var(--cyan); }
+  .video-card iframe {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border: none;
+  }
+  .video-card .label {
+    padding: 0.8rem 1rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .video-card .label strong {
+    color: var(--text);
+  }
+
+  /* Performance Specs */
+  .specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .spec-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem;
+  }
+  .spec-card .spec-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--magenta);
+    margin-bottom: 0.4rem;
+  }
+  .spec-card .spec-value {
+    font-size: 1rem;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* Contact */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+  .contact-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.3s;
+  }
+  .contact-card:hover { border-color: var(--cyan); }
+  .contact-icon {
+    font-size: 1.4rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,180,216,0.1);
+    border-radius: 8px;
+  }
+  .contact-card .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+  .contact-card .value { font-size: 0.95rem; font-weight: 500; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .section { padding: 2rem 1rem; }
+    .hero { min-height: 60vh; }
+    .hero-logo { width: 90px; height: 90px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <img class="hero-logo" src="00-raven-logo.jpg" alt="Dylan Crowe — The Raven">
+    <h1>Dylan Crowe</h1>
+    <p class="tagline">"One guitar. One dog. Every town in Australia."</p>
+    <span class="location">Touring Australia</span>
+  </div>
+</section>
+
+<!-- BIO -->
+<section class="section">
+  <h2 class="section-title">About</h2>
+  <div class="bio-text">
+    <p>Dylan Crowe is a singer-songwriter touring Australia from the seat of a van, with a guitar in the back and a dog named <span class="highlight">Maverick</span> riding shotgun. His performances span the spectrum from delicate acoustic ballads to high-energy rock covers — <span class="highlight">Beatles to Foo Fighters</span>, played raw on a street corner or an intimate stage.</p>
+    <p>Living on the road, Dylan has built a following one town at a time. He doesn't wait for an audience — he finds one. Every busking session is a show. Every street corner is a venue.</p>
+    <p>Currently on a national tour from the Sunshine Coast to Perth and back — crossing the Nullarbor twice, busking every major town, playing venues along the way — Dylan is a self-contained solo act who shows up, plugs in, and plays. <span class="highlight">No fuss. No ego. Just music.</span></p>
+  </div>
+</section>
+
+<!-- PHOTOS -->
+<section class="section">
+  <h2 class="section-title">Photos</h2>
+  <div class="gallery">
+    <img src="02-studio-performance.png" alt="Dylan Crowe — Studio Performance" loading="lazy">
+    <img src="03-live-stage-neon.jpg" alt="Dylan Crowe — Live Performance" loading="lazy">
+    <img src="IMG_0803.JPG" alt="Dylan Crowe & Maverick" loading="lazy">
+  </div>
+</section>
+
+<!-- VIDEOS -->
+<section class="section">
+  <h2 class="section-title">Watch</h2>
+  <div class="video-grid">
+    <div class="video-card">
+      <iframe src="https://www.youtube.com/embed/WWHovUyvv0s" title="Something — Beatles cover" allowfullscreen loading="lazy"></iframe>
+      <div class="label"><strong>Something</strong> — Beatles cover</div>
+    </div>
+    <div class="video-card">
+      <iframe src="https://www.youtube.com/embed/1Nsnbw2xvew" title="Got To Go — original" allowfullscreen loading="lazy"></iframe>
+      <div class="label"><strong>Got To Go</strong> — Original</div>
+    </div>
+    <div class="video-card">
+      <iframe src="https://www.youtube.com/embed/h_bSR6UdbqQ" title="Fight the feeling — original" allowfullscreen loading="lazy"></iframe>
+      <div class="label"><strong>Fight the feeling</strong> — Original (with Trinity Ashling)</div>
+    </div>
+    <div class="video-card">
+      <iframe src="https://www.youtube.com/embed/JxOxJFuXpu4" title="Neon Lights — original" allowfullscreen loading="lazy"></iframe>
+      <div class="label"><strong>Neon Lights</strong> — Original</div>
+    </div>
+  </div>
+</section>
+
+<!-- PERFORMANCE DETAILS -->
+<section class="section">
+  <h2 class="section-title">Performance Specs</h2>
+  <div class="specs-grid">
+    <div class="spec-card">
+      <div class="spec-label">Act Type</div>
+      <div class="spec-value">Solo acoustic — guitar & vocals</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Genre</div>
+      <div class="spec-value">Singer-songwriter, folk-rock, covers</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Set Length</div>
+      <div class="spec-value">45 min – 2 hours (flexible)</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Setup Time</div>
+      <div class="spec-value">10 minutes</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">PA Required</div>
+      <div class="spec-value">No — self-contained, or can use house PA</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Audience</div>
+      <div class="spec-value">All ages, family-friendly, dog-friendly</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Venue Types</div>
+      <div class="spec-value">Bars, cafes, pubs, restaurants, markets, festivals</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Backing</div>
+      <div class="spec-value">None — pure solo performance</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section">
+  <h2 class="section-title">Book Dylan</h2>
+  <div class="contact-grid">
+    <a href="mailto:dylancrowemusic@gmail.com" class="contact-card">
+      <div class="contact-icon">✉️</div>
+      <div>
+        <div class="label">Email</div>
+        <div class="value">dylancrowemusic@gmail.com</div>
+      </div>
+    </a>
+    <a href="tel:+6141126271" class="contact-card">
+      <div class="contact-icon">📞</div>
+      <div>
+        <div class="label">Phone</div>
+        <div class="value">0411 926 271</div>
+      </div>
+    </a>
+    <a href="https://instagram.com/dylan_crowe_music" target="_blank" class="contact-card">
+      <div class="contact-icon">📸</div>
+      <div>
+        <div class="label">Instagram</div>
+        <div class="value">@dylan_crowe_music</div>
+      </div>
+    </a>
+    <a href="https://youtube.com/@dylancrowemusic" target="_blank" class="contact-card">
+      <div class="contact-icon">▶️</div>
+      <div>
+        <div class="label">YouTube</div>
+        <div class="value">@dylancrowemusic</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<footer class="footer">
+  Dylan Crowe © 2026 &nbsp;·&nbsp; Touring Australia &nbsp;·&nbsp; Bookings: dylancrowemusic@gmail.com
+</footer>
+
+</body>
+</html>
