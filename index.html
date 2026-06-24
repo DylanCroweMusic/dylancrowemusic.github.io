@@ -448,6 +448,142 @@
     transition: border-color 0.3s;
   }
   .contact-card:hover { border-color: var(--cyan); }
+
+  /* House Concerts */
+  .house-hero {
+    background: linear-gradient(135deg, rgba(217,70,239,0.1), rgba(0,180,216,0.1));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .house-hero h3 {
+    font-size: 1.6rem;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+  .house-hero .house-subtitle {
+    font-size: 1.05rem;
+    color: var(--cyan);
+    margin-bottom: 1.5rem;
+    font-style: italic;
+  }
+  .house-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+  .house-flow .flow-step {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.5rem 0.9rem;
+    white-space: nowrap;
+  }
+  .house-flow .flow-arrow {
+    color: var(--cyan);
+    font-size: 1rem;
+  }
+  .pricing-tiers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .pricing-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: border-color 0.3s;
+  }
+  .pricing-card:hover { border-color: var(--cyan); }
+  .pricing-card .tier-name {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--magenta);
+    margin-bottom: 0.5rem;
+  }
+  .pricing-card .tier-price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--cyan);
+    margin-bottom: 0.3rem;
+  }
+  .pricing-card .tier-detail {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .house-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .house-detail-col {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+  }
+  .house-detail-col h4 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--magenta);
+    margin-bottom: 1rem;
+  }
+  .house-detail-col ul {
+    list-style: none;
+    padding: 0;
+  }
+  .house-detail-col li {
+    padding: 0.4rem 0;
+    font-size: 0.95rem;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+  }
+  .house-detail-col li:last-child { border-bottom: none; }
+  .house-cta {
+    text-align: center;
+  }
+  .house-cta .btn-house {
+    display: inline-block;
+    padding: 0.9rem 2.5rem;
+    border: 2px solid var(--cyan);
+    border-radius: 100px;
+    color: var(--cyan);
+    font-size: 1rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: all 0.3s;
+    font-weight: 600;
+  }
+  .house-cta .btn-house:hover {
+    background: var(--cyan);
+    color: var(--bg);
+  }
+  .house-cta .house-cta-sub {
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 600px) {
+    .house-details { grid-template-columns: 1fr; }
+    .house-hero { padding: 1.5rem; }
+    .house-hero h3 { font-size: 1.3rem; }
+  }
+
   .contact-icon {
     font-size: 1.4rem;
     width: 2.5rem;
@@ -686,8 +822,73 @@
     </div>
     <div class="spec-card">
       <div class="spec-label">Venue Types</div>
-      <div class="spec-value">Bars, cafes, pubs, restaurants, markets, festivals</div>
+      <div class="spec-value">Bars, cafes, pubs, restaurants, markets, festivals, private homes</div>
     </div>
+  </div>
+</section>
+
+<!-- HOUSE CONCERTS -->
+<section class="section">
+  <h2 class="section-title">House Concerts</h2>
+
+  <div class="house-hero">
+    <h3>Live music in your living room</h3>
+    <p class="house-subtitle">You host. I play. Your friends will never stop talking about it.</p>
+    <div class="house-flow">
+      <span class="flow-step">🎸 You host</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">👥 Invite 20+ friends</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">🎫 $25 tickets</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">🎶 2 acoustic sets</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">🔥 Unforgettable night</span>
+    </div>
+  </div>
+
+  <div class="pricing-tiers">
+    <div class="pricing-card">
+      <div class="tier-name">Starter</div>
+      <div class="tier-price">$500</div>
+      <div class="tier-detail">20 guests × $25 each</div>
+    </div>
+    <div class="pricing-card">
+      <div class="tier-name">Standard</div>
+      <div class="tier-price">$750</div>
+      <div class="tier-detail">25 guests × $30 each</div>
+    </div>
+    <div class="pricing-card">
+      <div class="tier-name">Premium</div>
+      <div class="tier-price">$1,200+</div>
+      <div class="tier-detail">30+ guests × $40+ each</div>
+    </div>
+  </div>
+
+  <div class="house-details">
+    <div class="house-detail-col">
+      <h4>🏡 You provide</h4>
+      <ul>
+        <li>A space — living room, backyard, deck, garage</li>
+        <li>Seating — couches, chairs, floor cushions</li>
+        <li>Guest list — invite your network (20 minimum)</li>
+        <li>BYO drinks & food (potluck works great)</li>
+      </ul>
+    </div>
+    <div class="house-detail-col">
+      <h4>🎸 Dylan provides</h4>
+      <ul>
+        <li>2 × 45 minute acoustic sets</li>
+        <li>All gear — guitar, small amp if needed</li>
+        <li>Maverick — road dog & crowd favourite</li>
+        <li>Zero fuss. Ten-minute setup.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="house-cta">
+    <a href="mailto:dylancrowemusic@gmail.com?subject=House%20Concert%20Booking" class="btn-house">Book a House Concert</a>
+    <p class="house-cta-sub">Host + partner get in free. Flexible on dates — I'm on the road and can route through your town.</p>
   </div>
 </section>
 
