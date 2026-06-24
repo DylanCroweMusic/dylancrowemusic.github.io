@@ -35,24 +35,15 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: linear-gradient(180deg, #0D0D2B 0%, var(--bg) 60%, #0D0D2B 100%);
+    background: url('02-studio-performance.png') center/cover no-repeat;
+    background-attachment: fixed;
   }
   .hero::before {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background:
-      radial-gradient(ellipse at 30% 20%, rgba(0,180,216,0.12) 0%, transparent 50%),
-      radial-gradient(ellipse at 70% 60%, rgba(217,70,239,0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 80%, rgba(217,119,6,0.06) 0%, transparent 40%);
-    animation: drift 20s ease-in-out infinite alternate;
-  }
-  @keyframes drift {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    100% { transform: translate(-2%, 2%) rotate(1deg); }
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13,13,43,0.75) 0%, rgba(26,26,62,0.6) 50%, rgba(13,13,43,0.8) 100%);
+    z-index: 1;
   }
   .hero-content {
     position: relative;
