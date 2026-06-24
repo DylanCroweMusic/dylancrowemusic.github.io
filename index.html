@@ -149,6 +149,119 @@
     box-shadow: 0 8px 30px rgba(0,180,216,0.15);
   }
 
+  /* Venue Assets / Downloads */
+  .asset-intro {
+    font-size: 1rem;
+    color: var(--text-muted);
+    max-width: 650px;
+    margin-bottom: 2rem;
+  }
+  .asset-subtitle {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--magenta);
+    margin: 2.2rem 0 1rem;
+  }
+  .download-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .download-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .download-card:hover { border-color: var(--cyan); }
+  .download-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  .download-card .card-body {
+    padding: 1rem;
+  }
+  .download-card .card-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.3rem;
+  }
+  .download-card .card-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0.8rem;
+  }
+  .download-card .card-body-center {
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+  .card-body-center .card-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  .btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--cyan);
+    border-radius: 6px;
+    color: var(--cyan);
+    font-size: 0.8rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: background 0.3s, color 0.3s;
+    cursor: pointer;
+    background: transparent;
+  }
+  .btn:hover {
+    background: var(--cyan);
+    color: var(--bg);
+  }
+  .btn-small {
+    padding: 0.35rem 0.8rem;
+    font-size: 0.75rem;
+  }
+  .blurb-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  .blurb-card .blurb-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--cyan);
+    margin-bottom: 0.6rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .blurb-card .blurb-text {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.7;
+    user-select: all;
+  }
+  .copy-btn {
+    background: rgba(0,180,216,0.1);
+    border: 1px solid rgba(0,180,216,0.3);
+    color: var(--cyan);
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+  .copy-btn:hover { background: rgba(0,180,216,0.2); }
+  .copy-btn.copied { background: var(--green); border-color: var(--green); color: #fff; }
+
   /* Video Grid */
   .video-grid {
     display: grid;
@@ -284,6 +397,91 @@
   </div>
 </section>
 
+<!-- VENUE ASSETS -->
+<section class="section">
+  <h2 class="section-title">Venue Assets</h2>
+  <p class="asset-intro">Everything you need to promote the show. Photos, bios, logos — ready to download and use in your marketing.</p>
+
+  <!-- Photos -->
+  <h3 class="asset-subtitle">Photos</h3>
+  <div class="download-grid">
+    <div class="download-card">
+      <img src="02-studio-performance.png" alt="Studio Performance" loading="lazy">
+      <div class="card-body">
+        <div class="card-label">Studio Performance</div>
+        <div class="card-meta">1268×586 · PNG</div>
+        <a href="02-studio-performance.png" download class="btn btn-small">Download</a>
+      </div>
+    </div>
+    <div class="download-card">
+      <img src="03-live-stage-neon.jpg" alt="Live — Neon Stage" loading="lazy">
+      <div class="card-body">
+        <div class="card-label">Live — Neon Stage</div>
+        <div class="card-meta">960×1280 · JPG</div>
+        <a href="03-live-stage-neon.jpg" download class="btn btn-small">Download</a>
+      </div>
+    </div>
+    <div class="download-card">
+      <img src="IMG_0803.JPG" alt="Dylan & Maverick" loading="lazy">
+      <div class="card-body">
+        <div class="card-label">Dylan & Maverick</div>
+        <div class="card-meta">High-res · JPG</div>
+        <a href="IMG_0803.JPG" download class="btn btn-small">Download</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logo -->
+  <h3 class="asset-subtitle">Logo</h3>
+  <div class="download-grid">
+    <div class="download-card" style="max-width: 250px;">
+      <img src="00-raven-logo.jpg" alt="The Raven Logo" loading="lazy">
+      <div class="card-body">
+        <div class="card-label">The Raven Logo</div>
+        <div class="card-meta">800×800 · JPG</div>
+        <a href="00-raven-logo.jpg" download class="btn btn-small">Download</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bio Blurbs -->
+  <h3 class="asset-subtitle">Bio Blurbs</h3>
+  <div class="blurb-card">
+    <div class="blurb-label">
+      <span>Short — for event listings</span>
+      <button class="copy-btn" onclick="copyBlurb(this,'short')">📋 Copy</button>
+    </div>
+    <div class="blurb-text" id="blurb-short">Dylan Crowe is a singer-songwriter touring Australia with his guitar and dog Maverick. From delicate acoustic ballads to high-energy Foo Fighters covers — a self-contained solo act who shows up and plays.</div>
+  </div>
+  <div class="blurb-card">
+    <div class="blurb-label">
+      <span>Medium — for website features</span>
+      <button class="copy-btn" onclick="copyBlurb(this,'medium')">📋 Copy</button>
+    </div>
+    <div class="blurb-text" id="blurb-medium">Dylan Crowe brings raw, road-worn music to every corner of Australia. Touring from a van with his dog Maverick by his side, Dylan delivers everything from tender Beatles covers to explosive Foo Fighters anthems — all on a single acoustic guitar. Self-contained, no-fuss, and road-tested on street corners from the Sunshine Coast to Perth. One guitar. One dog. Every town.</div>
+  </div>
+  <div class="blurb-card">
+    <div class="blurb-label">
+      <span>Long — for press & media</span>
+      <button class="copy-btn" onclick="copyBlurb(this,'long')">📋 Copy</button>
+    </div>
+    <div class="blurb-text" id="blurb-long">Dylan Crowe is a singer-songwriter living the Australian dream — touring the country from the seat of a van, with a guitar in the back and a border collie named Maverick riding shotgun. His music spans the spectrum from delicate acoustic ballads to full-throated rock covers, drawing from a deep well of influences including The Beatles, Foo Fighters, and classic Australian pub rock. Currently on a national tour crossing the Nullarbor twice, Dylan has built a following the old-fashioned way — one street corner, one busking session, one town at a time. He's a self-contained solo act who needs ten minutes to set up and can play anywhere from 45 minutes to two hours. No fuss. No ego. Just music.</div>
+  </div>
+
+  <!-- Tech Rider -->
+  <h3 class="asset-subtitle">Tech Rider</h3>
+  <div class="download-grid">
+    <div class="download-card" style="max-width: 250px;">
+      <div class="card-body card-body-center">
+        <div class="card-icon">🎸</div>
+        <div class="card-label">Tech Rider</div>
+        <div class="card-meta">Setup, gear & requirements</div>
+        <a href="tech-rider.txt" download class="btn btn-small" style="margin-top:0.5rem;">Download</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- VIDEOS -->
 <section class="section">
   <h2 class="section-title">Watch</h2>
@@ -385,5 +583,20 @@
   Dylan Crowe © 2026 &nbsp;·&nbsp; Touring Australia &nbsp;·&nbsp; Bookings: dylancrowemusic@gmail.com
 </footer>
 
+<script>
+  function copyBlurb(btn, id) {
+    const el = document.getElementById('blurb-' + id);
+    const text = el.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+</script>
 </body>
 </html>
