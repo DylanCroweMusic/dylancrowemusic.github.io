@@ -19,8 +19,8 @@ GEAR (SELF-PROVIDED):
   - Small pedalboard (tuner, reverb, looper optional)
 
 PA REQUIREMENTS:
-  Option A: Dylan is fully self-contained with a portable
-  battery-powered PA system (suitable for venues up to ~100
+  Option A: Dylan is fully self-contained with an Electro-Voice EVERSE 8
+  battery-powered PA speaker (suitable for venues up to ~100
   capacity or outdoor busking-style setups).
 
   Option B: House PA (preferred)
