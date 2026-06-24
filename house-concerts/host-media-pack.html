@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Host Media Pack — Dylan Crowe House Concert</title>
+<style>
+  :root {
+    --bg: #0D0D1A;
+    --card: rgba(255,255,255,0.04);
+    --cyan: #00B4D8;
+    --magenta: #D946EF;
+    --amber: #D97706;
+    --gold: #F59E0B;
+    --text: #F5F0E8;
+    --text-muted: rgba(245,240,232,0.65);
+    --border: rgba(245,240,232,0.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 4rem 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-badge {
+    display: inline-block;
+    padding: 0.4rem 1.2rem;
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 100px;
+    color: var(--gold);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+  .hero .sub {
+    color: var(--text-muted);
+    font-size: 1rem;
+  }
+
+  .section {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+  .section-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Copy blocks */
+  .copy-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .copy-block .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--cyan);
+    margin-bottom: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .copy-block .label span {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .copy-block .content {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    user-select: all;
+  }
+  .copy-block .content .placeholder {
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .copy-btn {
+    background: rgba(0,180,216,0.1);
+    border: 1px solid rgba(0,180,216,0.3);
+    color: var(--cyan);
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: inherit;
+  }
+  .copy-btn:hover { background: rgba(0,180,216,0.2); }
+  .copy-btn.copied { background: #166534; border-color: #166534; color: #fff; }
+
+  .footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
+  }
+  .footer a { color: var(--gold); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .section { padding: 2rem 1rem; }
+    .hero h1 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">📦 For the Host</div>
+  <h1>Media Pack</h1>
+  <p class="sub">Everything you need to fill your living room. Copy, paste, send.</p>
+</div>
+
+<!-- INVITE LINK -->
+<section class="section">
+  <h2 class="section-title">🔗 Your Invitation Link</h2>
+  <div class="copy-block">
+    <div class="label">Send this link to everyone <span>Click to select, then copy</span></div>
+    <div class="content" id="invite-link">https://dylancrowemusic.github.io/house-concerts/invites/[slug]</div>
+    <button class="copy-btn" onclick="copyText('invite-link', this)" style="margin-top:0.8rem;">📋 Copy Link</button>
+  </div>
+  <p style="font-size:0.85rem;color:var(--text-muted);">This is the page your friends see — date, time, tickets, everything. One link does it all.</p>
+</section>
+
+<!-- SMS / WHATSAPP -->
+<section class="section">
+  <h2 class="section-title">📱 Text Message</h2>
+  <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;">Copy this and send it to your group chats, WhatsApp, Messenger — anywhere.</p>
+
+  <div class="copy-block">
+    <div class="label">Casual group chat <span>Best for close friends</span></div>
+    <div class="content" id="msg-casual">🎸 House concert at mine!
+
+I've booked this amazing singer-songwriter — Dylan Crowe — to play at my place on <span class="placeholder">[DATE]</span>.
+
+He's touring Australia with his dog in a van, playing living rooms along the way. Two acoustic sets, BYO drinks, super casual.
+
+Tickets are $25 ($20 early bird) — grab one before they're gone:
+
+<span class="placeholder">[INVITE LINK]</span>
+
+Bring a plate to share, bring whatever you're drinking, and bring someone who'd love this. 30 spots — first in best dressed 🍷🎶</div>
+    <button class="copy-btn" onclick="copyText('msg-casual', this)" style="margin-top:0.8rem;">📋 Copy</button>
+  </div>
+
+  <div class="copy-block">
+    <div class="label">Short & punchy <span>Best for big groups</span></div>
+    <div class="content" id="msg-short">🎸 LIVE MUSIC AT MY PLACE — <span class="placeholder">[DATE]</span>
+
+Dylan Crowe. Acoustic. Living room. BYO drinks. $25.
+
+<span class="placeholder">[INVITE LINK]</span>
+
+30 spots. Don't sleep on this 🔥</div>
+    <button class="copy-btn" onclick="copyText('msg-short', this)" style="margin-top:0.8rem;">📋 Copy</button>
+  </div>
+</section>
+
+<!-- SOCIAL MEDIA -->
+<section class="section">
+  <h2 class="section-title">📸 Social Media</h2>
+  <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;">Post these on your Instagram story, Facebook, or wherever your people are.</p>
+
+  <div class="copy-block">
+    <div class="label">Instagram / Facebook post <span>Best with a photo</span></div>
+    <div class="content" id="social-post">I'm hosting a HOUSE CONCERT 🏡🎸
+
+Dylan Crowe is an incredible singer-songwriter touring Australia from a van with his dog Maverick — and he's playing in MY living room on <span class="placeholder">[DATE]</span>.
+
+Two acoustic sets. BYO drinks. 30 people max. This is going to be special.
+
+$25 tickets ($20 early bird):
+<span class="placeholder">[INVITE LINK]</span>
+
+Tag someone who needs to be there 👇
+
+#HouseConcert #LiveMusic #DylanCrowe #<span class="placeholder">[CITY]</span></div>
+    <button class="copy-btn" onclick="copyText('social-post', this)" style="margin-top:0.8rem;">📋 Copy</button>
+  </div>
+
+  <div class="copy-block">
+    <div class="label">Instagram Story <span>Short, visual, swipe-up if you have it</span></div>
+    <div class="content" id="social-story">🎸 House concert at mine
+<span class="placeholder">[DATE]</span>
+
+Dylan Crowe — live in my living room
+$25 tickets ↓
+<span class="placeholder">[INVITE LINK]</span></div>
+    <button class="copy-btn" onclick="copyText('social-story', this)" style="margin-top:0.8rem;">📋 Copy</button>
+  </div>
+</section>
+
+<!-- EMAIL -->
+<section class="section">
+  <h2 class="section-title">📧 Email</h2>
+  <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;">Forward this to colleagues, family, or anyone who prefers email.</p>
+
+  <div class="copy-block">
+    <div class="label">Email forward <span>Paste into your email app</span></div>
+    <div class="content" id="email">Subject: 🎸 House concert at mine — <span class="placeholder">[DATE]</span> — you're invited!
+
+Hey!
+
+I'm hosting a house concert and I'd love you to come.
+
+Dylan Crowe is a singer-songwriter touring Australia — he's played venues and busked from the Sunshine Coast to Perth, and now he's playing my living room. Acoustic covers and originals, two sets, BYO drinks, super casual.
+
+DATE: <span class="placeholder">[DATE]</span>
+TIME: Doors <span class="placeholder">[DOOR TIME]</span>, music from <span class="placeholder">[START TIME]</span>
+WHERE: My place in <span class="placeholder">[SUBURB]</span> (address on ticket)
+TICKETS: $25 ($20 early bird — grab one quick)
+LINK: <span class="placeholder">[INVITE LINK]</span>
+
+Limited to 30 spots. Bring a plate to share and whatever you're drinking.
+
+Hope you can make it!
+<span class="placeholder">[YOUR NAME]</span></div>
+    <button class="copy-btn" onclick="copyText('email', this)" style="margin-top:0.8rem;">📋 Copy</button>
+  </div>
+</section>
+
+<!-- QUICK TIPS -->
+<section class="section">
+  <h2 class="section-title">💡 Quick Tips</h2>
+  <div style="display:grid;gap:1rem;">
+    <div class="copy-block" style="border-left:3px solid var(--gold);">
+      <div class="content" style="color:var(--text);">
+        <strong>Send the link early.</strong> Early bird tickets ($20) go fast and create urgency. Share the link as soon as you have it.<br><br>
+        <strong>Post twice.</strong> First post: "I'm doing this!" Second post (3 days before): "Only X spots left!" Creates FOMO.<br><br>
+        <strong>Tag Dylan.</strong> @dylan_crowe_music on Instagram — he'll reshare and that brings more eyes to your event.<br><br>
+        <strong>Tell people to bring friends.</strong> "+1s welcome" doubles your reach with zero effort.<br><br>
+        <strong>It's BYO.</strong> Remind people — they bring drinks and a plate. You don't cater. You host the vibe, not the bar.
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  Dylan Crowe · Touring Australia · <a href="https://instagram.com/dylan_crowe_music">@dylan_crowe_music</a> · <a href="mailto:dylancrowemusic@gmail.com">dylancrowemusic@gmail.com</a>
+  <br><br>
+  <a href="https://dylancrowemusic.github.io/house-concerts">← Back to House Concerts</a>
+</footer>
+
+<script>
+function copyText(id, btn) {
+  const el = document.getElementById(id);
+  // Get visible text (strip HTML for plain-text copy)
+  const temp = document.createElement('div');
+  temp.innerHTML = el.innerHTML.replace(/<span class="placeholder">(.*?)<\/span>/g, '$1');
+  const text = temp.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '📋 Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>

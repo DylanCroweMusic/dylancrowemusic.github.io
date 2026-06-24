@@ -73,13 +73,17 @@ def main():
         f.write(template)
 
     url = f"https://dylancrowemusic.github.io/house-concerts/invites/{args.slug}"
+    media_pack_url = "https://dylancrowemusic.github.io/house-concerts/host-media-pack.html"
     print(f"✅ Invitation generated: {out_path}")
-    print(f"🔗 Live URL: {url}")
+    print(f"🔗 Invitation link: {url}")
+    print(f"📦 Host media pack:   {media_pack_url}")
     print(f"\nNext steps:")
     print(f"  git add {out_path}")
     print(f"  git commit -m \"Add house concert invitation for {args.host_name}\"")
     print(f"  git push origin main")
-    print(f"\nHost can share this link: {url}")
+    print(f"\n--- Send the host these two links ---")
+    print(f"  1. Invitation (share with friends): {url}")
+    print(f"  2. Media pack (copy-paste messages): {media_pack_url}")
 
 
 if __name__ == "__main__":
