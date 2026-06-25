@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tour Financial Projections — Dylan Crowe</title>
+<style>
+  :root {
+    --bg: #1A1A3E;
+    --bg-card: rgba(255,255,255,0.04);
+    --cyan: #00B4D8;
+    --magenta: #D946EF;
+    --amber: #D97706;
+    --green: #166534;
+    --text: #F5F0E8;
+    --text-muted: rgba(245,240,232,0.65);
+    --border: rgba(245,240,232,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #1A1A3E url('../02-studio-performance.png') center/cover no-repeat;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13,13,43,0.7) 0%, rgba(26,26,62,0.5) 50%, rgba(13,13,43,0.8) 100%);
+    z-index: 1;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 2rem;
+    max-width: 800px;
+  }
+  .hero-logo {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--cyan);
+    box-shadow: 0 0 30px rgba(0,180,216,0.2);
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--text), var(--amber));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero .subtitle {
+    font-size: 1rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+  .hero .badge {
+    display: inline-block;
+    margin-top: 1.2rem;
+    padding: 0.4rem 1.2rem;
+    border: 1px solid var(--amber);
+    border-radius: 100px;
+    color: var(--amber);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* Sections */
+  .section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+  .section + .section { padding-top: 0; }
+
+  .section-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--cyan);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+  }
+  th {
+    text-align: left;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.95rem;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr.total td {
+    border-top: 1px solid var(--cyan);
+    border-bottom: none;
+    font-weight: 700;
+    color: var(--cyan);
+    font-size: 1.05rem;
+  }
+  td.number {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Scenario cards */
+  .scenarios {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0 2rem;
+  }
+  .scenario-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .scenario-card.conservative { border-color: rgba(245,240,232,0.12); }
+  .scenario-card.target { border-color: var(--cyan); }
+  .scenario-card.stretch { border-color: var(--amber); }
+
+  .scenario-card .label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+  .scenario-card .number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+  }
+  .target .number { background: linear-gradient(135deg, var(--text), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .stretch .number { background: linear-gradient(135deg, var(--text), var(--amber)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .scenario-card .detail {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  /* Breakdown grid */
+  .breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  @media (max-width: 600px) { .breakdown { grid-template-columns: 1fr; } }
+
+  /* Callout */
+  .callout {
+    background: rgba(0,180,216,0.08);
+    border: 1px solid rgba(0,180,216,0.2);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin: 2rem 0;
+  }
+  .callout.amber { background: rgba(217,119,6,0.08); border-color: rgba(217,119,6,0.2); }
+  .callout p { font-size: 0.95rem; }
+  .callout strong { color: var(--cyan); }
+  .callout.amber strong { color: var(--amber); }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+  }
+  .footer a { color: var(--cyan); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  /* Note */
+  .note {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 1rem;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-content">
+    <img src="../00-raven-logo.jpg" alt="Dylan Crowe" class="hero-logo">
+    <h1>Tour Financial Projections</h1>
+    <p class="subtitle">WA Loop — 16 Weeks, 56–60 Gigs, 16 House Concerts</p>
+    <div class="badge">Mid-August → December</div>
+  </div>
+</div>
+
+<!-- Three Scenarios -->
+<div class="section">
+  <div class="section-title">Net Income Scenarios</div>
+  <div class="scenarios">
+    <div class="scenario-card conservative">
+      <div class="label">Conservative</div>
+      <div class="number">$40,400</div>
+      <div class="detail">3 gigs/wk @ $350<br>3 busking sessions<br>1 house concert/wk @ $500</div>
+    </div>
+    <div class="scenario-card target">
+      <div class="label">Target</div>
+      <div class="number">$44,100</div>
+      <div class="detail">3.5 gigs/wk @ $400<br>3 busking sessions<br>1 house concert/wk @ $700</div>
+    </div>
+    <div class="scenario-card stretch">
+      <div class="label">Stretch</div>
+      <div class="number">$48,100</div>
+      <div class="detail">4 gigs/wk @ $400<br>3 busking sessions<br>1 house concert/wk @ $800</div>
+    </div>
+  </div>
+  <p class="note">All figures in AUD. Net = gross income minus estimated costs (~$5,500–6,000 / 16 weeks).</p>
+</div>
+
+<!-- Target Breakdown -->
+<div class="section">
+  <div class="section-title">Target Scenario — Full Breakdown</div>
+  <div class="card">
+    <div class="breakdown">
+      <div>
+        <table>
+          <tr><th colspan="2">Weekly Income (avg)</th></tr>
+          <tr><td>Gigs (3.5 @ $400)</td><td class="number">$1,400</td></tr>
+          <tr><td>Busking (3 sessions)</td><td class="number">$1,000</td></tr>
+          <tr><td>House Concerts (1 @ $700)</td><td class="number">$700</td></tr>
+          <tr class="total"><td>Gross / week</td><td class="number">$3,100</td></tr>
+        </table>
+      </div>
+      <div>
+        <table>
+          <tr><th colspan="2">Weekly Costs (avg)</th></tr>
+          <tr><td>Fuel</td><td class="number">$100–150</td></tr>
+          <tr><td>Food</td><td class="number">$100–150</td></tr>
+          <tr><td>Accommodation</td><td class="number">$0–100</td></tr>
+          <tr><td>Gear + supplies</td><td class="number">$25–50</td></tr>
+          <tr><td>Maverick</td><td class="number">$30</td></tr>
+          <tr class="total"><td>Costs / week</td><td class="number">~$345</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <table>
+      <tr><th colspan="2">16-Week Tour Total</th></tr>
+      <tr><td>Gigs (56 @ $400 avg)</td><td class="number">$22,400</td></tr>
+      <tr><td>Busking (48 sessions)</td><td class="number">$16,000</td></tr>
+      <tr><td>House Concerts (16 @ $700 avg)</td><td class="number">$11,200</td></tr>
+      <tr class="total"><td>Gross income</td><td class="number">$49,600</td></tr>
+      <tr><td>Estimated costs</td><td class="number">−$5,500</td></tr>
+      <tr class="total"><td>Net income</td><td class="number">$44,100</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- The House Concert Difference -->
+<div class="section">
+  <div class="section-title">What House Concerts Add</div>
+
+  <div class="card">
+    <table>
+      <tr><th colspan="3">Gigs + Busking Only vs. With House Concerts</th></tr>
+      <tr><td></td><td class="number">Without</td><td class="number">With (1/wk)</td></tr>
+      <tr><td>Gigs</td><td class="number">$22,400</td><td class="number">$22,400</td></tr>
+      <tr><td>Busking</td><td class="number">$16,000</td><td class="number">$16,000</td></tr>
+      <tr><td>House Concerts</td><td class="number">—</td><td class="number">$11,200</td></tr>
+      <tr class="total"><td>Net</td><td class="number">~$32,900</td><td class="number">~$44,100</td></tr>
+    </table>
+  </div>
+
+  <div class="callout amber">
+    <p><strong>+$11,200</strong> — that's what one house concert per week adds to the tour. At $500 minimum each: <strong>+$8,000</strong>. At $800 average: <strong>+$12,800</strong>. House concerts are pure profit — no venue cut, no overhead beyond showing up.</p>
+  </div>
+</div>
+
+<!-- Pipeline -->
+<div class="section">
+  <div class="section-title">House Concert Pipeline</div>
+  <div class="card">
+    <table>
+      <tr><th>Seed Window</th><th>City</th><th>Arrival</th><th class="number">Target</th></tr>
+      <tr><td>Jul 7–21</td><td>Perth + Fremantle</td><td>Mid-Aug</td><td class="number">4–5</td></tr>
+      <tr><td>Jul 28–Aug 11</td><td>Margaret River, Busselton</td><td>Late Aug</td><td class="number">1–2</td></tr>
+      <tr><td>Aug 4–18</td><td>Kalgoorlie, Esperance</td><td>Early Sep</td><td class="number">1–2</td></tr>
+      <tr><td>Aug 18–Sep 1</td><td>Adelaide + Hills</td><td>Mid-Sep</td><td class="number">3–4</td></tr>
+      <tr><td>Sep 15–29</td><td>Melbourne + suburbs</td><td>Early Oct</td><td class="number">4–5</td></tr>
+      <tr><td>Oct 13–27</td><td>Sydney + suburbs</td><td>Early Nov</td><td class="number">3–4</td></tr>
+      <tr><td>Oct 27–Nov 10</td><td>Newcastle → Coffs Harbour</td><td>Mid-Nov</td><td class="number">1–2</td></tr>
+      <tr><td>Nov 10–24</td><td>Byron, GC, Brisbane</td><td>Late Nov</td><td class="number">2–3</td></tr>
+      <tr><td>Nov 24–Dec 8</td><td>Sunshine Coast (homecoming)</td><td>Dec</td><td class="number">1–2</td></tr>
+      <tr class="total"><td colspan="3">Total pipeline target</td><td class="number">26–34</td></tr>
+    </table>
+  </div>
+  <div class="callout">
+    <p><strong>26–34 target bookings</strong> across the tour. Even at a 50% conversion rate, that's <strong>13–17 confirmed</strong> — comfortably above the one-per-week minimum. Every city gets 3–4 weeks of Facebook community group exposure before arrival.</p>
+  </div>
+</div>
+
+<!-- Key Assumptions -->
+<div class="section">
+  <div class="section-title">Key Assumptions</div>
+  <div class="card">
+    <table>
+      <tr><td>Tour length</td><td>16 weeks</td></tr>
+      <tr><td>Gigs</td><td>56–60 total (3.5–4 / week) across 85+ mapped venues</td></tr>
+      <tr><td>Gig fee</td><td>$400 avg ($200–300 regional, $400–500 major cities)</td></tr>
+      <tr><td>Busking</td><td>3 sessions / week @ $1,000 total ($~333 / session)</td></tr>
+      <tr><td>House concerts</td><td>1 / week @ $500–800 avg (Starter → Standard tier)</td></tr>
+      <tr><td>Costs</td><td>~$345 / week (fuel, food, accommodation, gear, dog)</td></tr>
+      <tr><td>Nullarbor crossings</td><td>2 × 4 days zero income — costs still apply</td></tr>
+      <tr><td>Goal</td><td>Decent used campervan outright from tour earnings</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="footer">
+  <p><a href="../">← Back to EPK</a> &nbsp;·&nbsp; <a href="../house-concerts/">House Concerts</a></p>
+  <p style="margin-top:0.5rem">Updated June 2025 · All figures estimates based on confirmed rates</p>
+</div>
+
+</body>
+</html>
