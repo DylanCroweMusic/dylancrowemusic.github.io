@@ -224,6 +224,85 @@
     margin-top: 1rem;
     text-align: center;
   }
+
+  /* Schedule Grid */
+  .schedule-grid {
+    display: grid;
+    grid-template-columns: 100px repeat(7, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 1rem 0;
+    font-size: 0.8rem;
+  }
+  .schedule-grid .cell {
+    background: var(--bg);
+    padding: 0.6rem 0.4rem;
+    text-align: center;
+    min-height: 2.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .schedule-grid .header {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  .schedule-grid .row-label {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-align: right;
+    padding-right: 0.8rem;
+    justify-content: flex-end;
+  }
+  .cell.gig {
+    background: rgba(0,180,216,0.15);
+    color: var(--cyan);
+    font-weight: 600;
+  }
+  .cell.house {
+    background: rgba(217,119,6,0.15);
+    color: var(--amber);
+    font-weight: 600;
+  }
+  .cell.busk {
+    background: rgba(22,101,52,0.15);
+    color: #22c55e;
+    font-weight: 600;
+  }
+  .cell.travel {
+    background: rgba(245,240,232,0.03);
+    color: var(--text-muted);
+  }
+  .cell.off {
+    background: rgba(245,240,232,0.02);
+    color: var(--text-muted);
+    font-style: italic;
+  }
+  .schedule-grid .legend {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    grid-column: 1 / -1;
+    background: var(--bg);
+    padding: 0.5rem 0.8rem;
+    text-align: center;
+  }
+  .schedule-grid .legend span { margin: 0 0.6rem; }
+  .schedule-grid .legend .gig-leg { color: var(--cyan); }
+  .schedule-grid .legend .house-leg { color: var(--amber); }
+  .schedule-grid .legend .busk-leg { color: #22c55e; }
+
+  @media (max-width: 700px) {
+    .schedule-grid { font-size: 0.65rem; }
+    .schedule-grid .cell { padding: 0.35rem 0.2rem; }
+    .schedule-grid { grid-template-columns: 70px repeat(7, 1fr); }
+  }
 </style>
 </head>
 <body>
@@ -342,6 +421,84 @@
   </div>
   <div class="callout">
     <p><strong>26–34 target bookings</strong> across the tour. Even at a 50% conversion rate, that's <strong>13–17 confirmed</strong> — comfortably above the one-per-week minimum. Every city gets 3–4 weeks of Facebook community group exposure before arrival.</p>
+  </div>
+</div>
+
+<!-- Weekly Schedule -->
+<div class="section">
+  <div class="section-title">Weekly Schedule</div>
+
+  <div class="card">
+    <p style="margin-bottom: 1.5rem; color: var(--text-muted);">The rule: <strong style="color:var(--cyan)">venues own Thu–Sun</strong>, <strong style="color:var(--amber)">house concerts own Mon–Wed</strong>, <strong style="color:#22c55e">busking fills the daytime gaps</strong>.</p>
+
+    <h3 style="font-size:1rem; margin-bottom:0.75rem; color:var(--cyan)">City Week <span style="font-size:0.75rem; color:var(--text-muted); font-weight:400">(Perth, Melbourne, Sydney — settled in)</span></h3>
+    <div class="schedule-grid">
+      <div class="cell header"></div>
+      <div class="cell header">Mon</div><div class="cell header">Tue</div><div class="cell header">Wed</div><div class="cell header">Thu</div><div class="cell header">Fri</div><div class="cell header">Sat</div><div class="cell header">Sun</div>
+
+      <div class="cell row-label">Morning</div>
+      <div class="cell off">Rest</div><div class="cell off">Rest</div><div class="cell off">Rest</div><div class="cell off">Rest</div><div class="cell off">Rest</div><div class="cell busk">Busking</div><div class="cell off">Rest</div>
+
+      <div class="cell row-label">Afternoon</div>
+      <div class="cell busk">Busking</div><div class="cell busk">Busking</div><div class="cell busk">Busking</div><div class="cell off">Rest</div><div class="cell busk">Busking</div><div class="cell off">Rest</div><div class="cell busk">Busking</div>
+
+      <div class="cell row-label">Evening</div>
+      <div class="cell house">House<br>Concert</div><div class="cell off">OFF</div><div class="cell gig">Venue<br>Gig</div><div class="cell gig">Venue<br>Gig</div><div class="cell gig">Venue<br>Gig</div><div class="cell gig">Venue<br>Gig</div><div class="cell off">OFF</div>
+
+      <div class="cell legend"><span class="gig-leg">■ Venue gig</span><span class="house-leg">■ House concert</span><span class="busk-leg">■ Busking</span><span>□ Rest / off</span></div>
+    </div>
+    <p class="note">4 gigs · 1 house concert · 5 busking sessions · ~$3,200/week gross</p>
+
+    <h3 style="font-size:1rem; margin:2rem 0 0.75rem; color:var(--cyan)">Regional Week <span style="font-size:0.75rem; color:var(--text-muted); font-weight:400">(Margaret River, Kalgoorlie, coastal towns)</span></h3>
+    <div class="schedule-grid">
+      <div class="cell header"></div>
+      <div class="cell header">Mon</div><div class="cell header">Tue</div><div class="cell header">Wed</div><div class="cell header">Thu</div><div class="cell header">Fri</div><div class="cell header">Sat</div><div class="cell header">Sun</div>
+
+      <div class="cell row-label">Morning</div>
+      <div class="cell travel">Travel</div><div class="cell off">Rest</div><div class="cell travel">Travel</div><div class="cell off">Rest</div><div class="cell off">Rest</div><div class="cell busk">Busking</div><div class="cell travel">Travel</div>
+
+      <div class="cell row-label">Afternoon</div>
+      <div class="cell busk">Busking</div><div class="cell busk">Busking</div><div class="cell off">Settle in</div><div class="cell busk">Busking</div><div class="cell busk">Busking</div><div class="cell off">Rest</div><div class="cell off">—</div>
+
+      <div class="cell row-label">Evening</div>
+      <div class="cell off">OFF</div><div class="cell house">House<br>Concert</div><div class="cell off">OFF</div><div class="cell gig">Pub<br>Gig</div><div class="cell gig">Venue<br>Gig</div><div class="cell gig">Venue<br>Gig</div><div class="cell off">—</div>
+
+      <div class="cell legend"><span class="gig-leg">■ Venue gig</span><span class="house-leg">■ House concert</span><span class="busk-leg">■ Busking</span><span>□ Rest / travel / off</span></div>
+    </div>
+    <p class="note">3 gigs · 1 house concert · 4 busking sessions · ~$2,800/week gross</p>
+
+    <h3 style="font-size:1rem; margin:2rem 0 0.75rem; color:var(--cyan)">Transit Week <span style="font-size:0.75rem; color:var(--text-muted); font-weight:400">(long drives between regions)</span></h3>
+    <div class="schedule-grid">
+      <div class="cell header"></div>
+      <div class="cell header">Mon</div><div class="cell header">Tue</div><div class="cell header">Wed</div><div class="cell header">Thu</div><div class="cell header">Fri</div><div class="cell header">Sat</div><div class="cell header">Sun</div>
+
+      <div class="cell row-label">Morning</div>
+      <div class="cell travel">Travel</div><div class="cell travel">Travel</div><div class="cell off">Rest</div><div class="cell off">Rest</div><div class="cell off">Rest</div><div class="cell busk">Busking</div><div class="cell travel">Travel</div>
+
+      <div class="cell row-label">Afternoon</div>
+      <div class="cell travel">Travel</div><div class="cell travel">Travel</div><div class="cell busk">Busking</div><div class="cell busk">Busking</div><div class="cell busk">Busking</div><div class="cell off">Rest</div><div class="cell travel">Travel</div>
+
+      <div class="cell row-label">Evening</div>
+      <div class="cell off">OFF</div><div class="cell house">House<br>Concert</div><div class="cell off">OFF</div><div class="cell gig">Venue<br>Gig</div><div class="cell off">OFF</div><div class="cell off">OFF</div><div class="cell off">OFF</div>
+
+      <div class="cell legend"><span class="gig-leg">■ Venue gig</span><span class="house-leg">■ House concert</span><span class="busk-leg">■ Busking</span><span>□ Rest / travel / off</span></div>
+    </div>
+    <p class="note">1–2 gigs · 1 house concert · 3 busking sessions · ~$2,100/week gross</p>
+  </div>
+
+  <div class="callout amber">
+    <p><strong>Why house concerts on weekdays?</strong> Hosts don't care what night it is — their friends show up regardless. But venues only book Thu–Sun. Put house concerts on Mon/Tue/Wed and you never compete with your own gig nights. It's the scheduling unlock that makes 7+ income events per week sustainable.</p>
+  </div>
+
+  <div class="card" style="margin-top:2rem">
+    <table>
+      <tr><th>Week Type</th><th>How Often</th><th class="number">Gigs</th><th class="number">House</th><th class="number">Busk</th><th class="number">Gross</th></tr>
+      <tr><td>City week</td><td>8–9 weeks</td><td class="number">4</td><td class="number">1</td><td class="number">5</td><td class="number">$3,200</td></tr>
+      <tr><td>Regional week</td><td>4–5 weeks</td><td class="number">3</td><td class="number">1</td><td class="number">4</td><td class="number">$2,800</td></tr>
+      <tr><td>Transit week</td><td>1–2 weeks</td><td class="number">1–2</td><td class="number">1</td><td class="number">3</td><td class="number">$2,100</td></tr>
+      <tr><td>Nullarbor crossing</td><td>2 weeks</td><td class="number">0</td><td class="number">0</td><td class="number">0</td><td class="number">−$400</td></tr>
+      <tr class="total"><td colspan="2">16-week weighted avg</td><td class="number">3.5</td><td class="number">1</td><td class="number">4.3</td><td class="number">$3,100</td></tr>
+    </table>
   </div>
 </div>
 
