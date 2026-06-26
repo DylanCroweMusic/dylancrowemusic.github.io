@@ -49,17 +49,17 @@ def get_seed_data():
             "operational_bank": 150.0
         },
         "tour_stops": [
-            {"id": 1, "name": "Perth", "status": "Planned", "transit_status": "Scheduled"},
-            {"id": 2, "name": "Fremantle", "status": "Planned", "transit_status": "Scheduled"},
-            {"id": 3, "name": "Bunbury", "status": "Planned", "transit_status": "Scheduled"},
-            {"id": 4, "name": "Margaret River", "status": "Planned", "transit_status": "Scheduled"},
-            {"id": 5, "name": "Albany", "status": "Planned", "transit_status": "Scheduled"},
-            {"id": 6, "name": "Esperance", "status": "Planned", "transit_status": "Scheduled"},
-            {"id": 7, "name": "Kalgoorlie", "status": "Planned", "transit_status": "Scheduled"},
-            {"id": 8, "name": "Adelaide", "status": "Current", "transit_status": "Arrived"},
-            {"id": 9, "name": "Melbourne", "status": "Planned", "transit_status": "Scheduled"},
-            {"id": 10, "name": "Sydney", "status": "Planned", "transit_status": "Scheduled"},
-            {"id": 11, "name": "Sunshine Coast", "status": "Target", "transit_status": "Dreaming"}
+            {"id": 1, "name": "Perth", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 4, "gigs_booked": 0},
+            {"id": 2, "name": "Fremantle", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 3, "gigs_booked": 0},
+            {"id": 3, "name": "Bunbury", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 2, "gigs_booked": 0},
+            {"id": 4, "name": "Margaret River", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 4, "gigs_booked": 0},
+            {"id": 5, "name": "Albany", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 2, "gigs_booked": 0},
+            {"id": 6, "name": "Esperance", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 1, "gigs_booked": 0},
+            {"id": 7, "name": "Kalgoorlie", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 2, "gigs_booked": 0},
+            {"id": 8, "name": "Adelaide", "status": "Current", "transit_status": "Arrived", "gigs_target": 4, "gigs_booked": 0},
+            {"id": 9, "name": "Melbourne", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 5, "gigs_booked": 0},
+            {"id": 10, "name": "Sydney", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 5, "gigs_booked": 0},
+            {"id": 11, "name": "Sunshine Coast", "status": "Target", "transit_status": "Dreaming", "gigs_target": 4, "gigs_booked": 0}
         ],
         "booking": {
             "venues_mapped": 85,
@@ -87,6 +87,15 @@ def load_data():
                 data["expense_history"] = []
             if "financials" in data and "other_expenses" not in data["financials"]:
                 data["financials"]["other_expenses"] = 0.0
+            
+            # Safe defaults for tour stop fields compatibility
+            if "tour_stops" in data:
+                for stop in data["tour_stops"]:
+                    if "gigs_target" not in stop:
+                        stop["gigs_target"] = 3
+                    if "gigs_booked" not in stop:
+                        stop["gigs_booked"] = 0
+                        
             return data
     except (json.JSONDecodeError, OSError) as e:
         print(f"Warning: Failed to load existing metrics due to error: {e}. Reinitializing with seed data.", file=sys.stderr)
@@ -250,7 +259,7 @@ def cmd_financials(target, earnings, fuel, gear, other_exp=None):
     print("Financials updated successfully:")
     print(json.dumps(data["financials"], indent=2))
 
-def cmd_tour_stop(name, status, transit_status):
+def cmd_tour_stop(name, status, transit_status, gigs_target=None, gigs_booked=None):
     """Update or add a tour stop (matching by name)."""
     data = load_data()
     stops = data.setdefault("tour_stops", [])
@@ -267,6 +276,10 @@ def cmd_tour_stop(name, status, transit_status):
             matched_stop["status"] = status
         if transit_status is not None:
             matched_stop["transit_status"] = transit_status
+        if gigs_target is not None:
+            matched_stop["gigs_target"] = int(gigs_target)
+        if gigs_booked is not None:
+            matched_stop["gigs_booked"] = int(gigs_booked)
         print(f"Updated tour stop '{matched_stop['name']}'")
     else:
         # Add new stop
@@ -275,7 +288,9 @@ def cmd_tour_stop(name, status, transit_status):
             "id": new_id,
             "name": name,
             "status": status or "Planned",
-            "transit_status": transit_status or "Scheduled"
+            "transit_status": transit_status or "Scheduled",
+            "gigs_target": int(gigs_target) if gigs_target is not None else 3,
+            "gigs_booked": int(gigs_booked) if gigs_booked is not None else 0
         }
         stops.append(new_stop)
         print(f"Added new tour stop #{new_id}: '{name}'")
@@ -283,7 +298,7 @@ def cmd_tour_stop(name, status, transit_status):
     data["tour_stops"] = stops
     save_data(data)
 
-def cmd_tour_stop_add(name, status, transit):
+def cmd_tour_stop_add(name, status, transit, gigs_target=None, gigs_booked=None):
     """Forced append of a tour stop dynamically to the end of array, incrementing its ID."""
     data = load_data()
     stops = data.setdefault("tour_stops", [])
@@ -293,10 +308,12 @@ def cmd_tour_stop_add(name, status, transit):
         "id": new_id,
         "name": name,
         "status": status or "Planned",
-        "transit_status": transit or "Scheduled"
+        "transit_status": transit or "Scheduled",
+        "gigs_target": int(gigs_target) if gigs_target is not None else 3,
+        "gigs_booked": int(gigs_booked) if gigs_booked is not None else 0
     }
     stops.append(new_stop)
-    print(f"SUCCESS: Appended new tour stop #{new_id}: '{name}' (Status: {new_stop['status']}, Transit: {new_stop['transit_status']})")
+    print(f"SUCCESS: Appended new tour stop #{new_id}: '{name}' (Status: {new_stop['status']}, Transit: {new_stop['transit_status']}, Gigs Target: {new_stop['gigs_target']}, Gigs Booked: {new_stop['gigs_booked']})")
     
     data["tour_stops"] = stops
     save_data(data)
@@ -332,6 +349,17 @@ def cmd_log_income(income_type, amount, location, description, date):
     }
     history.append(entry)
     
+    # Check if this is an income type of 'gig' for a specific city location
+    # If so, automatically search tour_stops list (case-insensitive) and increment its gigs_booked count by 1.
+    if income_type == "gig" and location:
+        stops = data.setdefault("tour_stops", [])
+        for s in stops:
+            if s.get("name", "").strip().lower() == location.strip().lower():
+                # Make sure gigs_booked exists and increment it
+                s["gigs_booked"] = s.get("gigs_booked", 0) + 1
+                print(f"AUTOMATED ADVANCEMENT: Incremented gigs_booked to {s['gigs_booked']} for tour stop '{s['name']}' due to gig booked.")
+                break
+
     # Business logic for splitting local vs tour income:
     # If type is 'gig' or 'tour-busking' on the route -> financials 'current_earnings'
     # If type is 'local-busking' (Adelaide ground-ops) -> tracks to operational bank (ground_ops local_busking_earnings)
@@ -478,7 +506,9 @@ def cmd_show():
     
     print("\n--- TOUR STOPS ---")
     for s in data.get("tour_stops", []):
-        print(f"  - {s.get('name').ljust(15)} | Status: {s.get('status').ljust(10)} | Transit: {s.get('transit_status')}")
+        gigs_booked = s.get("gigs_booked", 0)
+        gigs_target = s.get("gigs_target", 3)
+        print(f"  - {s.get('name').ljust(15)} | Status: {s.get('status').ljust(10)} | Transit: {s.get('transit_status').ljust(10)} | Gigs: {gigs_booked}/{gigs_target}")
         
     print("\n--- BOOKING STATUS ---")
     b = data.get("booking", {})
@@ -538,12 +568,16 @@ def main():
     p_tour.add_argument("name", type=str, help="Name of the stop (e.g. 'Kalgoorlie')")
     p_tour.add_argument("--status", type=str, choices=["Current", "Planned", "Target", "Completed"], help="Booking/touring status")
     p_tour.add_argument("--transit", type=str, help="Transit/logistics status (e.g. 'Arrived', 'Scheduled', 'Dreaming')")
+    p_tour.add_argument("--gigs-target", type=int, help="Target number of gigs for this stop")
+    p_tour.add_argument("--gigs-booked", type=int, help="Number of currently booked/completed gigs")
     
     # Tour stop add (forced dynamic append)
     p_tour_add = subparsers.add_parser("tour-stop-add", help="Regular dynamic append to tour stop array, incrementing ID")
     p_tour_add.add_argument("--name", type=str, required=True, help="Name of the stop (e.g. 'Sydney')")
     p_tour_add.add_argument("--status", type=str, choices=["Planned", "Current", "Target", "Completed"], default="Planned", help="Status of the stop")
     p_tour_add.add_argument("--transit", type=str, choices=["Arrived", "Scheduled", "Dreaming", "Departed"], default="Scheduled", help="Transit/logistics status")
+    p_tour_add.add_argument("--gigs-target", type=int, help="Target number of gigs for this stop")
+    p_tour_add.add_argument("--gigs-booked", type=int, help="Number of currently booked/completed gigs")
     
     # Booking
     p_book = subparsers.add_parser("booking", help="Update booking status")
@@ -587,9 +621,9 @@ def main():
             p_fin.error("At least one financial metric flag (--target, --earnings, --fuel, --gear, --other-exp) must be provided.")
         cmd_financials(args.target, args.earnings, args.fuel, args.gear, args.other_exp)
     elif args.command == "tour-stop":
-        cmd_tour_stop(args.name, args.status, args.transit)
+        cmd_tour_stop(args.name, args.status, args.transit, args.gigs_target, args.gigs_booked)
     elif args.command == "tour-stop-add":
-        cmd_tour_stop_add(args.name, args.status, args.transit)
+        cmd_tour_stop_add(args.name, args.status, args.transit, args.gigs_target, args.gigs_booked)
     elif args.command == "booking":
         if args.count is None and args.status is None:
             p_book.error("At least one option (--count or --status) must be provided.")

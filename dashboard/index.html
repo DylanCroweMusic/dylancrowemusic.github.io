@@ -442,6 +442,17 @@
       color: var(--text-muted);
     }
 
+    .stop-gigs-needed-badge {
+      font-size: 0.58rem;
+      font-weight: 700;
+      margin-top: 0.2rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 100px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      display: inline-block;
+    }
+
     .stop-node.current .stop-status-tag {
       background: rgba(255, 46, 147, 0.15);
       color: var(--magenta);
@@ -999,10 +1010,11 @@
           <div id="inspector-placeholder" style="font-style: italic; font-size: 0.8rem; color: var(--text-muted); padding: 1rem 0;">
             Select any stop node on the timeline above to edit metrics or remove it.
           </div>
-          <div id="inspector-editor" style="display: none; align-items: flex-start; justify-content: space-between; gap: 1rem;">
-            <div style="flex-grow: 1; display: grid; grid-template-columns: repeat(3, 1fr) 1.2fr; gap: 0.5rem; align-items: center;">
+          <div id="inspector-editor" style="display: none; flex-direction: column; gap: 0.75rem; width: 100%;">
+            <!-- Status & Transit Controls Row -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; align-items: center; width: 100%;">
               <div>
-                <label id="inspector-stop-label" style="font-size: 0.75rem; font-weight: 700; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></label>
+                <label id="inspector-stop-label" style="font-size: 0.75rem; font-weight: 700; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--cyan);"></label>
               </div>
               <div>
                 <select id="inspect-status" style="font-size: 0.8rem; padding: 0.45rem;">
@@ -1020,10 +1032,33 @@
                   <option value="Dreaming">Dreaming</option>
                 </select>
               </div>
-              <div style="display: flex; gap: 0.35rem;">
-                <button type="button" class="btn btn-primary" id="inspect-btn-active" style="min-height: 34px; padding: 0.45rem 0.65rem; font-size: 0.72rem;">Set Active</button>
-                <button type="button" class="btn btn-danger" id="inspect-btn-delete" style="min-height: 34px; padding: 0.45rem 0.65rem; font-size: 0.72rem;" title="Delete stop">Delete</button>
+            </div>
+
+            <!-- Gigs Edit Control Row -->
+            <div style="display: flex; gap: 1rem; align-items: center; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: 10px; padding: 0.5rem 0.75rem; width: 100%;">
+              <div style="flex-grow: 1; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); white-space: nowrap;">Gigs Target:</span>
+                <button type="button" class="btn" id="inspect-btn-target-minus" style="min-height: 28px; height: 28px; width: 28px; padding: 0; font-size: 0.85rem; border-radius: 6px;">-</button>
+                <input type="number" id="inspect-gigs-target" style="width: 45px; text-align: center; padding: 0.25rem; font-size: 0.85rem; height: 28px; border-radius: 6px;" min="0">
+                <button type="button" class="btn" id="inspect-btn-target-plus" style="min-height: 28px; height: 28px; width: 28px; padding: 0; font-size: 0.85rem; border-radius: 6px;">+</button>
               </div>
+
+              <div style="flex-grow: 1; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); white-space: nowrap;">Gigs Booked:</span>
+                <button type="button" class="btn" id="inspect-btn-booked-minus" style="min-height: 28px; height: 28px; width: 28px; padding: 0; font-size: 0.85rem; border-radius: 6px;">-</button>
+                <input type="number" id="inspect-gigs-booked" style="width: 45px; text-align: center; padding: 0.25rem; font-size: 0.85rem; height: 28px; border-radius: 6px;" min="0">
+                <button type="button" class="btn" id="inspect-btn-booked-plus" style="min-height: 28px; height: 28px; width: 28px; padding: 0; font-size: 0.85rem; border-radius: 6px;">+</button>
+              </div>
+
+              <div id="inspector-badge-container" style="min-width: 130px; text-align: right;">
+                <!-- Dynamically Rendered Booking Status Badge -->
+              </div>
+            </div>
+
+            <!-- Operations / Actions Row -->
+            <div style="display: flex; justify-content: flex-end; gap: 0.5rem; width: 100%;">
+              <button type="button" class="btn btn-primary" id="inspect-btn-active" style="min-height: 34px; padding: 0.45rem 1rem; font-size: 0.75rem;">Set Active</button>
+              <button type="button" class="btn btn-danger" id="inspect-btn-delete" style="min-height: 34px; padding: 0.45rem 1rem; font-size: 0.75rem;" title="Delete stop">Delete Stop</button>
             </div>
           </div>
         </div>
@@ -1370,17 +1405,17 @@
       // Default base records loaded if no LocalStorage override exists
       const DEFAULT_APP_STATE = {
         tour_stops: [
-          { id: 1, name: "Perth", status: "Planned", transit_status: "Scheduled" },
-          { id: 2, name: "Fremantle", status: "Planned", transit_status: "Scheduled" },
-          { id: 3, name: "Bunbury", status: "Planned", transit_status: "Scheduled" },
-          { id: 4, name: "Margaret River", status: "Planned", transit_status: "Scheduled" },
-          { id: 5, name: "Albany", status: "Planned", transit_status: "Scheduled" },
-          { id: 6, name: "Esperance", status: "Planned", transit_status: "Scheduled" },
-          { id: 7, name: "Kalgoorlie", status: "Planned", transit_status: "Scheduled" },
-          { id: 8, name: "Adelaide", status: "Current", transit_status: "Arrived" },
-          { id: 9, name: "Melbourne", status: "Planned", transit_status: "Scheduled" },
-          { id: 10, name: "Sydney", status: "Planned", transit_status: "Scheduled" },
-          { id: 11, name: "Sunshine Coast", status: "Target", transit_status: "Dreaming" }
+          { id: 1, name: "Perth", status: "Planned", transit_status: "Scheduled", gigs_target: 4, gigs_booked: 0 },
+          { id: 2, name: "Fremantle", status: "Planned", transit_status: "Scheduled", gigs_target: 3, gigs_booked: 0 },
+          { id: 3, name: "Bunbury", status: "Planned", transit_status: "Scheduled", gigs_target: 2, gigs_booked: 0 },
+          { id: 4, name: "Margaret River", status: "Planned", transit_status: "Scheduled", gigs_target: 4, gigs_booked: 0 },
+          { id: 5, name: "Albany", status: "Planned", transit_status: "Scheduled", gigs_target: 2, gigs_booked: 0 },
+          { id: 6, name: "Esperance", status: "Planned", transit_status: "Scheduled", gigs_target: 1, gigs_booked: 0 },
+          { id: 7, name: "Kalgoorlie", status: "Planned", transit_status: "Scheduled", gigs_target: 2, gigs_booked: 0 },
+          { id: 8, name: "Adelaide", status: "Current", transit_status: "Arrived", gigs_target: 4, gigs_booked: 0 },
+          { id: 9, name: "Melbourne", status: "Planned", transit_status: "Scheduled", gigs_target: 5, gigs_booked: 0 },
+          { id: 10, name: "Sydney", status: "Planned", transit_status: "Scheduled", gigs_target: 5, gigs_booked: 0 },
+          { id: 11, name: "Sunshine Coast", status: "Target", transit_status: "Dreaming", gigs_target: 4, gigs_booked: 0 }
         ],
         todos: [
           { id: 1, task: "Service oil", completed: false, is_weekly: true, category: "road_cargo" },
@@ -1417,6 +1452,11 @@
             if (!state.tour_stops || !state.todos || !state.ledger || !state.sandbox) {
               throw new Error("Local state properties incomplete");
             }
+            // Ensure gigs_target and gigs_booked are populated for existing saved stops
+            state.tour_stops.forEach(s => {
+              if (s.gigs_target === undefined) s.gigs_target = 3;
+              if (s.gigs_booked === undefined) s.gigs_booked = 0;
+            });
           } catch (e) {
             console.error("Local override parsing failed, reverting to seeds:", e);
             loadBaseDefaults();
@@ -1465,7 +1505,16 @@
         // Merge server stops if present
         if (ext.tour_stops && Array.isArray(ext.tour_stops) && ext.tour_stops.length > 0) {
           // Check if user has unmodified state or if we should align stops index
-          state.tour_stops = ext.tour_stops;
+          state.tour_stops = ext.tour_stops.map(s => {
+            return {
+              id: s.id,
+              name: s.name,
+              status: s.status,
+              transit_status: s.transit_status,
+              gigs_target: s.gigs_target !== undefined ? s.gigs_target : 3,
+              gigs_booked: s.gigs_booked !== undefined ? s.gigs_booked : 0
+            };
+          });
         }
 
         // Merge server todos if present and matches seed count
@@ -1612,11 +1661,26 @@
           if (stop.status === "Current") stopClass += " current";
           else if (stop.status === "Completed" || (activeIndex !== -1 && index < activeIndex)) stopClass += " completed";
           
+          const target = stop.gigs_target !== undefined ? stop.gigs_target : 3;
+          const booked = stop.gigs_booked !== undefined ? stop.gigs_booked : 0;
+          const needed = Math.max(0, target - booked);
+          
+          let badgeHtml = "";
+          if (needed > 0) {
+            badgeHtml = `<div class="stop-gigs-needed-badge color-amber">⚠️ ${needed} needed</div>`;
+          } else {
+            badgeHtml = `<div class="stop-gigs-needed-badge color-green">✅ Target reached</div>`;
+          }
+
           stopNode.className = stopClass;
           stopNode.innerHTML = `
             <div class="stop-dot">${index + 1}</div>
             <div class="stop-name" title="${stop.name}">${stop.name}</div>
-            <div class="stop-status-tag">${stop.transit_status || stop.status}</div>
+            <div style="font-size: 0.62rem; color: var(--text-muted); margin-top: 0.1rem;">
+              <span>Gigs: ${booked}/${target}</span>
+            </div>
+            ${badgeHtml}
+            <div class="stop-status-tag" style="margin-top: 0.25rem;">${stop.transit_status || stop.status}</div>
           `;
 
           stopNode.addEventListener("click", () => {
@@ -1638,7 +1702,11 @@
       function triggerStopInspection(id) {
         inspectingStopId = id;
         const stop = state.tour_stops.find(s => s.id === id);
-        if (!stop) return;
+        if (!stop) {
+          document.getElementById("inspector-placeholder").style.display = "block";
+          document.getElementById("inspector-editor").style.display = "none";
+          return;
+        }
 
         document.getElementById("inspector-placeholder").style.display = "none";
         const editor = document.getElementById("inspector-editor");
@@ -1647,7 +1715,86 @@
         document.getElementById("inspector-stop-label").textContent = `${stop.name.toUpperCase()}`;
         document.getElementById("inspect-status").value = stop.status;
         document.getElementById("inspect-transit").value = stop.transit_status || "Scheduled";
+        
+        // Gigs Target and Booked Fields
+        const targetInput = document.getElementById("inspect-gigs-target");
+        const bookedInput = document.getElementById("inspect-gigs-booked");
+        const targetVal = stop.gigs_target !== undefined ? stop.gigs_target : 3;
+        const bookedVal = stop.gigs_booked !== undefined ? stop.gigs_booked : 0;
+        
+        targetInput.value = targetVal;
+        bookedInput.value = bookedVal;
+        
+        // Update booking status indicator badge
+        const badgeContainer = document.getElementById("inspector-badge-container");
+        const needed = Math.max(0, targetVal - bookedVal);
+        if (needed > 0) {
+          badgeContainer.innerHTML = `<span class="header-status-badge" style="background: rgba(255, 145, 0, 0.08); border-color: rgba(255, 145, 0, 0.2); color: var(--amber); display: inline-flex; justify-content: center;">⚠️ Need ${needed} More Gigs</span>`;
+        } else {
+          badgeContainer.innerHTML = `<span class="header-status-badge" style="background: rgba(0, 230, 118, 0.08); border-color: rgba(0, 230, 118, 0.2); color: var(--green); display: inline-flex; justify-content: center;">✅ Gig Target Reached</span>`;
+        }
       }
+
+      // Hook up direct numeric inputs and increment/decrement buttons
+      document.getElementById("inspect-gigs-target").addEventListener("change", (e) => {
+        if (!inspectingStopId) return;
+        const stop = state.tour_stops.find(s => s.id === inspectingStopId);
+        if (!stop) return;
+        stop.gigs_target = Math.max(0, parseInt(e.target.value) || 0);
+        saveStateToLocal();
+        renderEverything();
+        triggerStopInspection(inspectingStopId);
+      });
+
+      document.getElementById("inspect-gigs-booked").addEventListener("change", (e) => {
+        if (!inspectingStopId) return;
+        const stop = state.tour_stops.find(s => s.id === inspectingStopId);
+        if (!stop) return;
+        stop.gigs_booked = Math.max(0, parseInt(e.target.value) || 0);
+        saveStateToLocal();
+        renderEverything();
+        triggerStopInspection(inspectingStopId);
+      });
+
+      document.getElementById("inspect-btn-target-minus").addEventListener("click", () => {
+        if (!inspectingStopId) return;
+        const stop = state.tour_stops.find(s => s.id === inspectingStopId);
+        if (!stop) return;
+        stop.gigs_target = Math.max(0, (stop.gigs_target || 0) - 1);
+        saveStateToLocal();
+        renderEverything();
+        triggerStopInspection(inspectingStopId);
+      });
+
+      document.getElementById("inspect-btn-target-plus").addEventListener("click", () => {
+        if (!inspectingStopId) return;
+        const stop = state.tour_stops.find(s => s.id === inspectingStopId);
+        if (!stop) return;
+        stop.gigs_target = (stop.gigs_target || 0) + 1;
+        saveStateToLocal();
+        renderEverything();
+        triggerStopInspection(inspectingStopId);
+      });
+
+      document.getElementById("inspect-btn-booked-minus").addEventListener("click", () => {
+        if (!inspectingStopId) return;
+        const stop = state.tour_stops.find(s => s.id === inspectingStopId);
+        if (!stop) return;
+        stop.gigs_booked = Math.max(0, (stop.gigs_booked || 0) - 1);
+        saveStateToLocal();
+        renderEverything();
+        triggerStopInspection(inspectingStopId);
+      });
+
+      document.getElementById("inspect-btn-booked-plus").addEventListener("click", () => {
+        if (!inspectingStopId) return;
+        const stop = state.tour_stops.find(s => s.id === inspectingStopId);
+        if (!stop) return;
+        stop.gigs_booked = (stop.gigs_booked || 0) + 1;
+        saveStateToLocal();
+        renderEverything();
+        triggerStopInspection(inspectingStopId);
+      });
 
       // Timeline editor operations
       document.getElementById("inspect-status").addEventListener("change", (e) => {
@@ -1737,7 +1884,9 @@
           id: Date.now(),
           name: name,
           status: status,
-          transit_status: transit
+          transit_status: transit,
+          gigs_target: 3,
+          gigs_booked: 0
         };
 
         state.tour_stops.push(newStop);
