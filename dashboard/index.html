@@ -364,6 +364,38 @@ body { background: var(--bg-grad); min-height:100vh; }
 }
 .modal-submit:active { opacity:0.8; }
 
+/* ── CREATE MENU (unified + bottom sheet) ─────────────────────── */
+.create-sheet { padding-top:0.4rem; }
+.create-handle {
+  width:40px; height:4px; border-radius:2px;
+  background:var(--card-brd); margin:0 auto 0.6rem;
+}
+.create-tier {
+  border-left:3px solid var(--card-brd); padding-left:0.6rem;
+  margin-bottom:0.9rem;
+}
+.create-tier-income  { border-left-color:var(--green); }
+.create-tier-expense { border-left-color:var(--expense); }
+.create-tier-add     { border-left-color:var(--cyan); }
+.create-tier-quick   { border-left-color:var(--amber); }
+.create-tier-label {
+  font-size:0.62rem; text-transform:uppercase; letter-spacing:0.08em;
+  color:var(--text-dim); font-weight:700; margin-bottom:0.35rem;
+}
+.create-row {
+  display:flex; align-items:center; width:100%;
+  background:none; border:none; color:var(--off-white);
+  font-family:inherit; font-size:0.85rem; font-weight:600;
+  padding:0.6rem 0.2rem; cursor:pointer; text-align:left;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  transition:background 0.15s;
+}
+.create-row:last-child { border-bottom:none; }
+.create-row:active { background:rgba(255,255,255,0.04); }
+.cr-icon { font-size:1.1rem; margin-right:0.7rem; flex-shrink:0; width:1.6rem; text-align:center; }
+.cr-label { flex:1; }
+.cr-chev { color:var(--text-faint); font-size:1rem; font-weight:400; }
+
 /* ── STOP DETAIL HEADER ─────────────────────────────────────────── */
 .stop-detail-hdr {
   background:var(--card); border:1px solid var(--card-brd);
@@ -1023,8 +1055,49 @@ body { background: var(--bg-grad); min-height:100vh; }
 </section>
 
 <!-- ═══ QUICK-LOG FAB ═══ -->
-<button class="fab" id="fab-btn" onclick="openQuickLog()">+</button>
-<button class="fab add-venue" id="add-venue-fab" onclick="openAddVenueModal()">🎸</button>
+<button class="fab" id="fab-btn" onclick="openCreateMenu()">+</button>
+
+<!-- ═══ CREATE MENU (unified + bottom sheet) ═══ -->
+<div class="modal-overlay" id="create-menu">
+  <div class="modal-sheet create-sheet">
+    <div class="create-handle"></div>
+    <div class="modal-hdr">
+      <div class="modal-title">New</div>
+      <button class="modal-close" onclick="closeCreateMenu()">✕</button>
+    </div>
+
+    <div class="create-tier create-tier-income">
+      <div class="create-tier-label">Log Income</div>
+      <button class="create-row" onclick="createMenuOpen('busking')"><span class="cr-icon">🟢</span><span class="cr-label">Busking Session</span><span class="cr-chev">›</span></button>
+      <button class="create-row" onclick="createMenuOpen('gig')"><span class="cr-icon">🔵</span><span class="cr-label">Gig Income</span><span class="cr-chev">›</span></button>
+      <button class="create-row" onclick="createMenuOpen('house_concert')"><span class="cr-icon">🟠</span><span class="cr-label">House Concert</span><span class="cr-chev">›</span></button>
+      <button class="create-row" onclick="closeCreateMenu(); openModal('merch-modal');"><span class="cr-icon">🟣</span><span class="cr-label">Merch Sale</span><span class="cr-chev">›</span></button>
+    </div>
+
+    <div class="create-tier create-tier-expense">
+      <div class="create-tier-label">Log Expense</div>
+      <button class="create-row" onclick="closeCreateMenu(); openModal('mileage-modal');"><span class="cr-icon">⛽</span><span class="cr-label">Fuel / Mileage</span><span class="cr-chev">›</span></button>
+      <button class="create-row" onclick="createMenuOpen('expense')"><span class="cr-icon">🔴</span><span class="cr-label">Other Expense</span><span class="cr-chev">›</span></button>
+    </div>
+
+    <div class="create-tier create-tier-add">
+      <div class="create-tier-label">Add New</div>
+      <button class="create-row" onclick="createMenuOpen('spot')"><span class="cr-icon">📍</span><span class="cr-label">Busking Spot</span><span class="cr-chev">›</span></button>
+      <button class="create-row" onclick="closeCreateMenu(); openAddVenueModal();"><span class="cr-icon">🏢</span><span class="cr-label">Venue</span><span class="cr-chev">›</span></button>
+      <button class="create-row" onclick="closeCreateMenu(); openAddHostModal();"><span class="cr-icon">🏠</span><span class="cr-label">House Concert Host</span><span class="cr-chev">›</span></button>
+      <button class="create-row" onclick="closeCreateMenu(); openAddStopModal();"><span class="cr-icon">🗺️</span><span class="cr-label">Tour Stop</span><span class="cr-chev">›</span></button>
+      <button class="create-row" onclick="closeCreateMenu(); openModal('todo-modal');"><span class="cr-icon">✅</span><span class="cr-label">Todo</span><span class="cr-chev">›</span></button>
+    </div>
+
+    <div class="create-tier create-tier-quick">
+      <div class="create-tier-label">Quick Log</div>
+      <button class="create-row" onclick="closeCreateMenu(); openModal('note-modal');"><span class="cr-icon">📝</span><span class="cr-label">Quick Note</span><span class="cr-chev">›</span></button>
+      <button class="create-row" onclick="closeCreateMenu(); openModal('contact-modal');"><span class="cr-icon">👤</span><span class="cr-label">Contact / Lead</span><span class="cr-chev">›</span></button>
+      <button class="create-row" onclick="closeCreateMenu(); openModal('content-modal');"><span class="cr-icon">🎬</span><span class="cr-label">Content Captured</span><span class="cr-chev">›</span></button>
+      <button class="create-row" onclick="createMenuOpen('todo')"><span class="cr-icon">⚡</span><span class="cr-label">Complete Todo</span><span class="cr-chev">›</span></button>
+    </div>
+  </div>
+</div>
 
 <!-- ═══ QUICK-LOG MODAL ═══ -->
 <div class="modal-overlay" id="ql-modal">
@@ -1043,6 +1116,100 @@ body { background: var(--bg-grad); min-height:100vh; }
     </div>
     <div id="ql-fields"></div>
     <button class="modal-submit" onclick="submitQuickLog()">Log It</button>
+  </div>
+</div>
+
+<!-- ═══ MERCH SALE MODAL ═══ -->
+<div class="modal-overlay" id="merch-modal">
+  <div class="modal-sheet">
+    <div class="modal-hdr">
+      <div class="modal-title">🟣 Merch Sale</div>
+      <button class="modal-close" onclick="closeModal('merch-modal')">✕</button>
+    </div>
+    <div class="modal-field"><label>Item / Description</label><input type="text" id="merch-desc" placeholder="T-shirt, CD, sticker pack…"></div>
+    <div class="modal-field"><label>Quantity</label><input type="number" id="merch-qty" placeholder="1" inputmode="numeric"></div>
+    <div class="modal-field"><label>Unit Price ($)</label><input type="number" id="merch-price" placeholder="25" inputmode="numeric"></div>
+    <div class="modal-field"><label>Location / Stop</label><select id="merch-location"><option value="">Select…</option></select></div>
+    <div class="modal-field"><label>Notes</label><textarea id="merch-notes" rows="2" placeholder="Sold at gig intermission…"></textarea></div>
+    <button class="modal-submit" onclick="submitMerchSale()">Log Merch Sale</button>
+  </div>
+</div>
+
+<!-- ═══ MILEAGE / FUEL MODAL ═══ -->
+<div class="modal-overlay" id="mileage-modal">
+  <div class="modal-sheet">
+    <div class="modal-hdr">
+      <div class="modal-title">⛽ Fuel / Mileage</div>
+      <button class="modal-close" onclick="closeModal('mileage-modal')">✕</button>
+    </div>
+    <div class="modal-field"><label>Distance (km)</label><input type="number" id="mileage-km" placeholder="120" inputmode="numeric"></div>
+    <div class="modal-field"><label>Fuel Cost ($)</label><input type="number" id="mileage-cost" placeholder="60" inputmode="numeric"></div>
+    <div class="modal-field"><label>From</label><input type="text" id="mileage-from" placeholder="Adelaide"></div>
+    <div class="modal-field"><label>To</label><input type="text" id="mileage-to" placeholder="Port Augusta"></div>
+    <div class="modal-field"><label>Source</label><select id="mileage-source"><option value="tour">Tour</option><option value="local">Local (Adelaide)</option></select></div>
+    <button class="modal-submit" onclick="submitMileage()">Log Mileage</button>
+  </div>
+</div>
+
+<!-- ═══ TODO MODAL ═══ -->
+<div class="modal-overlay" id="todo-modal">
+  <div class="modal-sheet">
+    <div class="modal-hdr">
+      <div class="modal-title">✅ New Todo</div>
+      <button class="modal-close" onclick="closeModal('todo-modal')">✕</button>
+    </div>
+    <div class="modal-field"><label>Task</label><input type="text" id="todo-text" placeholder="Email venue about Saturday gig…"></div>
+    <div class="modal-field"><label>Category</label><select id="todo-category"><option>booking</option><option>marketing</option><option>vehicle</option><option>ops</option><option>merch</option><option>finance</option></select></div>
+    <div class="modal-field"><label>Priority</label><select id="todo-priority"><option value="2">Normal</option><option value="3">High</option><option value="1">Low</option></select></div>
+    <div class="modal-field"><label>Due Date</label><input type="date" id="todo-due"></div>
+    <button class="modal-submit" onclick="submitTodo()">Add Todo</button>
+  </div>
+</div>
+
+<!-- ═══ QUICK NOTE MODAL ═══ -->
+<div class="modal-overlay" id="note-modal">
+  <div class="modal-sheet">
+    <div class="modal-hdr">
+      <div class="modal-title">📝 Quick Note</div>
+      <button class="modal-close" onclick="closeModal('note-modal')">✕</button>
+    </div>
+    <div class="modal-field"><label>Stop</label><select id="note-stop"><option value="">Select…</option></select></div>
+    <div class="modal-field"><label>Note</label><textarea id="note-text" rows="4" placeholder="Sound guy was great, ask for Dylan next time…"></textarea></div>
+    <button class="modal-submit" onclick="submitNote()">Save Note</button>
+  </div>
+</div>
+
+<!-- ═══ CONTACT / LEAD MODAL ═══ -->
+<div class="modal-overlay" id="contact-modal">
+  <div class="modal-sheet">
+    <div class="modal-hdr">
+      <div class="modal-title">👤 New Contact / Lead</div>
+      <button class="modal-close" onclick="closeModal('contact-modal')">✕</button>
+    </div>
+    <div class="modal-field"><label>Name</label><input type="text" id="contact-name" placeholder="Jane from The Irish Rose"></div>
+    <div class="modal-field"><label>Role / Relationship</label><input type="text" id="contact-role" placeholder="Booker, promoter, fan…"></div>
+    <div class="modal-field"><label>Phone</label><input type="tel" id="contact-phone" placeholder="(08) 9221 1234"></div>
+    <div class="modal-field"><label>Email</label><input type="email" id="contact-email" placeholder="jane@venue.com"></div>
+    <div class="modal-field"><label>Venue / Org</label><input type="text" id="contact-org" placeholder="The Irish Rose"></div>
+    <div class="modal-field"><label>Notes</label><textarea id="contact-notes" rows="2" placeholder="Met at gig, interested in booking Nov…"></textarea></div>
+    <button class="modal-submit" onclick="submitContact()">Save Contact</button>
+  </div>
+</div>
+
+<!-- ═══ CONTENT CAPTURED MODAL ═══ -->
+<div class="modal-overlay" id="content-modal">
+  <div class="modal-sheet">
+    <div class="modal-hdr">
+      <div class="modal-title">🎬 Content Captured</div>
+      <button class="modal-close" onclick="closeModal('content-modal')">✕</button>
+    </div>
+    <div class="modal-field"><label>Type</label><select id="content-type"><option>Reel</option><option>Photo</option><option>Video</option><option>Story</option><option>Live stream</option><option>Interview</option></select></div>
+    <div class="modal-field"><label>Stop / Location</label><select id="content-stop"><option value="">Select…</option></select></div>
+    <div class="modal-field"><label>Title / Caption</label><input type="text" id="content-title" placeholder="Sunset busking set, Raine Square"></div>
+    <div class="modal-field"><label>Platform</label><select id="content-platform"><option>Instagram</option><option>TikTok</option><option>YouTube</option><option>Facebook</option><option>Other</option></select></div>
+    <div class="modal-field"><label>Posted?</label><select id="content-posted"><option value="false">Not yet</option><option value="true">Yes — posted</option></select></div>
+    <div class="modal-field"><label>Notes</label><textarea id="content-notes" rows="2" placeholder="Got great crowd reaction…"></textarea></div>
+    <button class="modal-submit" onclick="submitContent()">Log Content</button>
   </div>
 </div>
 
@@ -2164,6 +2331,202 @@ function openQuickLog() {
 function closeQuickLog() {
   document.getElementById('ql-modal').classList.remove('show');
 }
+
+// ═══ CREATE MENU (unified + bottom sheet) ═══
+function openCreateMenu() {
+  document.getElementById('create-menu').classList.add('show');
+}
+function closeCreateMenu() {
+  document.getElementById('create-menu').classList.remove('show');
+}
+// Opens ql-modal with a specific type after closing create-menu
+function createMenuOpen(type) {
+  closeCreateMenu();
+  setTimeout(function() {
+    document.getElementById('ql-modal').classList.add('show');
+    selectQLType(type);
+  }, 180);
+}
+
+// ── Helper: populate a <select> with tour stop options ──
+function fillStopSelect(selectId) {
+  var el = document.getElementById(selectId);
+  if (!el) return;
+  var stops = (D.tour_stops || []);
+  var cur = getCurrentStop();
+  var html = '<option value="">Select…</option>';
+  for (var i = 0; i < stops.length; i++) {
+    var s = stops[i];
+    var sel = (cur && s.name === cur.name) ? ' selected' : '';
+    html += '<option value="' + s.name + '"' + sel + '>' + s.name + '</option>';
+  }
+  el.innerHTML = html;
+}
+
+// ═══ MERCH SALE ═══
+function submitMerchSale() {
+  var desc = val('merch-desc');
+  var qty = parseFloat(val('merch-qty')) || 0;
+  var price = parseFloat(val('merch-price')) || 0;
+  var location = val('merch-location');
+  var notes = val('merch-notes');
+  var total = qty * price;
+  if (!desc || total <= 0) { showToast('Enter item and price'); return; }
+  var today = new Date().toISOString().slice(0, 10);
+  var stopObj = (D.tour_stops || []).find(function(s) { return s.name === location; });
+  var stopId = stopObj ? stopObj.id : '';
+  D.income_history = D.income_history || [];
+  D.income_history.push({
+    id: 'inc-' + Date.now(),
+    type: 'merch',
+    amount: total,
+    description: desc + (qty > 1 ? ' x' + qty : ''),
+    location: location || '',
+    date: today,
+    item: desc,
+    quantity: qty,
+    unit_price: price,
+    source: 'tour',
+    tour_stop_id: stopId,
+    notes: notes
+  });
+  if (stopObj) {
+    stopObj.actuals = stopObj.actuals || {};
+    stopObj.actuals.merch = (stopObj.actuals.merch || 0) + total;
+  }
+  saveEdits();
+  recalcFinancials();
+  closeModal('merch-modal');
+  showToast('Merch sale logged: $' + total.toFixed(2));
+  if (typeof renderView === 'function') renderView();
+}
+
+// ═══ MILEAGE / FUEL ═══
+function submitMileage() {
+  var km = parseFloat(val('mileage-km')) || 0;
+  var cost = parseFloat(val('mileage-cost')) || 0;
+  var from = val('mileage-from');
+  var to = val('mileage-to');
+  var source = val('mileage-source');
+  if (cost <= 0 && km <= 0) { showToast('Enter distance or cost'); return; }
+  var today = new Date().toISOString().slice(0, 10);
+  var desc = 'Fuel/Mileage: ' + from + ' to ' + to + ' (' + km + 'km)';
+  if (cost > 0) {
+    D.expense_history = D.expense_history || [];
+    D.expense_history.push({
+      id: 'exp-' + Date.now(),
+      category: 'fuel',
+      amount: cost,
+      source: source || 'tour',
+      description: desc,
+      date: today
+    });
+  }
+  D.ground_ops = D.ground_ops || {};
+  D.ground_ops.transaction_history = D.ground_ops.transaction_history || [];
+  D.ground_ops.transaction_history.push({
+    id: 'trip-' + Date.now(),
+    type: 'mileage',
+    start: from,
+    end: to,
+    km: km,
+    fuel_cost: cost,
+    date: today
+  });
+  saveEdits();
+  recalcFinancials();
+  closeModal('mileage-modal');
+  showToast('Mileage logged: ' + km + 'km / $' + cost.toFixed(2));
+  if (typeof renderView === 'function') renderView();
+}
+
+// ═══ TODO ═══
+function submitTodo() {
+  var text = val('todo-text');
+  var category = val('todo-category');
+  var priority = parseInt(val('todo-priority'), 10) || 2;
+  var due = val('todo-due');
+  if (!text) { showToast('Enter a task'); return; }
+  D.todos = D.todos || [];
+  D.todos.push({
+    id: 'todo-' + Date.now(),
+    text: text,
+    category: category,
+    priority: priority,
+    due_date: due,
+    completed: false,
+    created_date: new Date().toISOString().slice(0, 10)
+  });
+  saveEdits();
+  closeModal('todo-modal');
+  showToast('Todo added');
+  if (typeof renderView === 'function') renderView();
+}
+
+// ═══ QUICK NOTE ═══
+function submitNote() {
+  var stopName = val('note-stop');
+  var text = val('note-text');
+  if (!text) { showToast('Enter a note'); return; }
+  D.quick_notes = D.quick_notes || [];
+  D.quick_notes.push({
+    id: 'note-' + Date.now(),
+    stop: stopName || '',
+    text: text,
+    date: new Date().toISOString().slice(0, 10)
+  });
+  saveEdits();
+  closeModal('note-modal');
+  showToast('Note saved');
+  if (typeof renderView === 'function') renderView();
+}
+
+// ═══ CONTACT / LEAD ═══
+function submitContact() {
+  var name = val('contact-name');
+  if (!name) { showToast('Enter a name'); return; }
+  D.contacts = D.contacts || [];
+  D.contacts.push({
+    id: 'contact-' + Date.now(),
+    name: name,
+    role: val('contact-role'),
+    phone: val('contact-phone'),
+    email: val('contact-email'),
+    org: val('contact-org'),
+    notes: val('contact-notes'),
+    date: new Date().toISOString().slice(0, 10),
+    follow_up: true
+  });
+  saveEdits();
+  closeModal('contact-modal');
+  showToast('Contact saved');
+  if (typeof renderView === 'function') renderView();
+}
+
+// ═══ CONTENT CAPTURED ═══
+function submitContent() {
+  var ctype = val('content-type');
+  var title = val('content-title');
+  var stopName = val('content-stop');
+  var platform = val('content-platform');
+  var posted = val('content-posted') === 'true';
+  if (!title && !ctype) { showToast('Enter content details'); return; }
+  D.content_log = D.content_log || [];
+  D.content_log.push({
+    id: 'content-' + Date.now(),
+    type: ctype,
+    title: title,
+    stop: stopName || '',
+    platform: platform,
+    posted: posted,
+    notes: val('content-notes'),
+    date: new Date().toISOString().slice(0, 10)
+  });
+  saveEdits();
+  closeModal('content-modal');
+  showToast('Content logged');
+  if (typeof renderView === 'function') renderView();
+}
 function selectQLType(type) {
   qlType = type;
   document.querySelectorAll('.modal-type-btn').forEach(b => b.classList.remove('active'));
@@ -2467,12 +2830,14 @@ function openModal(id) { document.getElementById(id).classList.add('show'); }
 
 // ── Populate city selects ──
 function populateCitySelects() {
-  const stops = (D.tour_stops||[]).map(s => `<option value="${s.name}">${s.name}</option>`).join('');
-  const groups = (D.config?.facebook_groups||[]).map(g => `<option value="${g}">${g}</option>`).join('');
-  ['av-city','hc-fbgroup'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) { if (id === 'hc-fbgroup') el.innerHTML = '<option value="">Select group…</option>' + groups; else el.innerHTML = stops; }
+  var stopOptions = (D.tour_stops||[]).map(function(s){return '<option value="'+s.name+'">'+s.name+'</option>';}).join('');
+  var groups = (D.config&&D.config.facebook_groups||[]).map(function(g){return '<option value="'+g+'">'+g+'</option>';}).join('');
+  ['av-city','merch-location','contact-where','content-location'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.innerHTML = stopOptions;
   });
+  var fbEl = document.getElementById('hc-fbgroup');
+  if (fbEl) fbEl.innerHTML = '<option value="">Select group…</option>' + groups;
 }
 
 // ── ADD VENUE ──
@@ -2483,6 +2848,43 @@ function openAddVenueModal() {
   if (cityEl && stop) cityEl.value = stop.name;
   openModal('av-modal');
 }
+
+// ── NEW MODAL OPENERS (auto-fill current stop) ──
+function openTodoModal() { openModal('todo-modal'); }
+function openMerchModal() {
+  populateCitySelects();
+  var stop = getCurrentStop();
+  if (stop) {
+    var loc = document.getElementById('merch-location');
+    if (loc) loc.value = stop.name;
+  }
+  openModal('merch-modal');
+}
+function openMileageModal() {
+  var stop = getCurrentStop();
+  var startEl = document.getElementById('mil-start');
+  if (startEl && stop) startEl.value = stop.name;
+  openModal('mileage-modal');
+}
+function openContactModal() {
+  populateCitySelects();
+  var stop = getCurrentStop();
+  if (stop) {
+    var w = document.getElementById('contact-where');
+    if (w) w.value = stop.name;
+  }
+  openModal('contact-modal');
+}
+function openContentModal() {
+  populateCitySelects();
+  var stop = getCurrentStop();
+  if (stop) {
+    var loc = document.getElementById('content-location');
+    if (loc) loc.value = stop.name;
+  }
+  openModal('content-modal');
+}
+function openNoteModal() { openModal('note-modal'); }
 
 function submitAddVenue() {
   const name = val('av-name');
@@ -4109,69 +4511,6 @@ function handlePriorityAction(priority) {
   }
 }
 
-function openQuickLogExpense() {
-  document.getElementById('ql-modal').classList.add('show');
-  selectQLType('expense');
-}
-
-function openQuickLogIncome() {
-  document.getElementById('ql-modal').classList.add('show');
-  selectQLType('busking');
-}
-
-function setFinDateFilter(which, value) {
-  if (which === 'from') window._finFilterFrom = value;
-  if (which === 'to') window._finFilterTo = value;
-  window._finShowAll = false;
-  renderTransactions();
-}
-
-function toggleTodoFromQuickLog(todoId) {
-  var todo = (D.todos || []).find(function(t) {
-    return String(t.id || (t.text || '').replace(/[^a-zA-Z0-9]/g, '')) === String(todoId);
-  });
-  if (!todo) return;
-  todo.completed = true;
-  todo.completed_date = new Date().toISOString().slice(0, 10);
-  saveEdits();
-  showToast('✅ Done!');
-  closeQuickLog();
-  // Re-render current view
-  var activeViewEl = document.querySelector('.view.active');
-  var activeView = activeViewEl && activeViewEl.id ? activeViewEl.id.replace('view-', '') : null;
-  if (activeView) {
-    try { switchView(activeView); } catch(e) {}
-  }
-}
-
-function showWelcomeModal() {
-  // Build modal via string concatenation
-  var html = '' +
-    '<div class="modal-hdr">' +
-      '<div class="modal-title">Welcome to Tour OS 🎸</div>' +
-      '<button class="modal-close" onclick="closeModal(\'welcome-modal\')">✕</button>' +
-    '</div>' +
-    '<div class="welcome-body">' +
-      '<p class="welcome-text">This dashboard has demo data from Perth to help you explore. Would you like to start fresh or keep the demo data?</p>' +
-    '</div>' +
-    '<div class="welcome-actions">' +
-      '<button class="modal-submit welcome-btn-fresh" onclick="startFresh()">🚀 Start Fresh</button>' +
-      '<button class="modal-submit welcome-btn-keep" onclick="keepDemoData()">Keep Demo Data</button>' +
-    '</div>';
-
-  var sheet = document.getElementById('welcome-sheet');
-  if (sheet) {
-    sheet.innerHTML = html;
-    openModal('welcome-modal');
-  }
-}
-
-function keepDemoData() {
-  try { localStorage.setItem('tourOS_onboarded', '1'); } catch(e) {}
-  closeModal('welcome-modal');
-  showToast('Demo data loaded — explore freely!');
-}
-
 function startFresh() {
   // Clear all income history
   if (D.income_history) D.income_history = [];
@@ -4187,13 +4526,11 @@ function startFresh() {
   // Reset all tour stops: clear actuals, clear linked IDs, set statuses
   if (D.tour_stops) {
     D.tour_stops.forEach(function(stop) {
-      // Reset financials for this stop
       if (stop.financials) {
         stop.financials.actual_income = 0;
         stop.financials.actual_expenses = 0;
         stop.financials.net = 0;
       }
-      // Reset actuals object
       if (stop.actuals) {
         if (stop.actuals.busking) {
           stop.actuals.busking.sessions_completed = 0;
@@ -4214,13 +4551,11 @@ function startFresh() {
           stop.actuals.house_concert.earnings_actual = 0;
         }
       }
-      // Clear linked ID arrays
       stop.busking_spot_ids = [];
       stop.venue_ids = [];
       stop.house_concert_ids = [];
       stop.marketing_id = null;
 
-      // Set Perth → Planned, Adelaide → Current (home base)
       if (stop.name === 'Perth') {
         stop.status = 'Planned';
         stop.transit_status = 'Scheduled';
@@ -4267,11 +4602,10 @@ function startFresh() {
   try { localStorage.setItem('tourOS_onboarded', '1'); } catch(e) {}
   recalcFinancials();
   saveEdits();
-  checkStorageQuota();
+  if (typeof checkStorageQuota === 'function') checkStorageQuota();
 
   closeModal('welcome-modal');
 
-  // Reload current view
   if (typeof currentView !== 'undefined') {
     switchView(currentView);
   } else {
