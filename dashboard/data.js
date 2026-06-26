@@ -24,16 +24,16 @@ const DASHBOARD_DATA = {
   ],
   "financials": {
     "target": 37000.0,
-    "current_earnings": 500.0,
+    "current_earnings": 0.0,
     "fuel_expenses": 350.0,
     "gear_expenses": 120.0,
-    "net_earnings": 30.0
+    "net_earnings": -470.0
   },
   "ground_ops": {
-    "local_busking_earnings": 120.0,
+    "local_busking_earnings": 0.0,
     "expenses": 0.0,
     "cash_float": 150.0,
-    "operational_bank": 270.0
+    "operational_bank": 150.0
   },
   "tour_stops": [
     {
@@ -107,19 +107,6 @@ const DASHBOARD_DATA = {
     "venues_mapped": 85,
     "status": "85+ venues mapped"
   },
-  "income_history": [
-    {
-      "type": "local-busking",
-      "amount": 120.0,
-      "location": "Adelaide",
-      "date": "2026-06-26T02:09:54.340269Z"
-    },
-    {
-      "type": "gig",
-      "amount": 500.0,
-      "location": "Perth",
-      "date": "2026-06-26T02:09:57.074796Z"
-    }
-  ],
-  "last_updated": "2026-06-26T02:09:57.075246Z"
+  "income_history": [],
+  "last_updated": "2026-06-26T02:12:58.448941Z"
 };
