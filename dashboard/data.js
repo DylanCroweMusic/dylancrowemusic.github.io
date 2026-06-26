@@ -144,5 +144,5 @@ const DASHBOARD_DATA = {
     }
   ],
   "expense_history": [],
-  "last_updated": "2026-06-26T02:59:32.594702Z"
+  "last_updated": "2026-06-26T03:31:42.720857Z"
 };
