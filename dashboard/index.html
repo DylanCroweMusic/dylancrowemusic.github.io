@@ -546,7 +546,13 @@ body { background: var(--bg-grad); min-height:100vh; }
 <!-- ═══ VIEW 5: FINANCIALS ═══ -->
 <section class="view" id="view-fin">
   <div class="section">
-    <div class="section-title">Tour Financials</div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div class="section-title">Tour Financials</div>
+      <div style="display:flex;gap:0.4rem">
+        <button class="venue-btn" onclick="exportData()" style="font-size:0.6rem">📥 Export</button>
+        <button class="venue-btn danger" onclick="resetData()" style="font-size:0.6rem">🔄 Reset</button>
+      </div>
+    </div>
     <div id="fin-overview"></div>
   </div>
   <div class="section">
@@ -674,7 +680,7 @@ const STAGE_LABELS = {
   booked:'Booked', declined:'Declined', played:'Played'
 };
 const HC_STAGES = ['posted','interested','confirmed','completed','cancelled'];
-const VENUE_STAGES = ['not_contacted','called','emailed','follow_up_1','follow_up_2','booked','declined','played'];
+const VENUE_STAGES = ['not_contacted','called','emailed','follow_up_1','follow_up_2','booked','played','declined'];
 
 // Load data
 let D = null;
@@ -686,14 +692,15 @@ function loadData() {
   if (typeof window.DASHBOARD_DATA !== 'undefined') {
     D = JSON.parse(JSON.stringify(window.DASHBOARD_DATA));
   }
-  // Overlay localStorage changes
+  // Load saved data from localStorage (key must match saveEdits)
   try {
-    const saved = localStorage.getItem('tourOS_edits');
+    const saved = localStorage.getItem('tourOS_data');
     if (saved) {
-      const edits = JSON.parse(saved);
-      // For now, simple merge — full implementation would patch individual entities
+      const parsed = JSON.parse(saved);
+      // Use saved data as the full state (it's a complete copy of D)
+      D = parsed;
     }
-  } catch(e) {}
+  } catch(e) { console.warn('Failed to load saved data:', e); }
   if (!D) {
     D = { meta:{}, config:{}, tour_stops:[], busking_spots:[], venues:[], house_concerts:[], financials:{}, ground_ops:{}, todos:[], income_history:[], expense_history:[], booking_summary:{}, marketing:[] };
   }
@@ -1102,15 +1109,19 @@ function advanceVenue(venueId) {
   const idx = VENUE_STAGES.indexOf(v.pipeline_stage);
   if (idx < 0 || idx >= VENUE_STAGES.length - 1) return;
   const next = VENUE_STAGES[idx+1];
-  if (next === 'declined') return; // skip declined as auto-advance
+  if (next === 'declined') return; // declined is a separate action, not auto-advance
   v.pipeline_stage = next;
   v.stage_history = v.stage_history || [];
   v.stage_history.push({stage: next, date: new Date().toISOString().slice(0,10), notes: 'Advanced via dashboard'});
-  if (next === 'booked') v.status = 'booked';
+  const stop = D.tour_stops.find(s => s.id === v.tour_stop_id);
+  if (next === 'booked') {
+    v.status = 'booked';
+    // Auto-increment gigs_booked count
+    if (stop) stop.actuals.venue_gig.gigs_booked = (stop.actuals.venue_gig.gigs_booked||0) + 1;
+  }
   if (next === 'played') {
     v.status = 'played';
     // Auto-increment gig played count
-    const stop = D.tour_stops.find(s => s.id === v.tour_stop_id);
     if (stop) stop.actuals.venue_gig.gigs_played = (stop.actuals.venue_gig.gigs_played||0) + 1;
   }
   saveEdits();
@@ -1238,6 +1249,36 @@ function renderPipeline() {
 }
 
 // ═══ FINANCIALS VIEW ═══
+// Recalculate tour-level financials from income_history + expense_history
+function recalcFinancials() {
+  if (!D.financials) D.financials = {};
+  if (!D.financials.tour) D.financials.tour = {};
+  const fin = D.financials.tour;
+  // Reset income by stream
+  fin.income_by_stream = { busking:0, venue_gig:0, house_concert:0, merch:0 };
+  // Sum income
+  (D.income_history||[]).forEach(i => {
+    const t = i.type;
+    const key = t === 'busking' ? 'busking' : t === 'venue_gig' ? 'venue_gig' : t === 'house_concert' ? 'house_concert' : 'merch';
+    fin.income_by_stream[key] = (fin.income_by_stream[key]||0) + (i.amount||0);
+  });
+  fin.current_earnings = Object.values(fin.income_by_stream).reduce((s,v) => s+v, 0);
+  // Sum expenses
+  fin.expenses_by_category = fin.expenses_by_category || {};
+  // Reset expense categories to 0 (recalc from history)
+  const cats = ['fuel','accommodation','food','gear','maverick','marketing','misc'];
+  cats.forEach(c => { if (!(c in fin.expenses_by_category)) fin.expenses_by_category[c] = 0; });
+  // Recalc from expense_history
+  (D.expense_history||[]).forEach(e => {
+    const cat = e.category || 'misc';
+    fin.expenses_by_category[cat] = (fin.expenses_by_category[cat]||0) + (e.amount||0);
+  });
+  fin.total_expenses = Object.values(fin.expenses_by_category).reduce((s,v) => s+v, 0);
+  fin.net_earnings = fin.current_earnings - fin.total_expenses;
+  fin.target = fin.target || 37000;
+  fin.progress_to_target_pct = fin.target > 0 ? Math.round(fin.net_earnings / fin.target * 100 * 100) / 100 : 0;
+}
+
 function renderFinancials() {
   const fin = D.financials?.tour || D.financials || {};
   const earnings = fin.current_earnings || 0;
@@ -1397,19 +1438,35 @@ function submitQuickLog() {
 
     // Route to ground_ops if Adelaide local busking
     const isLocal = location === 'Adelaide';
-    D.income_history.push({id:`inc-${Date.now()}`,type:'busking',amount:amount+merch,location,date:today,notes});
+    const stopObj = D.tour_stops.find(s => s.name === location);
+    const stopId = stopObj ? stopObj.id : 0;
+    // Find the first busking spot for this stop
+    const spots = (D.busking_spots || []).filter(sp => sp.tour_stop_id === stopId);
+    const spot = spots[0];
+    const incomeId = `inc-${Date.now()}`;
+    D.income_history.push({id:incomeId,type:'busking',amount:amount+merch,location,date:today,notes,
+      source: isLocal ? 'local' : 'tour', tour_stop_id: stopId, busking_spot_id: spot ? spot.id : null});
 
     if (isLocal) {
       D.ground_ops.local_busking_earnings = (D.ground_ops.local_busking_earnings||0) + amount;
       D.ground_ops.operational_bank = (D.ground_ops.cash_float||0) + (D.ground_ops.local_busking_earnings||0) - (D.ground_ops.expenses||0);
     } else {
       // Update stop actuals
-      const s = D.tour_stops.find(s => s.name === location);
-      if (s) {
-        s.actuals.busking.earnings_actual = (s.actuals.busking.earnings_actual||0) + amount;
-        s.actuals.busking.sessions_completed = (s.actuals.busking.sessions_completed||0) + 1;
+      if (stopObj) {
+        stopObj.actuals.busking.earnings_actual = (stopObj.actuals.busking.earnings_actual||0) + amount + merch;
+        stopObj.actuals.busking.sessions_completed = (stopObj.actuals.busking.sessions_completed||0) + 1;
       }
     }
+    // Write to busking spot's earnings_history + recalc aggregates
+    if (spot) {
+      if (!spot.earnings_history) spot.earnings_history = [];
+      spot.earnings_history.push({date: today, duration_minutes: duration, earnings: amount, merch_sales: merch, notes, income_history_id: incomeId});
+      spot.total_sessions = spot.earnings_history.length;
+      spot.total_earnings_logged = spot.earnings_history.reduce((s,e) => s + (e.earnings||0), 0);
+      spot.avg_earnings_per_session = spot.total_sessions > 0 ? Math.round(spot.total_earnings_logged / spot.total_sessions * 100) / 100 : 0;
+    }
+    // Recalculate tour financials from income_history
+    recalcFinancials();
     saveEdits();
 
   } else if (qlType === 'gig') {
@@ -1418,12 +1475,12 @@ function submitQuickLog() {
     const amount = parseFloat(val('ql-amount') || '0');
     const date = val('ql-date') || today;
     if (!venue || !amount) { alert('Enter venue and fee'); return; }
-    D.income_history.push({id:`inc-${Date.now()}`,type:'venue_gig',amount,location:location||venue,date,venue_name:venue,notes:`Gig at ${venue}`});
-    const s = D.tour_stops.find(s => s.name === location);
-    if (s) {
-      s.actuals.venue_gig.earnings_actual = (s.actuals.venue_gig.earnings_actual||0) + amount;
-      s.actuals.venue_gig.gigs_played = (s.actuals.venue_gig.gigs_played||0) + 1;
+    const gigStop = D.tour_stops.find(s => s.name === location);
+    D.income_history.push({id:`inc-${Date.now()}`,type:'venue_gig',amount,location:location||venue,date,venue_name:venue,notes:`Gig at ${venue}`,source:'tour',tour_stop_id: gigStop ? gigStop.id : 0});
+    if (gigStop) {
+      gigStop.actuals.venue_gig.earnings_actual = (gigStop.actuals.venue_gig.earnings_actual||0) + amount;
     }
+    recalcFinancials();
     saveEdits();
 
   } else if (qlType === 'expense') {
@@ -1437,6 +1494,7 @@ function submitQuickLog() {
       D.ground_ops.expenses = (D.ground_ops.expenses||0) + amount;
       D.ground_ops.operational_bank = (D.ground_ops.cash_float||0) + (D.ground_ops.local_busking_earnings||0) - (D.ground_ops.expenses||0);
     }
+    recalcFinancials();
     saveEdits();
 
   } else if (qlType === 'spot') {
@@ -1703,11 +1761,19 @@ function advanceHouseConcert(hcId) {
   h.stage_history = h.stage_history || [];
   h.stage_history.push({stage: h.pipeline_stage, date: new Date().toISOString().slice(0,10)});
   if (h.pipeline_stage === 'confirmed') {
-    h.actuals.house_concert.shows_confirmed = (h.actuals?.house_concert?.shows_confirmed||0) + 1;
+    const stop = D.tour_stops.find(s => s.id === h.tour_stop_id);
+    if (stop) stop.actuals.house_concert.shows_confirmed = (stop.actuals.house_concert.shows_confirmed||0) + 1;
   }
   if (h.pipeline_stage === 'completed') {
     const stop = D.tour_stops.find(s => s.id === h.tour_stop_id);
     if (stop) stop.actuals.house_concert.shows_completed = (stop.actuals.house_concert.shows_completed||0) + 1;
+    // Log income from house concert
+    const revenue = h.event?.revenue_actual || h.event?.revenue_projected || 0;
+    if (revenue > 0) {
+      D.income_history.push({id:`inc-${Date.now()}`,type:'house_concert',amount:revenue,location:h.city||'',date:today,notes:`House concert at ${h.host_name}`,source:'tour',tour_stop_id:h.tour_stop_id});
+      if (stop) stop.actuals.house_concert.earnings_actual = (stop.actuals.house_concert.earnings_actual||0) + revenue;
+    }
+    recalcFinancials();
   }
   saveEdits();
   const av = document.querySelector('.view.active')?.id?.replace('view-','');
@@ -1757,7 +1823,15 @@ function deleteBuskingSession(spotId, sessionIdx) {
   // Recalc aggregates
   spot.total_sessions = spot.earnings_history.length;
   spot.total_earnings_logged = spot.earnings_history.reduce((s,e) => s + (e.earnings||0), 0);
-  spot.avg_earnings_per_session = spot.total_sessions > 0 ? spot.total_earnings_logged / spot.total_sessions : 0;
+  spot.avg_earnings_per_session = spot.total_sessions > 0 ? Math.round(spot.total_earnings_logged / spot.total_sessions * 100) / 100 : 0;
+  // Remove from income_history (match by income_history_id if present, else by date+amount)
+  if (session.income_history_id) {
+    D.income_history = (D.income_history||[]).filter(i => i.id !== session.income_history_id);
+  } else {
+    D.income_history = (D.income_history||[]).filter(i =>
+      !(i.type === 'busking' && i.date === session.date && Math.abs((i.amount||0) - ((session.earnings||0) + (session.merch_sales||0))) < 0.01)
+    );
+  }
   // Recalc stop actuals
   const stop = D.tour_stops.find(s => s.id === spot.tour_stop_id);
   if (stop) {
@@ -1765,6 +1839,7 @@ function deleteBuskingSession(spotId, sessionIdx) {
     stop.actuals.busking.sessions_completed = spots.reduce((s,sp) => s + (sp.total_sessions||0), 0);
     stop.actuals.busking.earnings_actual = spots.reduce((s,sp) => s + (sp.total_earnings_logged||0), 0);
   }
+  recalcFinancials();
   saveEdits();
   const av = document.querySelector('.view.active')?.id?.replace('view-','');
   if (av) switchView(av);
@@ -1775,6 +1850,8 @@ function deleteBuskingSpot(spotId) {
   if (!confirm('Delete this busking spot and all its sessions?')) return;
   const spot = D.busking_spots.find(s => s.id === spotId);
   if (!spot) return;
+  // Remove income_history entries for this spot
+  D.income_history = (D.income_history||[]).filter(i => i.busking_spot_id !== spotId);
   const stop = D.tour_stops.find(s => s.id === spot.tour_stop_id);
   if (stop) {
     stop.busking_spot_ids = (stop.busking_spot_ids||[]).filter(id => id !== spotId);
@@ -1784,6 +1861,7 @@ function deleteBuskingSpot(spotId) {
     stop.actuals.busking.spots_scouted = Math.max(0, (stop.actuals.busking.spots_scouted||0) - 1);
   }
   D.busking_spots = D.busking_spots.filter(s => s.id !== spotId);
+  recalcFinancials();
   saveEdits();
   const av = document.querySelector('.view.active')?.id?.replace('view-','');
   if (av) switchView(av);
@@ -1892,8 +1970,28 @@ function renderFBTracker(h) {
   }).join('')}</div>`;
 }
 
+// ═══ DATA EXPORT / RESET ═══
+function exportData() {
+  const data = JSON.stringify(D, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `tour-os-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function resetData() {
+  if (!confirm('Reset all data to defaults? This will erase all your changes.')) return;
+  localStorage.removeItem('tourOS_data');
+  localStorage.removeItem('tourOS_edits');
+  location.reload();
+}
+
 // ═══ INIT ═══
 loadData();
+recalcFinancials();
 renderCommand();
 </script>
 </body>
