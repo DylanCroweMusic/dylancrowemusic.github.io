@@ -5,8 +5,8 @@ update_dashboard.py
 Programmatically manage the JSON/JS database for the Musician OS Dashboard.
 Handles:
   - Reading/writing 'data.json' and 'data.js'
-  - High-quality seed data initialization
-  - CLI operations to add/complete todos, update financials, tour stops, and booking stats.
+  - High-quality seed data initialization with the new database format
+  - CLI operations to add/complete todos, update financials, tour stops, booking stats, and log income.
 
 Location: /tmp/dylancrowemusic.github.io/scripts/update_dashboard.py
 Data files: /tmp/dylancrowemusic.github.io/dashboard/data.json
@@ -26,7 +26,7 @@ JSON_PATH = os.path.join(DASHBOARD_DIR, "data.json")
 JS_PATH = os.path.join(DASHBOARD_DIR, "data.js")
 
 def get_seed_data():
-    """Return the initial seed data matching specification."""
+    """Return the initial seed data matching the new specification."""
     return {
         "todos": [
             {"id": 1, "task": "Service oil", "completed": False},
@@ -36,23 +36,35 @@ def get_seed_data():
         ],
         "financials": {
             "target": 37000.0,
-            "current_earnings": 1200.0,
+            "current_earnings": 0.0,
             "fuel_expenses": 350.0,
             "gear_expenses": 120.0,
-            "net_earnings": 730.0
+            "net_earnings": -470.0
+        },
+        "ground_ops": {
+            "local_busking_earnings": 0.0,
+            "expenses": 0.0,
+            "cash_float": 150.0,
+            "operational_bank": 150.0
         },
         "tour_stops": [
-            {"id": 1, "name": "Adelaide", "status": "Current", "transit_status": "Arrived"},
+            {"id": 1, "name": "Perth", "status": "Planned", "transit_status": "Scheduled"},
             {"id": 2, "name": "Kalgoorlie", "status": "Planned", "transit_status": "Scheduled"},
             {"id": 3, "name": "Esperance", "status": "Planned", "transit_status": "Scheduled"},
             {"id": 4, "name": "Albany", "status": "Planned", "transit_status": "Scheduled"},
             {"id": 5, "name": "Margaret River", "status": "Planned", "transit_status": "Scheduled"},
-            {"id": 6, "name": "Perth", "status": "Target", "transit_status": "Dreaming"}
+            {"id": 6, "name": "Bunbury", "status": "Planned", "transit_status": "Scheduled"},
+            {"id": 7, "name": "Fremantle", "status": "Planned", "transit_status": "Scheduled"},
+            {"id": 8, "name": "Adelaide", "status": "Planned", "transit_status": "Scheduled"},
+            {"id": 9, "name": "Melbourne", "status": "Planned", "transit_status": "Scheduled"},
+            {"id": 10, "name": "Sydney", "status": "Planned", "transit_status": "Scheduled"},
+            {"id": 11, "name": "Sunshine Coast", "status": "Target", "transit_status": "Dreaming"}
         ],
         "booking": {
             "venues_mapped": 85,
             "status": "85+ venues mapped"
         },
+        "income_history": [],
         "last_updated": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     }
 
@@ -87,6 +99,18 @@ def save_data(data):
     fuel = financials.get("fuel_expenses", 0.0)
     gear = financials.get("gear_expenses", 0.0)
     financials["net_earnings"] = round(earnings - fuel - gear, 2)
+    
+    # Recalculate operational bank
+    ground_ops = data.setdefault("ground_ops", {
+        "local_busking_earnings": 0.0,
+        "expenses": 0.0,
+        "cash_float": 150.0,
+        "operational_bank": 150.0
+    })
+    local_busking = ground_ops.setdefault("local_busking_earnings", 0.0)
+    expenses = ground_ops.setdefault("expenses", 0.0)
+    cash_float = ground_ops.setdefault("cash_float", 150.0)
+    ground_ops["operational_bank"] = round(cash_float + local_busking - expenses, 2)
     
     # Save JSON file
     try:
@@ -226,6 +250,62 @@ def cmd_booking(count, status):
     print("Booking info updated:")
     print(json.dumps(data["booking"], indent=2))
 
+def cmd_log_income(income_type, amount, location, date):
+    """Record income logs and update database accordingly."""
+    data = load_data()
+    history = data.setdefault("income_history", [])
+    
+    if not date:
+        date = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+        
+    entry = {
+        "type": income_type,
+        "amount": float(amount),
+        "location": location or "",
+        "date": date
+    }
+    history.append(entry)
+    
+    # Business logic for splitting local vs tour income:
+    # If type is 'gig' or 'tour-busking' on the route -> financials 'current_earnings'
+    # If type is 'local-busking' (Adelaide ground-ops) -> tracks to operational bank (ground_ops local_busking_earnings)
+    # If type is 'busking' generally: check if location is Adelaide to classify as local, else tour-busking.
+    # Note: Merch also logs to tour financials.
+    
+    is_local = False
+    if income_type == "local-busking":
+        is_local = True
+    elif income_type == "tour-busking":
+        is_local = False
+    elif income_type == "busking":
+        # check if location is Adelaide (case-insensitive)
+        if location and location.strip().lower() == "adelaide":
+            is_local = True
+        else:
+            is_local = False
+            
+    if is_local:
+        ground_ops = data.setdefault("ground_ops", {
+            "local_busking_earnings": 0.0,
+            "expenses": 0.0,
+            "cash_float": 150.0,
+            "operational_bank": 150.0
+        })
+        ground_ops["local_busking_earnings"] = round(ground_ops.get("local_busking_earnings", 0.0) + amount, 2)
+        print(f"SUCCESS: Logged local busking income of ${amount:,.2f} under Ground Operations.")
+    else:
+        financials = data.setdefault("financials", {
+            "target": 37000.0,
+            "current_earnings": 0.0,
+            "fuel_expenses": 350.0,
+            "gear_expenses": 120.0,
+            "net_earnings": -470.0
+        })
+        financials["current_earnings"] = round(financials.get("current_earnings", 0.0) + amount, 2)
+        print(f"SUCCESS: Logged tour income ({income_type}) of ${amount:,.2f} under Financials.")
+        
+    save_data(data)
+
 def cmd_show():
     """Print the contents of the database nicely."""
     data = load_data()
@@ -247,6 +327,13 @@ def cmd_show():
     print(f"  Gear Expenses:    ${fin.get('gear_expenses', 0.0):,.2f}")
     print(f"  Net Earnings:     ${fin.get('net_earnings', 0.0):,.2f}")
     
+    print("\n--- GROUND OPERATIONS (Adelaide Survival Plan) ---")
+    g = data.get("ground_ops", {})
+    print(f"  Cash Float:             ${g.get('cash_float', 0.0):,.2f}")
+    print(f"  Local Busking Earnings: ${g.get('local_busking_earnings', 0.0):,.2f}")
+    print(f"  Expenses:               ${g.get('expenses', 0.0):,.2f}")
+    print(f"  Operational Bank:       ${g.get('operational_bank', 0.0):,.2f}")
+    
     print("\n--- TOUR STOPS ---")
     for s in data.get("tour_stops", []):
         print(f"  - {s.get('name').ljust(15)} | Status: {s.get('status').ljust(10)} | Transit: {s.get('transit_status')}")
@@ -255,6 +342,12 @@ def cmd_show():
     b = data.get("booking", {})
     print(f"  Venues Mapped: {b.get('venues_mapped')}")
     print(f"  Status Text:   {b.get('status')}")
+    
+    history = data.get("income_history", [])
+    if history:
+        print("\n--- RECENT INCOME LOGS ---")
+        for item in history[-5:]:  # show up to last 5
+            print(f"  - {item.get('date')} | {item.get('type').ljust(12)} | ${item.get('amount'):,.2f} | {item.get('location')}")
     print("==================================================")
 
 def main():
@@ -293,6 +386,13 @@ def main():
     p_book.add_argument("--count", type=int, help="Number of venues mapped")
     p_book.add_argument("--status", type=str, help="Overall status text (e.g. '85+ venues mapped')")
     
+    # Log Income
+    p_log = subparsers.add_parser("log-income", help="Log earnings/income updates")
+    p_log.add_argument("--type", type=str, choices=["busking", "gig", "merch", "tour-busking", "local-busking"], required=True, help="Type of income tracker")
+    p_log.add_argument("--amount", type=float, required=True, help="Amount in dollars")
+    p_log.add_argument("--location", type=str, help="City/town/location where earned")
+    p_log.add_argument("--date", type=str, help="Date of event (defaults to current time)")
+    
     args = parser.parse_args()
     
     if args.command == "init":
@@ -313,6 +413,8 @@ def main():
         if args.count is None and args.status is None:
             p_book.error("At least one option (--count or --status) must be provided.")
         cmd_booking(args.count, args.status)
+    elif args.command == "log-income":
+        cmd_log_income(args.type, args.amount, args.location, args.date)
     else:
         # Default behavior: if no command is specified, load_data to initialize, and show current state.
         print("No command provided. Showing current state:")

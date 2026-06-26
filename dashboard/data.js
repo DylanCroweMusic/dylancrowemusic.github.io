@@ -24,17 +24,23 @@ const DASHBOARD_DATA = {
   ],
   "financials": {
     "target": 37000.0,
-    "current_earnings": 1200.0,
+    "current_earnings": 500.0,
     "fuel_expenses": 350.0,
     "gear_expenses": 120.0,
-    "net_earnings": 730.0
+    "net_earnings": 30.0
+  },
+  "ground_ops": {
+    "local_busking_earnings": 120.0,
+    "expenses": 0.0,
+    "cash_float": 150.0,
+    "operational_bank": 270.0
   },
   "tour_stops": [
     {
       "id": 1,
-      "name": "Adelaide",
-      "status": "Current",
-      "transit_status": "Arrived"
+      "name": "Perth",
+      "status": "Planned",
+      "transit_status": "Scheduled"
     },
     {
       "id": 2,
@@ -62,7 +68,37 @@ const DASHBOARD_DATA = {
     },
     {
       "id": 6,
-      "name": "Perth",
+      "name": "Bunbury",
+      "status": "Planned",
+      "transit_status": "Scheduled"
+    },
+    {
+      "id": 7,
+      "name": "Fremantle",
+      "status": "Planned",
+      "transit_status": "Scheduled"
+    },
+    {
+      "id": 8,
+      "name": "Adelaide",
+      "status": "Planned",
+      "transit_status": "Scheduled"
+    },
+    {
+      "id": 9,
+      "name": "Melbourne",
+      "status": "Planned",
+      "transit_status": "Scheduled"
+    },
+    {
+      "id": 10,
+      "name": "Sydney",
+      "status": "Planned",
+      "transit_status": "Scheduled"
+    },
+    {
+      "id": 11,
+      "name": "Sunshine Coast",
       "status": "Target",
       "transit_status": "Dreaming"
     }
@@ -71,5 +107,19 @@ const DASHBOARD_DATA = {
     "venues_mapped": 85,
     "status": "85+ venues mapped"
   },
-  "last_updated": "2026-06-26T01:57:28.138676Z"
+  "income_history": [
+    {
+      "type": "local-busking",
+      "amount": 120.0,
+      "location": "Adelaide",
+      "date": "2026-06-26T02:09:54.340269Z"
+    },
+    {
+      "type": "gig",
+      "amount": 500.0,
+      "location": "Perth",
+      "date": "2026-06-26T02:09:57.074796Z"
+    }
+  ],
+  "last_updated": "2026-06-26T02:09:57.075246Z"
 };
