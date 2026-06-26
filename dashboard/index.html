@@ -306,6 +306,17 @@
       .dev-sync-card button {
         height: 38px !important;
       }
+      /* Stack section titles to prevent text clipping search */
+      .section-title {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.25rem !important;
+        font-size: 0.8rem !important;
+      }
+      .section-title span:last-child {
+        font-size: 0.65rem !important;
+        opacity: 0.8;
+      }
     }
 
     .section-title {
