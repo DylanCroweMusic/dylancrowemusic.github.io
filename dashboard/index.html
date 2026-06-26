@@ -405,6 +405,90 @@ body { background: var(--bg-grad); min-height:100vh; }
   body { font-size:14px; }
   .stat-val { font-size:1.2rem; }
 }
+
+/* ═══ V2.1 WORKFLOW ADDITIONS ═══ */
+
+/* Add Venue FAB */
+.fab.add-venue {
+  bottom: 11rem; background: linear-gradient(135deg, var(--gig-l), #007a96);
+  box-shadow: 0 4px 16px rgba(0,180,216,0.4); width:44px; height:44px; font-size:1.2rem;
+}
+
+/* Follow-up alert badge */
+.followup-alert {
+  font-size:0.55rem; padding:2px 6px; border-radius:4px;
+  background:rgba(245,158,11,0.15); color:#f59e0b; font-weight:700;
+  display:inline-block; margin-top:0.2rem; animation:pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+
+/* Venue detail modal */
+.venue-detail-hdr { border-bottom:1px solid var(--card-brd); padding-bottom:0.6rem; margin-bottom:0.6rem; }
+.stage-timeline { display:flex; gap:2px; flex-wrap:wrap; margin:0.5rem 0; }
+.stage-tl-item { font-size:0.55rem; padding:2px 6px; border-radius:3px; background:rgba(255,255,255,0.04); }
+.stage-tl-arrow { color:var(--text-faint); font-size:0.5rem; align-self:center; }
+
+/* Marketing checklist */
+.mkt-check { display:flex; align-items:center; gap:0.5rem; padding:0.4rem; margin-bottom:0.25rem; background:rgba(255,255,255,0.02); border-radius:6px; cursor:pointer; }
+.mkt-check.done { opacity:0.6; }
+.mkt-check .todo-check { width:20px; height:20px; }
+.mkt-check .todo-text { font-size:0.72rem; }
+
+/* Filter bar */
+.filter-bar { display:flex; gap:0.4rem; margin-bottom:0.8rem; flex-wrap:wrap; }
+.filter-bar select, .filter-bar input {
+  flex:1; min-width:100px; padding:0.4rem; border-radius:6px;
+  border:1px solid var(--card-brd); background:rgba(0,0,0,0.3); color:var(--off-white);
+  font-family:inherit; font-size:0.7rem; min-height:36px;
+}
+
+/* House concert FB tracker */
+.fb-tracker { margin-top:0.5rem; }
+.fb-tracker-row {
+  display:flex; align-items:center; gap:0.4rem; padding:0.35rem;
+  background:rgba(255,255,255,0.02); border-radius:6px; margin-bottom:0.2rem; font-size:0.68rem;
+}
+.fb-tracker-row .todo-check { width:18px; height:18px; }
+.fb-group-name { flex:1; }
+.fb-post-date { color:var(--text-dim); font-size:0.6rem; }
+.fb-resp-count { font-size:0.6rem; color:var(--amber); font-weight:600; }
+
+/* HC posting schedule */
+.hc-schedule { background:rgba(217,119,6,0.05); border:1px solid rgba(217,119,6,0.15); border-radius:8px; padding:0.6rem; margin-bottom:0.6rem; }
+.hc-schedule-title { font-size:0.65rem; font-weight:700; color:var(--house-l); margin-bottom:0.4rem; }
+.hc-schedule-row { display:flex; justify-content:space-between; font-size:0.62rem; margin:0.2rem 0; }
+.hc-schedule-row.done span:last-child { color:var(--st-booked); }
+
+/* Stop management buttons */
+.stop-actions { display:flex; gap:0.3rem; margin-top:0.4rem; }
+.stop-btn {
+  font-size:0.6rem; padding:0.3rem 0.5rem; border-radius:6px;
+  border:1px solid var(--card-brd); background:transparent; color:var(--text-dim);
+  cursor:pointer; font-family:inherit; min-height:32px;
+}
+.stop-btn:active { background:var(--card-h); }
+.stop-btn.current { color:var(--st-Current); border-color:rgba(34,197,94,0.3); }
+.stop-btn.delete { color:var(--expense); }
+
+/* Session log entries */
+.session-log-item {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:0.4rem 0.5rem; background:rgba(255,255,255,0.02); border-radius:6px;
+  margin-bottom:0.2rem; font-size:0.7rem;
+}
+.session-log-del {
+  width:24px; height:24px; border-radius:6px; border:none;
+  background:rgba(239,68,68,0.1); color:var(--expense); font-size:0.8rem;
+  cursor:pointer; flex-shrink:0;
+}
+
+/* Inline edit inputs */
+.inline-edit {
+  width:50px; padding:2px 4px; border-radius:4px;
+  border:1px solid var(--card-brd); background:rgba(0,0,0,0.3); color:var(--off-white);
+  font-family:inherit; font-size:0.65rem; text-align:center;
+}
+
 </style>
 </head>
 <body>
@@ -477,6 +561,7 @@ body { background: var(--bg-grad); min-height:100vh; }
 
 <!-- ═══ QUICK-LOG FAB ═══ -->
 <button class="fab" id="fab-btn" onclick="openQuickLog()">+</button>
+<button class="fab add-venue" id="add-venue-fab" onclick="openAddVenueModal()">🎸</button>
 
 <!-- ═══ QUICK-LOG MODAL ═══ -->
 <div class="modal-overlay" id="ql-modal">
@@ -493,6 +578,61 @@ body { background: var(--bg-grad); min-height:100vh; }
     </div>
     <div id="ql-fields"></div>
     <button class="modal-submit" onclick="submitQuickLog()">Log It</button>
+  </div>
+</div>
+
+
+<!-- ═══ ADD VENUE MODAL ═══ -->
+<div class="modal-overlay" id="av-modal">
+  <div class="modal-sheet">
+    <div class="modal-hdr">
+      <div class="modal-title">Add Venue to Pipeline</div>
+      <button class="modal-close" onclick="closeModal('av-modal')">✕</button>
+    </div>
+    <div class="modal-field"><label>Venue Name</label><input type="text" id="av-name" placeholder="The Irish Rose"></div>
+    <div class="modal-field"><label>Phone</label><input type="tel" id="av-phone" placeholder="(08) 9221 1234"></div>
+    <div class="modal-field"><label>Venue Type</label><select id="av-type"><option>Live Music Bar</option><option>Pub</option><option>Restaurant</option><option>Brewery</option><option>Cafe</option><option>Folk Club</option><option>Other</option></select></div>
+    <div class="modal-field"><label>City</label><select id="av-city"></select></div>
+    <div class="modal-field"><label>Priority</label><select id="av-priority"><option value="high">High</option><option value="medium" selected>Medium</option><option value="low">Low</option></select></div>
+    <button class="modal-submit" onclick="submitAddVenue()">Add to Pipeline</button>
+  </div>
+</div>
+
+<!-- ═══ VENUE DETAIL MODAL ═══ -->
+<div class="modal-overlay" id="vd-modal">
+  <div class="modal-sheet" id="vd-content"></div>
+</div>
+
+<!-- ═══ ADD HOST MODAL ═══ -->
+<div class="modal-overlay" id="hc-modal">
+  <div class="modal-sheet">
+    <div class="modal-hdr">
+      <div class="modal-title">Add House Concert Host</div>
+      <button class="modal-close" onclick="closeModal('hc-modal')">✕</button>
+    </div>
+    <div class="modal-field"><label>Host Name</label><input type="text" id="hc-host" placeholder="Sarah Mitchell"></div>
+    <div class="modal-field"><label>Source</label><select id="hc-source"><option>Facebook group</option><option>Venue referral</option><option>Word of mouth</option><option>Instagram</option><option>Other</option></select></div>
+    <div class="modal-field"><label>Facebook Group</label><select id="hc-fbgroup"></select></div>
+    <div class="modal-field"><label>Host Phone</label><input type="tel" id="hc-phone" placeholder="0401 234 567"></div>
+    <div class="modal-field"><label>Host Email</label><input type="email" id="hc-email" placeholder="host@email.com"></div>
+    <button class="modal-submit" onclick="submitAddHost()">Add Host</button>
+  </div>
+</div>
+
+<!-- ═══ ADD STOP MODAL ═══ -->
+<div class="modal-overlay" id="as-modal">
+  <div class="modal-sheet">
+    <div class="modal-hdr">
+      <div class="modal-title">Add Tour Stop</div>
+      <button class="modal-close" onclick="closeModal('as-modal')">✕</button>
+    </div>
+    <div class="modal-field"><label>Stop Name</label><input type="text" id="as-name" placeholder="Ceduna"></div>
+    <div class="modal-field"><label>State</label><input type="text" id="as-state" placeholder="SA"></div>
+    <div class="modal-field"><label>Segment Type</label><select id="as-segment"><option>Regional</option><option>Major Metro</option><option>Coastal</option><option>Transit</option></select></div>
+    <div class="modal-field"><label>Duration (days)</label><input type="number" id="as-days" value="3" inputmode="numeric"></div>
+    <div class="modal-field"><label>Busking Target</label><input type="number" id="as-busk" value="2" inputmode="numeric"></div>
+    <div class="modal-field"><label>Gig Target</label><input type="number" id="as-gig" value="1" inputmode="numeric"></div>
+    <button class="modal-submit" onclick="submitAddStop()">Add Stop</button>
   </div>
 </div>
 
@@ -808,7 +948,7 @@ function renderRoute() {
             <div class="stream-mini" style="margin-top:0.5rem;border-top:1px solid var(--card-brd);padding-top:0.3rem"><span class="text-dim">Projected</span><span>${fmt$(s.financials?.projected_income||0)}</span></div>
             <div class="stream-mini"><span class="text-dim">Actual</span><span>${fmt$(s.financials?.actual_income||0)}</span></div>
             <div class="stream-mini"><span class="text-dim">Net</span><span style="font-weight:700">${fmt$(s.financials?.net||0)}</span></div>
-            <button class="venue-btn" style="width:100%;margin-top:0.4rem" onclick="event.stopPropagation();openStopDetail(${s.id})">View Details →</button>
+            <div class="stop-actions"><button class="stop-btn current" onclick="event.stopPropagation();setCurrentStop(${s.id})">📍 Set Current</button><button class="stop-btn" onclick="event.stopPropagation();moveStop(${s.id},-1)">↑</button><button class="stop-btn" onclick="event.stopPropagation();moveStop(${s.id},1)">↓</button><button class="stop-btn delete" onclick="event.stopPropagation();deleteStop(${s.id})">✕</button></div><button class="venue-btn" style="width:100%;margin-top:0.4rem" onclick="event.stopPropagation();openStopDetail(${s.id})">View Details →</button>
           </div>
         </div>
       </div>`;
@@ -883,27 +1023,35 @@ function switchTab(tab) {
 
 function renderBuskingTab(spots, stop) {
   if (!spots.length) return '<div class="empty-state">No busking spots logged yet. Tap + to add one.</div>';
-  return spots.map(s => `
-    <div class="entity-card">
-      <div class="entity-hdr">
-        <div>
-          <div class="entity-name">📍 ${s.name}</div>
-          <div class="entity-sub">${s.address || s.city || ''}</div>
-        </div>
-        <span class="stop-badge ${s.status==='confirmed'?'current':'planned'}">${s.status}</span>
-      </div>
-      <div class="entity-row"><span class="lbl">Foot Traffic</span><span>${'★'.repeat(s.foot_traffic_rating||0)}${'☆'.repeat(5-(s.foot_traffic_rating||0))}</span></div>
-      <div class="entity-row"><span class="lbl">Best Time</span><span>${s.best_time_of_day||'—'}</span></div>
-      <div class="entity-row"><span class="lbl">Permit</span><span>${s.permit_required ? (s.permit_obtained ? '✅ Obtained' : '⚠️ Required') : 'Not required'}</span></div>
-      <div class="entity-row"><span class="lbl">Sessions</span><span>${s.total_sessions||0}</span></div>
-      <div class="entity-row"><span class="lbl">Total Earned</span><span class="text-green" style="font-weight:700">${fmt$(s.total_earnings_logged||0)}</span></div>
-      ${s.avg_earnings_per_session ? `<div class="entity-row"><span class="lbl">Avg/Session</span><span>${fmt$(s.avg_earnings_per_session)}</span></div>` : ''}
-      ${s.best_time_notes ? `<div style="font-size:0.68rem;color:var(--text-dim);margin-top:0.4rem;padding:0.4rem;background:rgba(0,0,0,0.2);border-radius:6px">${s.best_time_notes}</div>` : ''}
-      ${(s.earnings_history||[]).map(e => `<div class="entity-row"><span class="lbl">${e.date}</span><span style="color:var(--busking-l)">${fmt$(e.earnings)}${e.merch_sales?` + ${fmt$(e.merch_sales)} merch`:''}</span></div>`).join('')}
-    </div>
-  `).join('');
+  return spots.map(s => {
+    const spotStatus = s.status || 'spotted';
+    const statusClass = spotStatus === 'confirmed' || spotStatus === 'played' || spotStatus === 'regular' ? 'current' : 'planned';
+    let sessionsHtml = '';
+    if (s.earnings_history && s.earnings_history.length) {
+      sessionsHtml = s.earnings_history.map((e, idx) => {
+        return '<div class="session-log-item">' +
+          '<div><div style="font-weight:600">' + (e.date||'') + '</div>' +
+          '<div style="font-size:0.6rem;color:var(--text-dim)">' + (e.duration_minutes||0) + 'min' + (e.notes ? ' · ' + e.notes : '') + '</div></div>' +
+          '<div style="text-align:right"><span style="color:var(--busking-l);font-weight:600">' + fmt$(e.earnings||0) + (e.merch_sales ? ' +' + fmt$(e.merch_sales) : '') + '</span>' +
+          '<button class="session-log-del" onclick="deleteBuskingSession(\'' + s.id + '\',' + idx + ')">✕</button></div></div>';
+      }).join('');
+    }
+    return '<div class="entity-card">' +
+      '<div class="entity-hdr"><div><div class="entity-name">📍 ' + s.name + '</div>' +
+      '<div class="entity-sub">' + (s.address || s.city || '') + '</div></div>' +
+      '<span class="stop-badge ' + statusClass + '" onclick="cycleSpotStatus(\'' + s.id + '\')">' + spotStatus + '</span></div>' +
+      '<div class="entity-row"><span class="lbl">Foot Traffic</span><span>' + '★'.repeat(s.foot_traffic_rating||0) + '☆'.repeat(5-(s.foot_traffic_rating||0)) + '</span></div>' +
+      '<div class="entity-row"><span class="lbl">Best Time</span><span>' + (s.best_time_of_day||'—') + '</span></div>' +
+      '<div class="entity-row"><span class="lbl">Permit</span><span>' + (s.permit_required ? (s.permit_obtained ? '✅ Obtained' : '⚠️ Required') : 'Not required') + '</span></div>' +
+      '<div class="entity-row"><span class="lbl">Sessions</span><span>' + (s.total_sessions||0) + '</span></div>' +
+      '<div class="entity-row"><span class="lbl">Total Earned</span><span class="text-green" style="font-weight:700">' + fmt$(s.total_earnings_logged||0) + '</span></div>' +
+      (s.avg_earnings_per_session ? '<div class="entity-row"><span class="lbl">Avg/Session</span><span>' + fmt$(s.avg_earnings_per_session) + '</span></div>' : '') +
+      (s.best_time_notes ? '<div style="font-size:0.68rem;color:var(--text-dim);margin-top:0.4rem;padding:0.4rem;background:rgba(0,0,0,0.2);border-radius:6px">' + s.best_time_notes + '</div>' : '') +
+      sessionsHtml +
+      '<button class="venue-btn" style="width:100%;margin-top:0.3rem;color:var(--expense)" onclick="deleteBuskingSpot(\'' + s.id + '\')">Delete Spot</button>' +
+    '</div>';
+  }).join('');
 }
-
 function renderGigsTab(venues, stop) {
   if (!venues.length) return '<div class="empty-state">No venues in pipeline yet. Use the Pipeline tab to manage bookings.</div>';
   return venues.map(v => `
@@ -970,32 +1118,41 @@ function advanceVenue(venueId) {
 }
 
 function renderHouseTab(hcs, stop) {
-  if (!hcs.length) return '<div class="empty-state">No house concerts in pipeline. Seed Facebook groups 3-4 weeks before arrival.</div>';
+  if (!hcs.length) return '<div class="empty-state">No house concerts in pipeline. Tap + Add Host to start.</div>';
   const hcStageLabels = {posted:'Posted',interested:'Interested',confirmed:'Confirmed',completed:'Completed',cancelled:'Cancelled'};
   const hcStageColors = {posted:'#6b7280',interested:'#f59e0b',confirmed:'#22c55e',completed:'#14b8a6',cancelled:'#ef4444'};
-  return hcs.map(h => `
-    <div class="entity-card" style="border-left:3px solid ${hcStageColors[h.pipeline_stage]||'#6b7280'}">
-      <div class="entity-hdr">
-        <div>
-          <div class="entity-name">🏠 ${h.host_name}</div>
-          <div class="entity-sub">Source: ${h.source||'—'}</div>
-        </div>
-        <span class="venue-stage-badge" style="background:${hcStageColors[h.pipeline_stage]||'#6b7280'}22;color:${hcStageColors[h.pipeline_stage]||'#6b7280'}">${hcStageLabels[h.pipeline_stage]||h.pipeline_stage}</span>
-      </div>
-      ${h.facebook_group ? `<div class="entity-row"><span class="lbl">FB Group</span><span>${h.facebook_group}</span></div>` : ''}
-      ${h.event ? `
-        <div style="margin-top:0.5rem;padding:0.5rem;background:rgba(217,119,6,0.06);border-radius:6px">
-          ${h.event.date ? `<div class="entity-row"><span class="lbl">Date</span><span>${h.event.date}</span></div>` : ''}
-          ${h.event.tier_label ? `<div class="entity-row"><span class="lbl">Tier</span><span>${h.event.tier_label}</span></div>` : ''}
-          ${h.event.ticket_count ? `<div class="entity-row"><span class="lbl">Tickets</span><span>${h.event.ticket_count}</span></div>` : ''}
-          ${h.event.revenue ? `<div class="entity-row"><span class="lbl">Revenue</span><span style="color:var(--house-l);font-weight:700">${fmt$(h.event.revenue)}</span></div>` : ''}
-        </div>
-      ` : ''}
-      ${(h.stage_history||[]).map(sh => `<div class="entity-row"><span class="lbl">${sh.stage}</span><span>${sh.date}${sh.notes?' — '+sh.notes:''}</span></div>`).join('')}
-    </div>
-  `).join('');
+  let html = '<button class="venue-btn" style="width:100%;margin-bottom:0.6rem" onclick="openAddHostModal()">+ Add Host</button>';
+  html += hcs.map(h => {
+    const color = hcStageColors[h.pipeline_stage] || '#6b7280';
+    let detail = '';
+    if (h.event) {
+      detail = '<div style="margin-top:0.5rem;padding:0.5rem;background:rgba(217,119,6,0.06);border-radius:6px">';
+      if (h.event.date) detail += '<div class="entity-row"><span class="lbl">Date</span><span>' + h.event.date + '</span></div>';
+      if (h.event.tier_label) detail += '<div class="entity-row"><span class="lbl">Tier</span><span>' + h.event.tier_label + '</span></div>';
+      if (h.event.ticket_count) detail += '<div class="entity-row"><span class="lbl">Tickets</span><span>' + h.event.ticket_count + '</span></div>';
+      if (h.event.revenue) detail += '<div class="entity-row"><span class="lbl">Revenue</span><span style="color:var(--house-l);font-weight:700">' + fmt$(h.event.revenue) + '</span></div>';
+      detail += '</div>';
+    }
+    let history = '';
+    if (h.stage_history && h.stage_history.length) {
+      history = h.stage_history.map(sh => '<div class="entity-row"><span class="lbl">' + (hcStageLabels[sh.stage]||sh.stage) + '</span><span>' + sh.date + (sh.notes ? ' — ' + sh.notes : '') + '</span></div>').join('');
+    }
+    const showAdvance = h.pipeline_stage !== 'completed' && h.pipeline_stage !== 'cancelled';
+    const nextLabel = nextHCStageLabel(h.pipeline_stage);
+    let actions = '<div class="venue-actions">';
+    if (showAdvance) actions += '<button class="venue-btn advance" onclick="advanceHouseConcert(\'' + h.id + '\')">→ ' + nextLabel + '</button>';
+    if (showAdvance) actions += '<button class="venue-btn" style="color:var(--expense)" onclick="cancelHouseConcert(\'' + h.id + '\')">✕ Cancel</button>';
+    actions += '</div>';
+    const fbTracker = renderFBTracker(h);
+    return '<div class="entity-card" style="border-left:3px solid ' + color + '">' +
+      '<div class="entity-hdr"><div><div class="entity-name">🏠 ' + h.host_name + '</div>' +
+      '<div class="entity-sub">Source: ' + (h.source||'—') + '</div></div>' +
+      '<span class="venue-stage-badge" style="background:' + color + '22;color:' + color + '">' + (hcStageLabels[h.pipeline_stage]||h.pipeline_stage) + '</span></div>' +
+      (h.facebook_group ? '<div class="entity-row"><span class="lbl">FB Group</span><span>' + h.facebook_group + '</span></div>' : '') +
+      detail + history + actions + fbTracker + '</div>';
+  }).join('');
+  return html;
 }
-
 function renderStopFinancials(stop) {
   const proj = stop.financials?.projected_income || 0;
   const actual = stop.financials?.actual_income || 0;
@@ -1039,9 +1196,10 @@ function renderPipeline() {
   }
 
   const stages = ['not_contacted','called','emailed','follow_up_1','follow_up_2','booked','played','declined'];
-  let html = `<div style="font-size:0.8rem;color:var(--text-dim);margin-bottom:0.8rem">Showing venues for ${stop.name}${allVenues.length>venues.length?' + next stop':''} — ${allVenues.length} total</div>`;
+  let html = `<div class="filter-bar"><select onchange="renderPipelineFiltered(this.value)"><option value="all">All Stages</option><option value="not_contacted">Not Contacted</option><option value="called">Called</option><option value="emailed">Emailed</option><option value="follow_up_1">Follow Up 1</option><option value="follow_up_2">Follow Up 2</option><option value="booked">Booked</option><option value="played">Played</option><option value="declined">Declined</option></select></div><div style="font-size:0.8rem;color:var(--text-dim);margin-bottom:0.8rem">Showing venues for ${stop.name}${allVenues.length>venues.length?' + next stop':''} — ${allVenues.length} total</div>`;
 
-  stages.forEach(stage => {
+  const filteredStages = pipeFilterStage === 'all' ? stages : stages.filter(s => s === pipeFilterStage);
+  filteredStages.forEach(stage => {
     const stageVenues = allVenues.filter(v => v.pipeline_stage === stage);
     if (!stageVenues.length) return;
     const color = STAGE_COLORS[stage];
@@ -1324,6 +1482,414 @@ function submitQuickLog() {
 function val(id) {
   const el = document.getElementById(id);
   return el ? el.value : '';
+}
+
+
+// ═══ V2.1 WORKFLOW FUNCTIONS ═══
+
+// ── Modal helpers ──
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+
+// ── Populate city selects ──
+function populateCitySelects() {
+  const stops = (D.tour_stops||[]).map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+  const groups = (D.config?.facebook_groups||[]).map(g => `<option value="${g}">${g}</option>`).join('');
+  ['av-city','hc-fbgroup'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { if (id === 'hc-fbgroup') el.innerHTML = '<option value="">Select group…</option>' + groups; else el.innerHTML = stops; }
+  });
+}
+
+// ── ADD VENUE ──
+function openAddVenueModal() {
+  populateCitySelects();
+  const stop = getCurrentStop();
+  const cityEl = document.getElementById('av-city');
+  if (cityEl && stop) cityEl.value = stop.name;
+  openModal('av-modal');
+}
+
+function submitAddVenue() {
+  const name = val('av-name');
+  const phone = val('av-phone');
+  const vtype = val('av-type');
+  const city = val('av-city');
+  const priority = val('av-priority');
+  if (!name) { alert('Enter venue name'); return; }
+  const stop = D.tour_stops.find(s => s.name === city) || getCurrentStop();
+  if (!stop) { alert('No stop selected'); return; }
+  const id = `ven-${city.toLowerCase().replace(/[^a-z]/g,'-')}-${name.toLowerCase().replace(/[^a-z]/g,'-')}`;
+  const venue = {
+    id, tour_stop_id: stop.id, name, city, state: stop.state,
+    phone, email: '', contact_name: '', venue_type: vtype,
+    address: '', website: '', priority, tags: [],
+    pipeline_stage: 'not_contacted', stage_history: [{stage:'not_contacted', date: new Date().toISOString().slice(0,10)}],
+    status: 'active', gig: null, marketing: {epk_sent:false, reels_captured:false, venue_posted_content:false, venue_tagged_dylan:false}
+  };
+  D.venues = D.venues || [];
+  D.venues.push(venue);
+  stop.venue_ids = stop.venue_ids || [];
+  stop.venue_ids.push(id);
+  stop.actuals.venue_gig.venues_contacted = (stop.actuals.venue_gig.venues_contacted||0) + 1;
+  saveEdits(); closeModal('av-modal');
+  const av = document.querySelector('.view.active')?.id?.replace('view-','');
+  if (av) switchView(av);
+}
+
+// ── VENUE DETAIL MODAL ──
+function openVenueDetail(venueId) {
+  const v = D.venues.find(x => x.id === venueId);
+  if (!v) return;
+  const stageHistory = (v.stage_history||[]).map(sh => 
+    `<div class="entity-row"><span class="lbl">${STAGE_LABELS[sh.stage]||sh.stage}</span><span>${sh.date}${sh.notes?' — '+sh.notes:''}</span></div>`
+  ).join('');
+  
+  const gigDetails = v.gig ? `
+    <div style="padding:0.5rem;background:rgba(34,197,94,0.06);border-radius:6px;margin-top:0.5rem">
+      <div class="entity-row"><span class="lbl">Date</span><input class="inline-edit" style="width:auto" type="date" value="${v.gig.date||''}" onchange="updateGigField('${venueId}','date',this.value)"></div>
+      <div class="entity-row"><span class="lbl">Fee $</span><input class="inline-edit" type="number" value="${v.gig.fee||0}" onchange="updateGigField('${venueId}','fee',parseFloat(this.value))"></div>
+      <div class="entity-row"><span class="lbl">Sound Check</span><input class="inline-edit" style="width:80px" type="time" value="${v.gig.sound_check_time||''}" onchange="updateGigField('${venueId}','sound_check_time',this.value)"></div>
+      <div class="entity-row"><span class="lbl">PA Provided</span><select class="inline-edit" onchange="updateGigField('${venueId}','pa_provided',this.value==='true')"><option value="true" ${v.gig.pa_provided?'selected':''}>Yes</option><option value="false" ${!v.gig.pa_provided?'selected':''}>No</option></select></div>
+      <div class="entity-row"><span class="lbl">Rider Notes</span><input class="inline-edit" style="width:60%" type="text" value="${v.gig.rider_notes||''}" onchange="updateGigField('${venueId}','rider_notes',this.value)"></div>
+      <div class="entity-row"><span class="lbl">Venue Notes</span><input class="inline-edit" style="width:60%" type="text" value="${v.gig.venue_notes||''}" onchange="updateGigField('${venueId}','venue_notes',this.value)"></div>
+    </div>` : (v.pipeline_stage === 'booked' ? '<button class="modal-submit" onclick="initGig(\''+venueId+'\')">Add Gig Details</button>' : '');
+
+  const mktChecklist = v.marketing ? `
+    <div style="margin-top:0.5rem">
+      <div class="section-title" style="margin:0.4rem 0">Marketing Checklist</div>
+      ${renderMktCheck('epk_sent','EPK Sent',v,venueId)}
+      ${renderMktCheck('reels_captured','Reels Captured',v,venueId)}
+      ${renderMktCheck('venue_posted_content','Venue Posted Content',v,venueId)}
+      ${renderMktCheck('venue_tagged_dylan','Venue Tagged Dylan',v,venueId)}
+    </div>` : '';
+
+  const needsFU = venueNeedsFollowUp(v);
+  const fuAlert = needsFU ? `<div class="followup-alert">⚠️ ${needsFU}</div>` : '';
+
+  document.getElementById('vd-content').innerHTML = `
+    <div class="modal-hdr">
+      <div class="modal-title">${v.name}</div>
+      <button class="modal-close" onclick="closeModal('vd-modal')">✕</button>
+    </div>
+    <div class="venue-detail-hdr">
+      <div class="entity-row"><span class="lbl">Type</span><span>${v.venue_type||'—'}</span></div>
+      <div class="entity-row"><span class="lbl">City</span><span>${v.city}</span></div>
+      ${v.phone?`<div class="entity-row"><span class="lbl">Phone</span><a href="tel:${v.phone}" style="color:var(--cyan)">${v.phone}</a></div>`:''}
+      ${v.contact_name?`<div class="entity-row"><span class="lbl">Contact</span><span>${v.contact_name}</span></div>`:''}
+      <div class="entity-row"><span class="lbl">Stage</span><span class="venue-stage-badge" style="background:${STAGE_COLORS[v.pipeline_stage]}22;color:${STAGE_COLORS[v.pipeline_stage]}">${STAGE_LABELS[v.pipeline_stage]}</span></div>
+      ${fuAlert}
+    </div>
+    <div class="venue-actions">
+      ${v.phone?`<a href="tel:${v.phone}" class="venue-btn call">📞 Call</a>`:''}
+      <button class="venue-btn advance" onclick="advanceVenue('${venueId}');openVenueDetail('${venueId}')">→ ${nextStageLabel(v.pipeline_stage)}</button>
+      ${v.pipeline_stage!=='declined'&&v.pipeline_stage!=='played'?`<button class="venue-btn" style="color:var(--expense);border-color:rgba(239,68,68,0.3)" onclick="declineVenue('${venueId}')">✕ Decline</button>`:''}
+    </div>
+    <div style="margin-top:0.6rem">
+      <div class="section-title">Stage History</div>
+      ${stageHistory || '<div class="empty-state">No history</div>'}
+    </div>
+    ${gigDetails}
+    ${mktChecklist}
+  `;
+  openModal('vd-modal');
+}
+
+function renderMktCheck(field, label, v, venueId) {
+  const done = v.marketing?.[field];
+  return `<div class="mkt-check ${done?'done':''}" onclick="toggleMarketing('${venueId}','${field}')">
+    <div class="todo-check ${done?'done':''}"></div>
+    <span class="todo-text">${label}</span>
+  </div>`;
+}
+
+function toggleMarketing(venueId, field) {
+  const v = D.venues.find(x => x.id === venueId);
+  if (!v?.marketing) return;
+  v.marketing[field] = !v.marketing[field];
+  if (field === 'epk_sent' && v.marketing.epk_sent) v.marketing.epk_sent_date = new Date().toISOString().slice(0,10);
+  saveEdits(); openVenueDetail(venueId);
+}
+
+function updateGigField(venueId, field, value) {
+  const v = D.venues.find(x => x.id === venueId);
+  if (!v?.gig) return;
+  v.gig[field] = value;
+  saveEdits();
+}
+
+function initGig(venueId) {
+  const v = D.venues.find(x => x.id === venueId);
+  if (!v) return;
+  v.gig = { date:'', fee:400, set_times:[], set_duration_minutes:45, sound_check_time:'', stage_type:'small_stage', pa_provided:true, accommodation_offered:false, rider_notes:'', venue_notes:'' };
+  saveEdits(); openVenueDetail(venueId);
+}
+
+function declineVenue(venueId) {
+  const reason = prompt('Reason for declining?');
+  if (reason === null) return;
+  const v = D.venues.find(x => x.id === venueId);
+  if (!v) return;
+  v.pipeline_stage = 'declined';
+  v.status = 'declined';
+  v.stage_history = v.stage_history || [];
+  v.stage_history.push({stage:'declined', date: new Date().toISOString().slice(0,10), notes:reason});
+  saveEdits(); closeModal('vd-modal');
+  const av = document.querySelector('.view.active')?.id?.replace('view-','');
+  if (av) switchView(av);
+}
+
+function venueNeedsFollowUp(v) {
+  if (!v.stage_history?.length) return null;
+  const last = v.stage_history[v.stage_history.length-1];
+  const daysAgo = Math.floor((Date.now() - new Date(last.date)) / 86400000);
+  if (v.pipeline_stage === 'emailed' && daysAgo >= 3) return `Follow up — emailed ${daysAgo} days ago`;
+  if (v.pipeline_stage === 'follow_up_1' && daysAgo >= 5) return `Second follow-up — ${daysAgo} days since first`;
+  if (v.pipeline_stage === 'follow_up_2' && daysAgo >= 14) return `May need to let go — ${daysAgo} days of silence`;
+  return null;
+}
+
+// ── PIPELINE FILTER ──
+let pipeFilterStage = 'all';
+function renderPipelineFiltered(stage) {
+  pipeFilterStage = stage;
+  renderPipeline();
+}
+
+// ── ADD HOST ──
+function openAddHostModal() {
+  populateCitySelects();
+  const stop = getCurrentStop();
+  if (stop) { const el = document.getElementById('hc-fbgroup'); if (el) el.value = ''; }
+  openModal('hc-modal');
+}
+
+function submitAddHost() {
+  const hostName = val('hc-host');
+  const source = val('hc-source');
+  const fbGroup = val('hc-fbgroup');
+  const phone = val('hc-phone');
+  const email = val('hc-email');
+  if (!hostName) { alert('Enter host name'); return; }
+  const stop = getCurrentStop();
+  if (!stop) return;
+  const id = `hc-${stop.name.toLowerCase().replace(/[^a-z]/g,'-')}-${hostName.toLowerCase().replace(/[^a-z]/g,'-')}`;
+  const hc = {
+    id, tour_stop_id: stop.id, host_name: hostName, city: stop.name, state: stop.state,
+    host_email: email, host_phone: phone, source, source_detail: fbGroup,
+    pipeline_stage: 'posted', stage_history: [{stage:'posted', date: new Date().toISOString().slice(0,10), notes:fbGroup?`Posted in ${fbGroup}`:'Added manually'}],
+    event: null, outreach: { facebook_groups_posted: fbGroup?[fbGroup]:[], post_dates:[new Date().toISOString().slice(0,10)], posts: fbGroup?[{group:fbGroup, post_date:new Date().toISOString().slice(0,10), responses:0, status:'posted'}]:[], follow_up_messages_sent:0, personal_messages_sent:0 },
+    marketing: {}, status: 'posted', priority: 'medium', first_contact_date: new Date().toISOString().slice(0,10), tags: []
+  };
+  D.house_concerts = D.house_concerts || [];
+  D.house_concerts.push(hc);
+  stop.house_concert_ids = stop.house_concert_ids || [];
+  stop.house_concert_ids.push(id);
+  stop.actuals.house_concert.hosts_contacted = (stop.actuals.house_concert.hosts_contacted||0) + 1;
+  saveEdits(); closeModal('hc-modal');
+  const av = document.querySelector('.view.active')?.id?.replace('view-','');
+  if (av) switchView(av);
+}
+
+// ── ADVANCE HOUSE CONCERT ──
+function advanceHouseConcert(hcId) {
+  const h = D.house_concerts.find(x => x.id === hcId);
+  if (!h) return;
+  const stages = ['posted','interested','confirmed','completed'];
+  const idx = stages.indexOf(h.pipeline_stage);
+  if (idx < 0 || idx >= stages.length - 1) return;
+  h.pipeline_stage = stages[idx+1];
+  h.status = stages[idx+1];
+  h.stage_history = h.stage_history || [];
+  h.stage_history.push({stage: h.pipeline_stage, date: new Date().toISOString().slice(0,10)});
+  if (h.pipeline_stage === 'confirmed') {
+    h.actuals.house_concert.shows_confirmed = (h.actuals?.house_concert?.shows_confirmed||0) + 1;
+  }
+  if (h.pipeline_stage === 'completed') {
+    const stop = D.tour_stops.find(s => s.id === h.tour_stop_id);
+    if (stop) stop.actuals.house_concert.shows_completed = (stop.actuals.house_concert.shows_completed||0) + 1;
+  }
+  saveEdits();
+  const av = document.querySelector('.view.active')?.id?.replace('view-','');
+  if (av) switchView(av);
+}
+
+function cancelHouseConcert(hcId) {
+  if (!confirm('Cancel this house concert?')) return;
+  const h = D.house_concerts.find(x => x.id === hcId);
+  if (!h) return;
+  h.pipeline_stage = 'cancelled';
+  h.status = 'cancelled';
+  h.stage_history = h.stage_history || [];
+  h.stage_history.push({stage:'cancelled', date: new Date().toISOString().slice(0,10), notes:'Cancelled via dashboard'});
+  saveEdits();
+  const av = document.querySelector('.view.active')?.id?.replace('view-','');
+  if (av) switchView(av);
+}
+
+// ── FB POSTING TRACKER ──
+function toggleFBPost(hcId, group) {
+  const h = D.house_concerts.find(x => x.id === hcId);
+  if (!h) return;
+  h.outreach = h.outreach || { posts: [], facebook_groups_posted: [], post_dates: [] };
+  h.outreach.posts = h.outreach.posts || [];
+  const existing = h.outreach.posts.find(p => p.group === group);
+  const today = new Date().toISOString().slice(0,10);
+  if (existing) {
+    h.outreach.posts = h.outreach.posts.filter(p => p.group !== group);
+  } else {
+    h.outreach.posts.push({group, post_date: today, responses: 0, status: 'posted'});
+  }
+  h.outreach.facebook_groups_posted = h.outreach.posts.map(p => p.group);
+  h.outreach.post_dates = h.outreach.posts.map(p => p.post_date);
+  saveEdits();
+  const av = document.querySelector('.view.active')?.id?.replace('view-','');
+  if (av) switchView(av);
+}
+
+// ── DELETE BUSKING SESSION ──
+function deleteBuskingSession(spotId, sessionIdx) {
+  if (!confirm('Delete this busking session?')) return;
+  const spot = D.busking_spots.find(s => s.id === spotId);
+  if (!spot?.earnings_history) return;
+  const session = spot.earnings_history[sessionIdx];
+  spot.earnings_history.splice(sessionIdx, 1);
+  // Recalc aggregates
+  spot.total_sessions = spot.earnings_history.length;
+  spot.total_earnings_logged = spot.earnings_history.reduce((s,e) => s + (e.earnings||0), 0);
+  spot.avg_earnings_per_session = spot.total_sessions > 0 ? spot.total_earnings_logged / spot.total_sessions : 0;
+  // Recalc stop actuals
+  const stop = D.tour_stops.find(s => s.id === spot.tour_stop_id);
+  if (stop) {
+    const spots = getStopBuskingSpots(stop.id);
+    stop.actuals.busking.sessions_completed = spots.reduce((s,sp) => s + (sp.total_sessions||0), 0);
+    stop.actuals.busking.earnings_actual = spots.reduce((s,sp) => s + (sp.total_earnings_logged||0), 0);
+  }
+  saveEdits();
+  const av = document.querySelector('.view.active')?.id?.replace('view-','');
+  if (av) switchView(av);
+}
+
+// ── DELETE BUSKING SPOT ──
+function deleteBuskingSpot(spotId) {
+  if (!confirm('Delete this busking spot and all its sessions?')) return;
+  const spot = D.busking_spots.find(s => s.id === spotId);
+  if (!spot) return;
+  const stop = D.tour_stops.find(s => s.id === spot.tour_stop_id);
+  if (stop) {
+    stop.busking_spot_ids = (stop.busking_spot_ids||[]).filter(id => id !== spotId);
+    const spots = getStopBuskingSpots(stop.id);
+    stop.actuals.busking.sessions_completed = spots.filter(s=>s.id!==spotId).reduce((s,sp) => s + (sp.total_sessions||0), 0);
+    stop.actuals.busking.earnings_actual = spots.filter(s=>s.id!==spotId).reduce((s,sp) => s + (sp.total_earnings_logged||0), 0);
+    stop.actuals.busking.spots_scouted = Math.max(0, (stop.actuals.busking.spots_scouted||0) - 1);
+  }
+  D.busking_spots = D.busking_spots.filter(s => s.id !== spotId);
+  saveEdits();
+  const av = document.querySelector('.view.active')?.id?.replace('view-','');
+  if (av) switchView(av);
+}
+
+// ── CYCLE SPOT STATUS ──
+function cycleSpotStatus(spotId) {
+  const spot = D.busking_spots.find(s => s.id === spotId);
+  if (!spot) return;
+  const cycle = ['spotted','confirmed','played','regular'];
+  const idx = cycle.indexOf(spot.status || 'spotted');
+  spot.status = cycle[(idx+1) % cycle.length];
+  saveEdits();
+  const av = document.querySelector('.view.active')?.id?.replace('view-','');
+  if (av) switchView(av);
+}
+
+// ── STOP MANAGEMENT ──
+function setCurrentStop(stopId) {
+  D.tour_stops.forEach(s => {
+    if (s.status === 'Current') s.status = 'Planned';
+  });
+  const stop = D.tour_stops.find(s => s.id === stopId);
+  if (stop) { stop.status = 'Current'; stop.transit_status = 'Arrived'; }
+  saveEdits();
+  selectedStopId = stopId;
+  switchView('command');
+}
+
+function moveStop(stopId, direction) {
+  const stops = D.tour_stops;
+  const idx = stops.findIndex(s => s.id === stopId);
+  if (idx < 0) return;
+  const newIdx = idx + direction;
+  if (newIdx < 0 || newIdx >= stops.length) return;
+  const tmp = stops[idx];
+  stops[idx] = stops[newIdx];
+  stops[newIdx] = tmp;
+  // Swap IDs to maintain order
+  const tmpId = stops[idx].id;
+  stops[idx].id = stops[newIdx].id;
+  stops[newIdx].id = tmpId;
+  saveEdits(); renderRoute();
+}
+
+function deleteStop(stopId) {
+  const stop = D.tour_stops.find(s => s.id === stopId);
+  if (!stop) return;
+  if (stop.status === 'Current') { alert('Cannot delete current stop'); return; }
+  if (!confirm(`Delete ${stop.name}? All venues, spots, and house concerts for this stop will be removed.`)) return;
+  D.busking_spots = (D.busking_spots||[]).filter(s => s.tour_stop_id !== stopId);
+  D.venues = (D.venues||[]).filter(v => v.tour_stop_id !== stopId);
+  D.house_concerts = (D.house_concerts||[]).filter(h => h.tour_stop_id !== stopId);
+  D.tour_stops = D.tour_stops.filter(s => s.id !== stopId);
+  saveEdits(); renderRoute();
+}
+
+function openAddStopModal() { openModal('as-modal'); }
+
+function submitAddStop() {
+  const name = val('as-name');
+  const state = val('as-state');
+  if (!name) { alert('Enter stop name'); return; }
+  const newId = Math.max(...D.tour_stops.map(s => s.id), 0) + 1;
+  const stop = {
+    id: newId, name, state, segment_type: val('as-segment'),
+    est_duration_days: parseInt(val('as-days')||'3'), arrival_date: '', departure_date: '',
+    status: 'Planned', transit_status: 'Scheduled', week_type: 'regional', notes: '',
+    targets: { busking:{sessions_target:parseInt(val('as-busk')||'2'),spots_scouted_target:1,spots_confirmed_target:1,earnings_target:600},
+               venue_gig:{gigs_target:parseInt(val('as-gig')||'1'),venues_contacted_target:3,gigs_booked_target:1,earnings_target:400},
+               house_concert:{shows_target:1,hosts_contacted_target:2,shows_confirmed_target:1,earnings_target:500} },
+    actuals: { busking:{sessions_completed:0,spots_scouted:0,spots_confirmed:0,earnings_actual:0},
+               venue_gig:{gigs_booked:0,venues_contacted:0,gigs_played:0,earnings_actual:0},
+               house_concert:{shows_confirmed:0,hosts_contacted:0,shows_completed:0,earnings_actual:0} },
+    financials: {projected_income:1500,actual_income:0,actual_expenses:0,net:0},
+    busking_spot_ids: [], venue_ids: [], house_concert_ids: [], marketing_id: null
+  };
+  D.tour_stops.push(stop);
+  saveEdits(); closeModal('as-modal'); renderRoute();
+}
+
+// ── ADD STOP BUTTON IN ROUTE VIEW ──
+function renderAddStopButton() {
+  return `<button class="venue-btn" style="width:100%;margin-top:0.5rem" onclick="openAddStopModal()">+ Add Tour Stop</button>`;
+}
+
+
+function nextHCStageLabel(stage) {
+  const stages = ['posted','interested','confirmed','completed'];
+  const idx = stages.indexOf(stage);
+  if (idx < 0 || idx >= stages.length-1) return '—';
+  const labels = {interested:'Interested', confirmed:'Confirm', completed:'Complete'};
+  return labels[stages[idx+1]] || '—';
+}
+
+function renderFBTracker(h) {
+  const groups = D.config?.facebook_groups || [];
+  const posts = h.outreach?.posts || [];
+  return `<div class="fb-tracker"><div class="section-title" style="margin:0.4rem 0">Facebook Group Posts</div>${groups.map(g => {
+    const post = posts.find(p => p.group === g);
+    return `<div class="fb-tracker-row" onclick="toggleFBPost('${h.id}','${g}')">
+      <div class="todo-check ${post?'done':''}"></div>
+      <span class="fb-group-name">${g}</span>
+      ${post?`<span class="fb-post-date">${post.post_date}</span><span class="fb-resp-count">${post.responses||0} resp</span>`:''}
+    </div>`;
+  }).join('')}</div>`;
 }
 
 // ═══ INIT ═══
