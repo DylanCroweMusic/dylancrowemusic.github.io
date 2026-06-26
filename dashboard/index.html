@@ -1,0 +1,1807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dylan Crowe — Musician OS Dashboard</title>
+  <style>
+    :root {
+      --bg: #1A1A3E; /* Cosmic Blue */
+      --bg-gradient: radial-gradient(circle at top right, #242459, #131332);
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --bg-card-hover: rgba(255, 255, 255, 0.06);
+      --cyan: #00B4D8; /* Cyan Accent */
+      --magenta: #D946EF; /* Magenta Accent */
+      --amber: #D97706; /* Amber Accent */
+      --green: #166534; /* Green Muted */
+      --green-bright: #22c55e; /* Green Bright */
+      --text: #F5F0E8; /* Off-white */
+      --text-muted: rgba(245, 240, 232, 0.6);
+      --border: rgba(245, 240, 232, 0.06);
+      --border-glowing: rgba(0, 180, 216, 0.25);
+      --font-stack: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background: var(--bg);
+      background-image: var(--bg-gradient);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 2rem;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(26, 26, 62, 0.5);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(245, 240, 232, 0.15);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--cyan);
+    }
+
+    header {
+      padding: 1.5rem 2rem;
+      background: rgba(19, 19, 50, 0.5);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-logo-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .header-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1.5px solid var(--cyan);
+      box-shadow: 0 0 15px rgba(0, 180, 216, 0.3);
+      object-fit: cover;
+    }
+
+    .header-title-group h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      background: linear-gradient(135deg, var(--text), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-title-group p {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: -1px;
+    }
+
+    .header-status-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      padding: 0.35rem 0.75rem;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--green-bright);
+    }
+
+    .status-pulse {
+      width: 6px;
+      height: 6px;
+      background: var(--green-bright);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--green-bright);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.7; }
+      50% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 12px var(--green-bright); }
+      100% { transform: scale(0.9); opacity: 0.7; }
+    }
+
+    main {
+      padding: 1.5rem;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Standard Card Stylings */
+    .dashboard-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: border 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    }
+
+    .dashboard-card:hover {
+      border-color: rgba(245, 240, 232, 0.1);
+    }
+
+    .card-header-with-icon {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .card-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    /* Grid Layouts */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .dashboard-grid-main {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 968px) {
+      .dashboard-grid-main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* High level financial cards styling */
+    .financial-summary-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .financial-main-huge {
+      font-size: 2.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #F5F0E8;
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+    }
+
+    .financial-main-huge span {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .financial-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* Progress bar */
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: rgba(245, 240, 232, 0.06);
+      border-radius: 100px;
+      overflow: hidden;
+      margin: 0.4rem 0;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 100px;
+      transition: width 1.2s cubic-bezier(0.1, 0.8, 0.2, 1);
+    }
+
+    .cyan-glow-bar {
+      background: linear-gradient(90deg, #0077b6, var(--cyan));
+      box-shadow: 0 0 10px rgba(0, 180, 216, 0.4);
+    }
+
+    .magenta-glow-bar {
+      background: linear-gradient(90deg, #a21caf, var(--magenta));
+      box-shadow: 0 0 10px rgba(217, 70, 239, 0.4);
+    }
+
+    .amber-glow-bar {
+      background: linear-gradient(90deg, #b45309, var(--amber));
+      box-shadow: 0 0 10px rgba(217, 119, 6, 0.4);
+    }
+
+    .progress-values {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: monospace;
+    }
+
+    .progress-percentage {
+      font-weight: 700;
+    }
+
+    /* TOUR ROAD MAP INTERACTIVE PIPELINE */
+    .pipeline-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .pipeline-nodes-wrapper {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin: 1.5rem 0.5rem;
+      padding: 0 0.5rem;
+    }
+
+    .pipeline-line-underlay {
+      position: absolute;
+      top: 14px;
+      left: 10px;
+      right: 10px;
+      height: 3px;
+      background: rgba(245, 240, 232, 0.06);
+      z-index: 1;
+    }
+
+    .pipeline-line-progress {
+      position: absolute;
+      top: 14px;
+      left: 10px;
+      height: 3px;
+      background: var(--cyan);
+      box-shadow: 0 0 10px rgba(0, 180, 216, 0.5);
+      z-index: 2;
+      width: 0%;
+      transition: width 1s ease-in-out;
+    }
+
+    .pipeline-stop {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 10;
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+      width: 50px;
+    }
+
+    .pipeline-node {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #1e1e4a;
+      border: 3px solid rgba(245, 240, 232, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .pipeline-stop:hover .pipeline-node {
+      transform: scale(1.15);
+      border-color: rgba(245, 240, 232, 0.3);
+    }
+
+    .pipeline-stop-name {
+      font-size: 0.6rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 0.5rem;
+      position: absolute;
+      top: 30px;
+      width: 90px;
+      pointer-events: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: color 0.3s ease;
+    }
+
+    /* Completed state */
+    .pipeline-stop.completed .pipeline-node {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      color: #1A1A3E;
+      box-shadow: 0 0 12px rgba(0, 180, 216, 0.4);
+    }
+
+    .pipeline-stop.completed .pipeline-stop-name {
+      color: var(--cyan);
+    }
+
+    /* Active current stop state */
+    .pipeline-stop.current .pipeline-node {
+      background: #1A1A3E;
+      border-color: var(--magenta);
+      color: var(--magenta);
+      box-shadow: 0 0 18px var(--magenta);
+      transform: scale(1.18);
+      animation: roadPulse 2.5s infinite;
+    }
+
+    .pipeline-stop.current .pipeline-stop-name {
+      color: var(--magenta);
+      font-weight: 700;
+    }
+
+    @keyframes roadPulse {
+      0% { box-shadow: 0 0 8px var(--magenta); }
+      50% { box-shadow: 0 0 20px var(--magenta), 0 0 30px rgba(217, 70, 239, 0.3); }
+      100% { box-shadow: 0 0 8px var(--magenta); }
+    }
+
+    /* Muted responsive road track fallback is shown below on mobile screen sizes */
+    .mobile-pipeline-list {
+      display: none;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .mobile-pipeline-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 0.8rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .mobile-pipeline-item.completed {
+      border-color: rgba(0, 180, 216, 0.25);
+      background: rgba(0, 180, 216, 0.03);
+    }
+
+    .mobile-pipeline-item.current {
+      border-color: var(--magenta);
+      background: rgba(217, 70, 239, 0.05);
+      animation: mobileCurrentPulse 3s infinite;
+    }
+
+    @keyframes mobileCurrentPulse {
+      0%, 100% { box-shadow: inset 0 0 10px rgba(217, 70, 239, 0.05); }
+      50% { box-shadow: inset 0 0 15px rgba(217, 70, 239, 0.15); }
+    }
+
+    .mobil-node-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #242459;
+      border: 2.5px solid rgba(245, 240, 232, 0.2);
+    }
+
+    .mobile-pipeline-item.completed .mobil-node-dot {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      box-shadow: 0 0 6px var(--cyan);
+    }
+
+    .mobile-pipeline-item.current .mobil-node-dot {
+      background: var(--magenta);
+      border-color: var(--magenta);
+      box-shadow: 0 0 10px var(--magenta);
+    }
+
+    .mobile-pipeline-item-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .mobile-pipeline-item.completed .mobile-pipeline-item-name {
+      color: var(--cyan);
+    }
+
+    .mobile-pipeline-item.current .mobile-pipeline-item-name {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .mobile-stop-status-tag {
+      margin-left: auto;
+      font-size: 0.6rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+    }
+
+    .completed .mobile-stop-status-tag {
+      background: rgba(0, 180, 216, 0.1);
+      color: var(--cyan);
+    }
+
+    .current .mobile-stop-status-tag {
+      background: rgba(217, 70, 239, 0.15);
+      color: var(--magenta);
+    }
+
+    @media (max-width: 768px) {
+      .pipeline-nodes-wrapper, .pipeline-line-underlay {
+        display: none;
+      }
+      .mobile-pipeline-list {
+        display: flex;
+      }
+    }
+
+    /* INTERACTIVE TODO CHECKLIST */
+    .checklist-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      gap: 1rem;
+    }
+
+    .checklist-tabs {
+      display: flex;
+      gap: 0.35rem;
+      background: rgba(26, 26, 62, 0.4);
+      padding: 0.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      width: 100%;
+    }
+
+    .checklist-tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: inherit;
+      padding: 0.45rem 0.6rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .checklist-tab-btn:hover {
+      color: var(--text);
+    }
+
+    .checklist-tab-btn.active[data-category="Daily Grind"] {
+      background: rgba(0, 180, 216, 0.15);
+      color: var(--cyan);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .checklist-tab-btn.active[data-category="Booking"] {
+      background: rgba(217, 70, 239, 0.15);
+      color: var(--magenta);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .checklist-tab-btn.active[data-category="Van & Road"] {
+      background: rgba(217, 119, 6, 0.15);
+      color: var(--amber);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .checklist-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .todo-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid var(--border);
+      border-radius: 12.5px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .todo-item:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(245, 240, 232, 0.12);
+    }
+
+    .todo-item.checked {
+      border-color: rgba(245, 240, 232, 0.04);
+      background: rgba(255, 255, 255, 0.005);
+    }
+
+    .todo-checkbox-wrapper {
+      position: relative;
+      margin-right: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .todo-checkbox-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid var(--text-muted);
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Icon within checkbox */
+    .todo-checkbox-circle svg {
+      width: 11px;
+      height: 11px;
+      stroke: #1A1A3E;
+      stroke-width: 3.5;
+      fill: none;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46);
+    }
+
+    /* Active category states */
+    .category-daily-grind .todo-item:hover .todo-checkbox-circle {
+      border-color: var(--cyan);
+      box-shadow: 0 0 6px rgba(0, 180, 216, 0.3);
+    }
+    .category-daily-grind .todo-item.checked .todo-checkbox-circle {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      box-shadow: 0 0 8px rgba(0, 180, 216, 0.2);
+    }
+
+    .category-booking .todo-item:hover .todo-checkbox-circle {
+      border-color: var(--magenta);
+      box-shadow: 0 0 6px rgba(217, 70, 239, 0.3);
+    }
+    .category-booking .todo-item.checked .todo-checkbox-circle {
+      background: var(--magenta);
+      border-color: var(--magenta);
+      box-shadow: 0 0 8px rgba(217, 70, 239, 0.2);
+    }
+
+    .category-van-road .todo-item:hover .todo-checkbox-circle {
+      border-color: var(--amber);
+      box-shadow: 0 0 6px rgba(217, 119, 6, 0.3);
+    }
+    .category-van-road .todo-item.checked .todo-checkbox-circle {
+      background: var(--amber);
+      border-color: var(--amber);
+      box-shadow: 0 0 8px rgba(217, 119, 6, 0.2);
+    }
+
+    .todo-item.checked .todo-checkbox-circle svg {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    .todo-text {
+      font-size: 0.9rem;
+      color: var(--text);
+      transition: all 0.2s ease;
+      flex-grow: 1;
+    }
+
+    .todo-item.checked .todo-text {
+      color: var(--text-muted);
+      text-decoration: line-through;
+    }
+
+    .todo-delete-btn {
+      background: none;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      cursor: pointer;
+      opacity: 0;
+      padding: 0.25rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      margin-left: 0.5rem;
+    }
+
+    .todo-item:hover .todo-delete-btn {
+      opacity: 0.6;
+    }
+
+    .todo-delete-btn:hover {
+      opacity: 1 !important;
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .todo-delete-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Actions row */
+    .checklist-actions-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .checklist-input {
+      flex: 1;
+      background: rgba(26, 26, 62, 0.3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.6rem 0.85rem;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .checklist-input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px rgba(0, 180, 216, 0.15);
+    }
+
+    .checklist-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: 10px;
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .checklist-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(245, 240, 232, 0.2);
+    }
+
+    .checklist-btn-primary {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      color: #1A1A3E;
+    }
+
+    .checklist-btn-primary:hover {
+      background: #0093b1;
+      border-color: #0093b1;
+      box-shadow: 0 0 10px rgba(0, 180, 216, 0.3);
+      color: #1A1A3E;
+    }
+
+    /* INTERACTIVE BUDGET SLIDERS/SANDBOX */
+    .financials-detail-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .budget-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    .budget-table th {
+      padding: 0.6rem 0.5rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      letter-spacing: 0.05em;
+    }
+
+    .budget-table td {
+      padding: 0.65rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .budget-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .budget-table td.numeric {
+      text-align: right;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+
+    .label-accent-cyan { color: var(--cyan); font-weight: 600;}
+    .label-accent-magenta { color: var(--magenta); font-weight: 600;}
+    .label-accent-amber { color: var(--amber); font-weight: 600;}
+    .label-accent-green { color: var(--green-bright); font-weight: 600;}
+
+    .dynamic-sandbox-card {
+      border: 1px solid var(--border-glowing);
+      background: rgba(0, 180, 216, 0.01);
+      box-shadow: 0 0 15px rgba(0, 180, 216, 0.03);
+    }
+
+    .sandbox-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .sandbox-tag {
+      background: var(--cyan);
+      color: #1A1A3E;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .sandbox-sliders {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .sandbox-slider-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .sandbox-slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+    }
+
+    .sandbox-slider-labels span:first-child {
+      color: var(--text-muted);
+    }
+
+    .sandbox-slider-labels span:last-child {
+      font-family: monospace;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+
+    .sandbox-slider-control {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 100px;
+      background: rgba(245, 240, 232, 0.08);
+      outline: none;
+      transition: background 0.3s;
+    }
+
+    .sandbox-slider-control::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 8px rgba(0, 180, 216, 0.5);
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    .sandbox-slider-control::-webkit-slider-thumb:hover {
+      transform: scale(1.25);
+    }
+
+    /* TELEMETRY VAN CARD */
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.85rem;
+    }
+
+    .telemetry-item {
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .telemetry-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .telemetry-item-main {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      font-family: monospace;
+      margin-top: 0.1rem;
+    }
+
+    .telemetry-bar-bg {
+      width: 100%;
+      height: 4px;
+      background: rgba(245, 240, 232, 0.05);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 0.25rem;
+    }
+
+    .telemetry-bar-fill {
+      height: 100%;
+      border-radius: 10px;
+    }
+
+    /* Utilities */
+    .flex-row-val {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+
+    .dcyan { color: var(--cyan); }
+    .dmagenta { color: var(--magenta); }
+    .damber { color: var(--amber); }
+    .dgreen { color: var(--green-bright); }
+
+    /* Footer styling */
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+    }
+
+    footer a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Mobile specific adjustments */
+    @media (max-width: 480px) {
+      header {
+        padding: 1rem 1.25rem;
+      }
+      main {
+        padding: 1rem;
+        gap: 1.25rem;
+      }
+      .stats-row {
+        grid-template-columns: 1fr;
+      }
+      .financial-main-huge {
+        font-size: 1.85rem;
+      }
+      .dashboard-card {
+        padding: 1.15rem;
+      }
+      .checklist-tab-btn {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.3rem;
+      }
+      .checklist-actions-bar {
+        flex-direction: column;
+      }
+      .checklist-input {
+        width: 100%;
+      }
+      .checklist-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-logo-group">
+      <img src="../00-raven-logo.jpg" alt="Dylan Crowe" class="header-logo" onerror="this.src='https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=100&auto=format&fit=crop&q=60'">
+      <div class="header-title-group">
+        <h1>MUSICIAN OS</h1>
+        <p>Telemetry & Tour Command</p>
+      </div>
+    </div>
+    <div class="header-status-badge">
+      <div class="status-pulse"></div>
+      <span>VAN COMPILATION ONLINE</span>
+    </div>
+  </header>
+
+  <!-- Main Dashboard -->
+  <main>
+
+    <!-- Top Core Financial Cards Row -->
+    <section class="stats-row">
+      
+      <!-- Primary Target Counter -->
+      <article class="dashboard-card financial-summary-card" style="border-color: rgba(217, 70, 239, 0.15);">
+        <div class="card-header-with-icon">
+          <span class="card-title">Net Income Target</span>
+          <!-- Dollar Icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--magenta)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        </div>
+        <div class="financial-main-huge" id="stat-net-income">
+          $24,500 <span>/ $37,000</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar-fill magenta-glow-bar" id="progress-net-income"></div>
+        </div>
+        <div class="progress-values">
+          <span>Target Progress</span>
+          <span class="progress-percentage dmagenta" id="pct-net-income">66%</span>
+        </div>
+      </article>
+
+      <!-- Second Target (Campervan Nest Egg) -->
+      <article class="dashboard-card financial-summary-card" style="border-color: rgba(217, 119, 6, 0.15);">
+        <div class="card-header-with-icon">
+          <span class="card-title">Van Savings Progress</span>
+          <!-- Truck / Vehicle Icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+        </div>
+        <div class="financial-main-huge" id="stat-van-savings">
+          $9,800 <span>/ $15,000</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar-fill amber-glow-bar" id="progress-van-savings"></div>
+        </div>
+        <div class="progress-values">
+          <span>Rig Purchase Fund</span>
+          <span class="progress-percentage damber" id="pct-van-savings">65%</span>
+        </div>
+      </article>
+
+      <!-- Road Milestones Stats -->
+      <article class="dashboard-card financial-summary-card" style="border-color: rgba(0, 180, 216, 0.15);">
+        <div class="card-header-with-icon">
+          <span class="card-title">Tour Stops Covered</span>
+          <!-- Map Pin Icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+        </div>
+        <div class="financial-main-huge" id="stat-tour-stops">
+          3 <span>/ 8 Stops</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar-fill cyan-glow-bar" id="progress-tour-stops"></div>
+        </div>
+        <div class="progress-values">
+          <span>WA Loop Complete</span>
+          <span class="progress-percentage dcyan" id="pct-tour-stops">37%</span>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- Interactive Tour Roadmap pipeline -->
+    <section class="dashboard-card" style="overflow: visible;">
+      <div class="card-header-with-icon" style="margin-bottom: 0.5rem;">
+        <span class="card-title">Tour Roadmap Pipeline</span>
+        <span class="label-accent-cyan" id="current-stop-badge" style="font-size: 0.75rem; text-transform: uppercase;">Current: Esperance</span>
+      </div>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem; margin-top: -0.25rem;">Interactive tour pipeline. Tap nodes as Dylan navigates the West Coast to update the active stop telemetry!</p>
+      
+      <div class="pipeline-container">
+        <!-- Desktop Horizontal Pipeline -->
+        <div class="pipeline-nodes-wrapper">
+          <div class="pipeline-line-underlay"></div>
+          <div class="pipeline-line-progress" id="pipeline-progress-bar"></div>
+          
+          <!-- Nodes injected via JS -->
+        </div>
+
+        <!-- Mobile Stacked Pipelines (shown under 768px) -->
+        <div class="mobile-pipeline-list" id="mobile-pipeline-list">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Two columns details layout -->
+    <div class="dashboard-grid-main">
+      
+      <!-- Interactive To-Do List Card -->
+      <section class="dashboard-card">
+        <div class="card-header-with-icon">
+          <span class="card-title">Tour Checklist Control</span>
+          <div style="font-size: 0.75rem; display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span id="checklist-remaining-count">3 remaining</span>
+          </div>
+        </div>
+
+        <!-- Tab selection and interactive state -->
+        <div class="checklist-controls">
+          <div class="checklist-tabs" id="category-tabs">
+            <button class="checklist-tab-btn active" data-category="Daily Grind">Daily Grind</button>
+            <button class="checklist-tab-btn" data-category="Booking">Booking</button>
+            <button class="checklist-tab-btn" data-category="Van & Road">Van & Road</button>
+          </div>
+        </div>
+
+        <!-- Tasks holder -->
+        <div class="checklist-container category-daily-grind" id="checklist-holder">
+          <!-- Elements dynamically loaded & checked against LocalStorage IDs -->
+        </div>
+
+        <!-- Actions panel: add, clear -->
+        <div class="checklist-actions-bar">
+          <input type="text" id="new-todo-input" class="checklist-input" placeholder="Add custom daily grind task..." autocomplete="off">
+          <button id="add-todo-btn" class="checklist-btn checklist-btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Add
+          </button>
+          <button id="reset-checklist-btn" class="checklist-btn" title="Reset default checked statuses">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+            Reset
+          </button>
+        </div>
+      </section>
+
+      <!-- Right column elements: financial tracking details, sandbox slider, telemetry battery/water -->
+      <div class="financials-detail-panel">
+        
+        <!-- Interactive Budget Projection Sandbox -->
+        <section class="dashboard-card dynamic-sandbox-card">
+          <div class="sandbox-header">
+            <span class="sandbox-tag">Interactive Sandbox</span>
+            <span class="card-title" style="margin-bottom: 0;">Earnings Projector</span>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">Adjust tour variables below to calculate your estimated net outcome over the 16-week tour!</p>
+          
+          <div class="budget-table-wrapper" style="margin-bottom: 1rem;">
+            <table class="budget-table">
+              <thead>
+                <tr>
+                  <th>Direct Income Class</th>
+                  <th class="numeric">Projection</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Venue Gigs (<span id="box-gigs-count">58</span> gigs @ <span id="box-gig-fee-label">$400</span>)</td>
+                  <td class="numeric label-accent-cyan" id="proj-venue-gigs">$23,200</td>
+                </tr>
+                <tr>
+                  <td>House Concerts (<span id="box-house-count">16</span> concerts @ <span id="box-house-fee-label">$650</span>)</td>
+                  <td class="numeric label-accent-magenta" id="proj-house-concerts">$10,400</td>
+                </tr>
+                <tr>
+                  <td>Busking Sessions (<span id="box-busk-count">60</span> @ <span id="box-busk-fee-label">$250</span>)</td>
+                  <td class="numeric label-accent-amber" id="proj-busking">$15,000</td>
+                </tr>
+                <tr>
+                  <td>Estimated Expenses (Muted Cost Outlay)</td>
+                  <td class="numeric" style="color: #ef4444;" id="proj-expenses">-$5,520</td>
+                </tr>
+                <tr style="border-top: 2px solid var(--cyan)">
+                  <td style="font-weight: 700;">Projected Net Profit</td>
+                  <td class="numeric label-accent-green" style="font-size: 1.1rem; font-weight: 700;" id="proj-total-net">$43,080</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="sandbox-sliders">
+            <!-- Avg Gig Fee Slider -->
+            <div class="sandbox-slider-item">
+              <div class="sandbox-slider-labels">
+                <span>Avg Gig Fee</span>
+                <span id="slider-gig-fee-val">$400</span>
+              </div>
+              <input type="range" class="sandbox-slider-control" id="slider-gig-fee" min="200" max="800" step="25" value="400">
+            </div>
+
+            <!-- House Concert average slider -->
+            <div class="sandbox-slider-item">
+              <div class="sandbox-slider-labels">
+                <span>Avg House Concert Profit</span>
+                <span id="slider-house-fee-val">$650</span>
+              </div>
+              <input type="range" class="sandbox-slider-control" id="slider-house-fee" min="300" max="1200" step="50" value="650">
+            </div>
+
+            <!-- Busking Profit Slider -->
+            <div class="sandbox-slider-item">
+              <div class="sandbox-slider-labels">
+                <span>Avg Busking Session Profit</span>
+                <span id="slider-busk-fee-val">$250</span>
+              </div>
+              <input type="range" class="sandbox-slider-control" id="slider-busk-fee" min="100" max="500" step="10" value="250">
+            </div>
+          </div>
+        </section>
+
+        <!-- Van Telemetry/Road Stats -->
+        <section class="dashboard-card">
+          <div class="card-header-with-icon">
+            <span class="card-title">Van Asset Telemetry</span>
+            <!-- Cloud Icon / Sensor Tracker -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"></path></svg>
+          </div>
+          
+          <div class="telemetry-grid">
+            <!-- House battery -->
+            <div class="telemetry-item">
+              <div class="telemetry-item-header">
+                <span>House Battery</span>
+                <span class="dgreen">92%</span>
+              </div>
+              <div class="telemetry-item-main" id="tel-battery">13.2 V</div>
+              <div class="telemetry-bar-bg">
+                <div class="telemetry-bar-fill" style="width: 92%; background: var(--green-bright);"></div>
+              </div>
+            </div>
+
+            <!-- Fresh Water Level -->
+            <div class="telemetry-item">
+              <div class="telemetry-item-header">
+                <span>Fresh Water</span>
+                <span class="dcyan" id="tel-water-pct">82%</span>
+              </div>
+              <div class="telemetry-item-main" id="tel-water">115 L</div>
+              <div class="telemetry-bar-bg">
+                <div class="telemetry-bar-fill" style="width: 82%; background: var(--cyan);" id="tel-water-bar"></div>
+              </div>
+            </div>
+
+            <!-- Solar Generation -->
+            <div class="telemetry-item">
+              <div class="telemetry-item-header">
+                <span>Solar Charge</span>
+                <span class="damber">Active</span>
+              </div>
+              <div class="telemetry-item-main" id="tel-solar">245 W</div>
+              <div class="telemetry-bar-bg">
+                <div class="telemetry-bar-fill" style="width: 65%; background: var(--amber);"></div>
+              </div>
+            </div>
+
+            <!-- Fuel Reserve -->
+            <div class="telemetry-item">
+              <div class="telemetry-item-header">
+                <span>Diesel Tank</span>
+                <span style="color: #eab308;">68%</span>
+              </div>
+              <div class="telemetry-item-main" id="tel-fuel">480 km</div>
+              <div class="telemetry-bar-bg">
+                <div class="telemetry-bar-fill" style="width: 68%; background: #eab308;"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer links -->
+  <footer>
+    <p>Dylan Crowe Musician OS Dashboard &copy; 2026. Made with ❤️ for road-trips. Back to <a href="../index.html">Main EPK</a> or <a href="../financials/index.html">Projections Detail</a>.</p>
+  </footer>
+
+  <!-- ENGINE APPLICATION CODE -->
+  <script>
+    // Robust dashboard controller and dynamic asset injection
+    document.addEventListener("DOMContentLoaded", () => {
+      
+      // Default dashboard template
+      const DEFAULT_DASHBOARD_DATA = {
+        currentStopIndex: 2, // Esperance initial
+        stops: [
+          "Adelaide",
+          "Kalgoorlie",
+          "Esperance",
+          "Albany",
+          "Margaret River",
+          "Bunbury",
+          "Fremantle",
+          "Perth"
+        ],
+        financials: {
+          netIncomeTarget: 37000,
+          netIncomeActual: 24500,
+          expensesTotal: 5520,
+          vanSavingsTarget: 15000,
+          vanSavingsActual: 9800
+        },
+        todoCategories: {
+          "Daily Grind": [
+            { id: "daily_01", text: "Vocal Warmups (20 min)", checked: false },
+            { id: "daily_02", text: "Post IG Story / Van Life teaser", checked: false },
+            { id: "daily_03", text: "Double-check city busking permits", checked: false },
+            { id: "daily_04", text: "Prepare dog kibble ration for Nullarbor", checked: false }
+          ],
+          "Booking": [
+            { id: "booking_01", text: "Pitch 3 house concerts in Adelaide Hills", checked: false },
+            { id: "booking_02", text: "Confirm Albany guest support slots", checked: false },
+            { id: "booking_03", text: "Update Facebook community campaign logs", checked: false },
+            { id: "booking_04", text: "Verify Perth venue contract details", checked: false }
+          ],
+          "Van & Road": [
+            { id: "van_01", text: "Check tyre pressures & engine lube pack", checked: false },
+            { id: "van_02", text: "Verify solar mounts & loose panels", checked: false },
+            { id: "van_03", text: "Top-up fresh drinking water reserves", checked: false },
+            { id: "van_04", text: "Flush greywater tank prior to long transit", checked: false }
+          ]
+        },
+        telemetry: {
+          batteryVolts: "13.2 V",
+          batteryPct: 92,
+          waterLitres: "115 L",
+          waterPct: 82,
+          solarWatts: "245 W",
+          solarPct: 65,
+          fuelRange: "480 km",
+          fuelPct: 68
+        },
+        projections: {
+          gigsCount: 58,
+          gigsFeeAvg: 400,
+          houseCount: 16,
+          houseFeeAvg: 650,
+          buskingCount: 60,
+          buskingFeeAvg: 250,
+          expensesWeekly: 345,
+          weeksCount: 16
+        }
+      };
+
+      // Active state variable populated by merge
+      let state = {};
+
+      // Local storage checklist checks loading
+      function loadLocalChecklistState(todoCategories) {
+        const localChecks = localStorage.getItem("musician_os_checked_ids");
+        const checkedIds = localChecks ? JSON.parse(localChecks) : [];
+        
+        // Loop and overwrite checked states
+        for (const cat in todoCategories) {
+          todoCategories[cat].forEach(item => {
+            if (checkedIds.includes(item.id)) {
+              item.checked = true;
+            }
+          });
+        }
+
+        // Custom items loading
+        const localCustomItems = localStorage.getItem("musician_os_custom_items");
+        if (localCustomItems) {
+          const customItems = JSON.parse(localCustomItems);
+          customItems.forEach(item => {
+            if (todoCategories[item.category]) {
+              // Ensure we don't load copies if already merged
+              const exists = todoCategories[item.category].some(x => x.id === item.id);
+              if (!exists) {
+                todoCategories[item.category].push(item);
+              }
+            }
+          });
+        }
+      }
+
+      // Save checklists checklist checked status & templates to localStorage
+      function saveChecklistState() {
+        const checkedIds = [];
+        const customItems = [];
+        
+        for (const cat in state.todoCategories) {
+          state.todoCategories[cat].forEach(item => {
+            if (item.checked) {
+              checkedIds.push(item.id);
+            }
+            if (item.isCustom) {
+              customItems.push(item);
+            }
+          });
+        }
+        
+        localStorage.setItem("musician_os_checked_ids", JSON.stringify(checkedIds));
+        localStorage.setItem("musician_os_custom_items", JSON.stringify(customItems));
+      }
+
+      // Load active tour index from localstorage if not explicitly updated from data
+      function loadLocalTourIndex() {
+        const localIndex = localStorage.getItem("musician_os_tour_index");
+        if (localIndex !== null) {
+          state.currentStopIndex = parseInt(localIndex, 10);
+        }
+      }
+
+      // Initialize State with Fallbacks and JSON payloads
+      async function initializeDashboardState() {
+        // Deep copy default template
+        state = JSON.parse(JSON.stringify(DEFAULT_DASHBOARD_DATA));
+
+        // 1. Check window global setting injection
+        if (window.dashboardData) {
+          console.log("Loading state from window.dashboardData override");
+          mergeExternalState(window.dashboardData);
+        } else {
+          // 2. Fetch data.json payload fallback
+          try {
+            const resp = await fetch("data.json");
+            if (resp.ok) {
+              const externalData = await resp.json();
+              console.log("Loading state from data.json file remote response", externalData);
+              mergeExternalState(externalData);
+            }
+          } catch (e) {
+            console.log("data.json failed to load or not present; falling back securely to pre-sets.");
+          }
+        }
+
+        // 3. Load local interactive states (overrides defaults and external injects for task checklists!)
+        loadLocalChecklistState(state.todoCategories);
+        loadLocalTourIndex();
+
+        // 4. Trigger Layout Render engine
+        renderEverything();
+      }
+
+      // Helper to cleanly merge loaded external stats with template
+      function mergeExternalState(ext) {
+        if (!ext) return;
+        if (typeof ext.currentStopIndex === 'number') state.currentStopIndex = ext.currentStopIndex;
+        if (ext.stops && Array.isArray(ext.stops)) state.stops = ext.stops;
+        
+        if (ext.financials) {
+          state.financials = { ...state.financials, ...ext.financials };
+        }
+        if (ext.todoCategories) {
+          // Merge items
+          for (const key in ext.todoCategories) {
+            if (state.todoCategories[key]) {
+              state.todoCategories[key] = ext.todoCategories[key];
+            }
+          }
+        }
+        if (ext.telemetry) {
+          state.telemetry = { ...state.telemetry, ...ext.telemetry };
+        }
+        if (ext.projections) {
+          state.projections = { ...state.projections, ...ext.projections };
+        }
+      }
+
+      // ----------------------------------------------------
+      // CHANNELS OF THE RENDER ENGINE
+      // ----------------------------------------------------
+
+      function renderEverything() {
+        renderFinancialCards();
+        renderRoadmapPipeline();
+        renderChecklistTabs();
+        renderActiveChecklist();
+        renderVanTelemetry();
+        renderProjectorSandbox();
+      }
+
+      // Renders Financial cards at the top
+      function renderFinancialCards() {
+        const fin = state.financials;
+        
+        // Net Income Card
+        const statNetIncome = document.getElementById("stat-net-income");
+        const progressNetIncome = document.getElementById("progress-net-income");
+        const pctNetIncome = document.getElementById("pct-net-income");
+        
+        const netPct = Math.round((fin.netIncomeActual / fin.netIncomeTarget) * 100);
+        statNetIncome.innerHTML = `$${fin.netIncomeActual.toLocaleString()} <span>/ $${fin.netIncomeTarget.toLocaleString()}</span>`;
+        progressNetIncome.style.width = `${Math.min(netPct, 100)}%`;
+        pctNetIncome.textContent = `${netPct}%`;
+
+        // Van Savings Card
+        const statVanSavings = document.getElementById("stat-van-savings");
+        const progressVanSavings = document.getElementById("progress-van-savings");
+        const pctVanSavings = document.getElementById("pct-van-savings");
+        
+        const vanPct = Math.round((fin.vanSavingsActual / fin.vanSavingsTarget) * 100);
+        statVanSavings.innerHTML = `$${fin.vanSavingsActual.toLocaleString()} <span>/ $${fin.vanSavingsTarget.toLocaleString()}</span>`;
+        progressVanSavings.style.width = `${Math.min(vanPct, 100)}%`;
+        pctVanSavings.textContent = `${vanPct}%`;
+
+        // Tour Stops covered
+        const statStops = document.getElementById("stat-tour-stops");
+        const progressStops = document.getElementById("progress-tour-stops");
+        const pctStops = document.getElementById("pct-tour-stops");
+        
+        const currentIdx = state.currentStopIndex;
+        const totalStops = state.stops.length;
+        // stops completed: current index reflects how many stops we already covered
+        const stopsCompletedPct = Math.round((currentIdx / (totalStops - 1)) * 100);
+        
+        statStops.innerHTML = `${currentIdx + 1} <span>/ ${totalStops} Stops</span>`;
+        progressStops.style.width = `${stopsCompletedPct}%`;
+        pctStops.textContent = `${stopsCompletedPct}%`;
+      }
+
+      // Renders Tour Stop roadmap node flows
+      function renderRoadmapPipeline() {
+        const stops = state.stops;
+        const currentIdx = state.currentStopIndex;
+        
+        // 1. Desktop Render
+        const wrapper = document.querySelector(".pipeline-nodes-wrapper");
+        
+        // Clean out previous nodes but keep underlay lines
+        const nodeElements = wrapper.querySelectorAll(".pipeline-stop");
+        nodeElements.forEach(n => n.remove());
+
+        stops.forEach((stop, index) => {
+          const stopContainer = document.createElement("div");
+          stopContainer.className = `pipeline-stop ${index < currentIdx ? 'completed' : index === currentIdx ? 'current' : ''}`;
+          
+          stopContainer.innerHTML = `
+            <div class="pipeline-node">${index + 1}</div>
+            <div class="pipeline-stop-name">${stop}</div>
+          `;
+          
+          stopContainer.addEventListener("click", () => {
+            handleRoadmapNodeClick(index);
+          });
+
+          wrapper.appendChild(stopContainer);
+        });
+
+        // Compute horizontal slider fill bar width %
+        const progressLineFill = document.getElementById("pipeline-progress-bar");
+        const fillPercentage = (currentIdx / (stops.length - 1)) * 100;
+        progressLineFill.style.width = `${fillPercentage}%`;
+
+        // Update active stop title badges
+        const badgeTitle = document.getElementById("current-stop-badge");
+        badgeTitle.textContent = `Current stop: ${stops[currentIdx]}`;
+
+        // 2. Mobile Render
+        const mobileList = document.getElementById("mobile-pipeline-list");
+        mobileList.innerHTML = "";
+
+        stops.forEach((stop, index) => {
+          const item = document.createElement("div");
+          item.className = `mobile-pipeline-item ${index < currentIdx ? 'completed' : index === currentIdx ? 'current' : ''}`;
+          
+          let statusText = "Upcoming";
+          if (index < currentIdx) statusText = "Completed";
+          if (index === currentIdx) statusText = "Active Current Stop";
+
+          item.innerHTML = `
+            <div class="mobil-node-dot"></div>
+            <div class="mobile-pipeline-item-name">${index + 1}. ${stop}</div>
+            <span class="mobile-stop-status-tag">${statusText}</span>
+          `;
+
+          item.addEventListener("click", () => {
+            handleRoadmapNodeClick(index);
+          });
+
+          mobileList.appendChild(item);
+        });
+      }
+
+      // Click callback to update active tour index
+      function handleRoadmapNodeClick(clickedIndex) {
+        state.currentStopIndex = clickedIndex;
+        localStorage.setItem("musician_os_tour_index", clickedIndex);
+        
+        // Reflect stop changes dynamically
+        renderRoadmapPipeline();
+        renderFinancialCards();
+        updateVanTelemetryWater(clickedIndex);
+      }
+
+      // Renders tab selections
+      let activeCategory = "Daily Grind";
+      function renderChecklistTabs() {
+        const tabs = document.querySelectorAll(".checklist-tab-btn");
+        tabs.forEach(tab => {
+          tab.classList.toggle("active", tab.getAttribute("data-category") === activeCategory);
+          tab.addEventListener("click", () => {
+            activeCategory = tab.getAttribute("data-category");
+            
+            // Switch tabs
+            const holder = document.getElementById("checklist-holder");
+            holder.className = `checklist-container category-${activeCategory.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}`;
+            
+            // Update UI
+            renderChecklistTabs();
+            renderActiveChecklist();
+            
+            // Adjust input prompt placeholder matching
+            const inputField = document.getElementById("new-todo-input");
+            inputField.placeholder = `Add custom ${activeCategory.toLowerCase()} task...`;
+          });
+        });
+      }
+
+      // Renders items for the currently active tab category
+      function renderActiveChecklist() {
+        const holder = document.getElementById("checklist-holder");
+        holder.innerHTML = "";
+
+        const items = state.todoCategories[activeCategory] || [];
+        
+        if (items.length === 0) {
+          holder.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 2rem;">No items in category. Add one below!</div>`;
+          document.getElementById("checklist-remaining-count").textContent = `0 remaining`;
+          return;
+        }
+
+        // Draw checklist elements
+        items.forEach((item, index) => {
+          const block = document.createElement("div");
+          block.className = `todo-item ${item.checked ? 'checked' : ''}`;
+          
+          block.innerHTML = `
+            <div class="todo-checkbox-wrapper">
+              <div class="todo-checkbox-circle">
+                <!-- Inline Checkmark SVG -->
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+            </div>
+            <div class="todo-text">${item.text}</div>
+            <button class="todo-delete-btn" title="Delete custom task">
+              <!-- Trash Icon SVG -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+            </button>
+          `;
+
+          // Handle click checked status toggle
+          block.addEventListener("click", (e) => {
+            // Prevent triggering if clicked delete button
+            if (e.target.closest(".todo-delete-btn")) return;
+            
+            item.checked = !item.checked;
+            saveChecklistState();
+            renderActiveChecklist();
+          });
+
+          // Handle delete click if customizable
+          const delBtn = block.querySelector(".todo-delete-btn");
+          if (item.isCustom) {
+            delBtn.addEventListener("click", () => {
+              state.todoCategories[activeCategory].splice(index, 1);
+              saveChecklistState();
+              renderActiveChecklist();
+            });
+          } else {
+            // Remove delete button if core template asset (optional, keep disabled/hidden)
+            delBtn.style.display = "none";
+          }
+
+          holder.appendChild(block);
+        });
+
+        // Dynamic item checklist tally updates
+        const remaining = items.filter(x => !x.checked).length;
+        document.getElementById("checklist-remaining-count").textContent = `${remaining} remaining`;
+      }
+
+      // Add custom checklist item handler
+      function handleAddNewTodo() {
+        const input = document.getElementById("new-todo-input");
+        const val = input.value.trim();
+        if (!val) return;
+
+        state.todoCategories[activeCategory].push({
+          id: `custom_${activeCategory.replace(/\s+/g, '')}_${Date.now()}`,
+          text: val,
+          checked: false,
+          isCustom: true,
+          category: activeCategory
+        });
+
+        input.value = "";
+        saveChecklistState();
+        renderActiveChecklist();
+      }
+
+      // Bind input events
+      document.getElementById("add-todo-btn").addEventListener("click", handleAddNewTodo);
+      document.getElementById("new-todo-input").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") handleAddNewTodo();
+      });
+
+      // Reset checklist button logic
+      document.getElementById("reset-checklist-btn").addEventListener("click", () => {
+        if (confirm("Reset default checklists? Custom additions will remain, but checked markers will be cleared.")) {
+          // Clear checked values for all categories
+          for (const cat in state.todoCategories) {
+            state.todoCategories[cat].forEach(item => {
+              item.checked = false;
+            });
+          }
+          saveChecklistState();
+          renderActiveChecklist();
+        }
+      });
+
+      // Renders static/dynamic telemetry readings
+      function renderVanTelemetry() {
+        const tel = state.telemetry;
+        document.getElementById("tel-battery").textContent = tel.batteryVolts;
+        document.getElementById("tel-solar").textContent = tel.solarWatts;
+        document.getElementById("tel-fuel").textContent = tel.fuelRange;
+        
+        // Run water level computation based on active stop distance
+        updateVanTelemetryWater(state.currentStopIndex);
+      }
+
+      // Dynamically drop water percentage as tour progress advances (adding reality to campervan theme)
+      function updateVanTelemetryWater(stopIndex) {
+        const defaultWaterPct = 82;
+        // Reduce level as we move along to simulate usage, wrapping back
+        const computedWaterPct = Math.max(10, defaultWaterPct - (stopIndex * 8));
+        const computedLitres = Math.round((computedWaterPct / 100) * 140);
+
+        document.getElementById("tel-water-pct").textContent = `${computedWaterPct}%`;
+        document.getElementById("tel-water").textContent = `${computedLitres} L`;
+        
+        const barFill = document.getElementById("tel-water-bar");
+        barFill.style.width = `${computedWaterPct}%`;
+        
+        // Critical color changing trigger
+        if (computedWaterPct < 25) {
+          barFill.style.backgroundColor = "#ef4444";
+          document.getElementById("tel-water-pct").style.color = "#ef4444";
+        } else {
+          barFill.style.backgroundColor = "var(--cyan)";
+          document.getElementById("tel-water-pct").style.color = "var(--cyan)";
+        }
+      }
+
+      // Renders the budget slider sandbox calculator calculations
+      function renderProjectorSandbox() {
+        const proj = state.projections;
+
+        // Bind sliders
+        const gigFeeSlider = document.getElementById("slider-gig-fee");
+        const houseFeeSlider = document.getElementById("slider-house-fee");
+        const buskFeeSlider = document.getElementById("slider-busk-fee");
+
+        // Sync initial preset values
+        gigFeeSlider.value = proj.gigsFeeAvg;
+        houseFeeSlider.value = proj.houseFeeAvg;
+        buskFeeSlider.value = proj.buskingFeeAvg;
+
+        const updateProjections = () => {
+          const rawGigFee = parseInt(gigFeeSlider.value, 10);
+          const rawHouseFee = parseInt(houseFeeSlider.value, 10);
+          const rawBuskFee = parseInt(buskFeeSlider.value, 10);
+
+          // Labels
+          document.getElementById("slider-gig-fee-val").textContent = `$${rawGigFee}`;
+          document.getElementById("slider-house-fee-val").textContent = `$${rawHouseFee}`;
+          document.getElementById("slider-busk-fee-val").textContent = `$${rawBuskFee}`;
+
+          document.getElementById("box-gig-fee-label").textContent = `$${rawGigFee}`;
+          document.getElementById("box-house-fee-label").textContent = `$${rawHouseFee}`;
+          document.getElementById("box-busk-fee-label").textContent = `$${rawBuskFee}`;
+
+          // Calculate subtotals
+          const computedGigsTotal = proj.gigsCount * rawGigFee;
+          const computedHouseTotal = proj.houseCount * rawHouseFee;
+          const computedBuskTotal = proj.buskingCount * rawBuskFee;
+          const computedExpensesTotal = proj.expensesWeekly * proj.weeksCount;
+
+          const computedNet = (computedGigsTotal + computedHouseTotal + computedBuskTotal) - computedExpensesTotal;
+
+          // Render
+          document.getElementById("proj-venue-gigs").textContent = `$${computedGigsTotal.toLocaleString()}`;
+          document.getElementById("proj-house-concerts").textContent = `$${computedHouseTotal.toLocaleString()}`;
+          document.getElementById("proj-busking").textContent = `$${computedBuskTotal.toLocaleString()}`;
+          document.getElementById("proj-expenses").textContent = `-$${computedExpensesTotal.toLocaleString()}`;
+          
+          const netLabel = document.getElementById("proj-total-net");
+          netLabel.textContent = `$${computedNet.toLocaleString()}`;
+
+          // Color change based on profit levels
+          if (computedNet >= 37000) {
+            netLabel.className = "numeric label-accent-green";
+          } else if (computedNet >= 25000) {
+            netLabel.className = "numeric label-accent-cyan";
+          } else {
+            netLabel.className = "numeric label-accent-amber";
+          }
+        };
+
+        // Attach listeners
+        gigFeeSlider.addEventListener("input", updateProjections);
+        houseFeeSlider.addEventListener("input", updateProjections);
+        buskFeeSlider.addEventListener("input", updateProjections);
+
+        // Run once
+        updateProjections();
+      }
+
+      // Initialize
+      initializeDashboardState();
+    });
+  </script>
+</body>
+</html>

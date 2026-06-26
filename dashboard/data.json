@@ -1,0 +1,74 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "task": "Service oil",
+      "completed": false
+    },
+    {
+      "id": 2,
+      "task": "Fuel to parks",
+      "completed": false
+    },
+    {
+      "id": 3,
+      "task": "Organize busking cash float",
+      "completed": false
+    },
+    {
+      "id": 4,
+      "task": "Verify council permits",
+      "completed": false
+    }
+  ],
+  "financials": {
+    "target": 37000.0,
+    "current_earnings": 1200.0,
+    "fuel_expenses": 350.0,
+    "gear_expenses": 120.0,
+    "net_earnings": 730.0
+  },
+  "tour_stops": [
+    {
+      "id": 1,
+      "name": "Adelaide",
+      "status": "Current",
+      "transit_status": "Arrived"
+    },
+    {
+      "id": 2,
+      "name": "Kalgoorlie",
+      "status": "Planned",
+      "transit_status": "Scheduled"
+    },
+    {
+      "id": 3,
+      "name": "Esperance",
+      "status": "Planned",
+      "transit_status": "Scheduled"
+    },
+    {
+      "id": 4,
+      "name": "Albany",
+      "status": "Planned",
+      "transit_status": "Scheduled"
+    },
+    {
+      "id": 5,
+      "name": "Margaret River",
+      "status": "Planned",
+      "transit_status": "Scheduled"
+    },
+    {
+      "id": 6,
+      "name": "Perth",
+      "status": "Target",
+      "transit_status": "Dreaming"
+    }
+  ],
+  "booking": {
+    "venues_mapped": 85,
+    "status": "85+ venues mapped"
+  },
+  "last_updated": "2026-06-26T01:57:28.138676Z"
+}
