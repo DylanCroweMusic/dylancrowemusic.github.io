@@ -32,6 +32,15 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
+      box-sizing: border-box;
+      -webkit-text-size-adjust: 100%;
+    }
+
     body {
       font-family: var(--font-stack);
       background: var(--bg);
@@ -41,7 +50,6 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
       padding-bottom: 3rem;
     }
@@ -563,9 +571,10 @@
       gap: 1.25rem;
     }
 
-    @media (max-width: 650px) {
+    @media (max-width: 768px) {
       .todo-columns {
         grid-template-columns: 1fr;
+        gap: 1rem;
       }
     }
 
