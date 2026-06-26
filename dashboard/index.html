@@ -846,6 +846,101 @@ body { background: var(--bg-grad); min-height:100vh; }
   box-shadow: 0 0 0 2px rgba(0, 210, 255, 0.25);
 }
 
+
+/* ═══ SECTION 8 ONBOARDING CSS ═══ */
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 8: ONBOARDING + DATA MANAGEMENT — CSS ADDITIONS
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Header settings gear button ───────────────────────────────── */
+.hdr-gear {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--card-brd);
+  background: var(--card); color: var(--off-white);
+  font-size: 1.1rem; cursor: pointer; font-family: inherit;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, transform 0.15s;
+  flex-shrink: 0;
+}
+.hdr-gear:active { transform: scale(0.92); }
+.hdr-gear:hover { background: var(--card-h, rgba(255,255,255,0.06)); }
+
+/* The header needs space for logo + eta + gear — adjust if needed */
+.hdr { gap: 0.5rem; }
+
+/* ── Welcome modal ─────────────────────────────────────────────── */
+.welcome-body {
+  margin-bottom: 1rem;
+}
+.welcome-text {
+  font-size: 0.85rem; line-height: 1.5; color: var(--off-white);
+  margin: 0;
+}
+.welcome-actions {
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.welcome-btn-fresh {
+  background: linear-gradient(135deg, var(--magenta, #d946ef), #b030d0) !important;
+}
+.welcome-btn-keep {
+  background: var(--card) !important;
+  border: 1px solid var(--card-brd) !important;
+  color: var(--off-white) !important;
+}
+
+/* ── Settings modal ────────────────────────────────────────────── */
+.settings-list {
+  display: flex; flex-direction: column; gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+.settings-row {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.8rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid var(--card-brd);
+  background: var(--card);
+  color: var(--off-white);
+  font-family: inherit; font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; text-align: left;
+  transition: background 0.15s, border-color 0.15s;
+  width: 100%;
+}
+.settings-row:active { background: var(--card-h, rgba(255,255,255,0.04)); }
+.settings-row:hover { border-color: var(--cyan, #00d2ff); }
+.settings-icon { font-size: 1.1rem; flex-shrink: 0; }
+.settings-label { flex: 1; }
+.settings-arrow { color: var(--text-dim, #8b8d98); font-size: 1.2rem; }
+.settings-danger { color: var(--expense, #ef4444); }
+.settings-danger:hover { border-color: var(--expense, #ef4444); }
+
+/* ── About section in settings ─────────────────────────────────── */
+.settings-about {
+  padding: 0.8rem 0.9rem;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--card-brd);
+}
+.about-title {
+  font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--text-dim, #8b8d98); margin-bottom: 0.35rem;
+}
+.about-text { font-size: 0.8rem; font-weight: 700; color: var(--off-white); }
+.about-sub { font-size: 0.65rem; color: var(--text-dim, #8b8d98); margin-top: 0.1rem; }
+
+/* ── Import paste textarea (uses existing .modal-field textarea styles,
+   but ensure monospace + taller) ───────────────────────────────── */
+.modal-field textarea#import-paste-area {
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  font-size: 0.7rem;
+  min-height: 180px;
+  resize: vertical;
+}
+
+/* ── Hidden file input (no visual styling needed) ─────────────── */
+#import-file-input {
+  position: absolute; width: 0; height: 0; opacity: 0; overflow: hidden;
+}
+
 </style>
 </head>
 <body>
@@ -860,6 +955,7 @@ body { background: var(--bg-grad); min-height:100vh; }
     </div>
   </div>
   <div class="hdr-eta" id="hdr-eta">—</div>
+  <button class="hdr-gear" onclick="openSettings()" aria-label="Settings">⚙️</button>
 </header>
 
 <!-- ═══ VIEW 1: COMMAND CENTER ═══ -->
@@ -970,6 +1066,16 @@ body { background: var(--bg-grad); min-height:100vh; }
 <!-- ═══ VENUE DETAIL MODAL ═══ -->
 <div class="modal-overlay" id="vd-modal">
   <div class="modal-sheet" id="vd-content"></div>
+</div>
+
+<!-- ═══ SPOT DETAIL MODAL ═══ -->
+<div class="modal-overlay" id="sd-modal">
+  <div class="modal-sheet" id="sd-content"></div>
+</div>
+
+<!-- ═══ HOST DETAIL MODAL ═══ -->
+<div class="modal-overlay" id="hd-modal">
+  <div class="modal-sheet" id="hd-content"></div>
 </div>
 
 <!-- ═══ ADD HOST MODAL ═══ -->
@@ -1117,6 +1223,28 @@ body { background: var(--bg-grad); min-height:100vh; }
 <!-- ═══ TOAST CONTAINER ═══ -->
 <div class="toast" id="toast-container"></div>
 
+       <header class="hdr">
+         <div class="hdr-logo">...</div>
+         <div class="hdr-eta" id="hdr-eta">—</div>
+       </header>
+        
+       <header class="hdr">
+         <div class="hdr-logo">...</div>
+         <div class="hdr-eta" id="hdr-eta">—</div>
+         
+       </header>
+<div class="modal-overlay" id="welcome-modal">
+  <div class="modal-sheet" id="welcome-sheet"></div>
+</div>
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal-sheet" id="settings-sheet"></div>
+</div>
+<div class="modal-overlay" id="import-paste-modal">
+  <div class="modal-sheet" id="import-paste-sheet"></div>
+</div>
+
+<input type="file" id="import-file-input" accept=".json,application/json" style="display:none" onchange="handleImportFile(event)">
+
 <!-- ═══ BOTTOM TAB BAR ═══ -->
 <nav class="bottom-tabs">
   <button class="bt-tab active" data-view="command" onclick="switchView('command')">
@@ -1179,6 +1307,16 @@ function loadData() {
   if (!D) {
     D = { meta:{}, config:{}, tour_stops:[], busking_spots:[], venues:[], house_concerts:[], financials:{}, ground_ops:{}, todos:[], income_history:[], expense_history:[], booking_summary:{}, marketing:[] };
   }
+  // ── Section 8: First-run onboarding detection ──
+  // If no saved data exists AND user hasn't been onboarded yet, show welcome.
+  try {
+    var hasSavedData = localStorage.getItem('tourOS_data');
+    var hasOnboarded = localStorage.getItem('tourOS_onboarded');
+    if (!hasSavedData && !hasOnboarded) {
+      // Defer to after initial render so the modal overlays correctly
+      setTimeout(function() { showWelcomeModal(); }, 300);
+    }
+  } catch(e) { /* localStorage may be unavailable */ }
 }
 
 function saveEdits() {
@@ -4006,6 +4144,352 @@ function toggleTodoFromQuickLog(todoId) {
   }
 }
 
+function showWelcomeModal() {
+  // Build modal via string concatenation
+  var html = '' +
+    '<div class="modal-hdr">' +
+      '<div class="modal-title">Welcome to Tour OS 🎸</div>' +
+      '<button class="modal-close" onclick="closeModal(\'welcome-modal\')">✕</button>' +
+    '</div>' +
+    '<div class="welcome-body">' +
+      '<p class="welcome-text">This dashboard has demo data from Perth to help you explore. Would you like to start fresh or keep the demo data?</p>' +
+    '</div>' +
+    '<div class="welcome-actions">' +
+      '<button class="modal-submit welcome-btn-fresh" onclick="startFresh()">🚀 Start Fresh</button>' +
+      '<button class="modal-submit welcome-btn-keep" onclick="keepDemoData()">Keep Demo Data</button>' +
+    '</div>';
+
+  var sheet = document.getElementById('welcome-sheet');
+  if (sheet) {
+    sheet.innerHTML = html;
+    openModal('welcome-modal');
+  }
+}
+
+function keepDemoData() {
+  try { localStorage.setItem('tourOS_onboarded', '1'); } catch(e) {}
+  closeModal('welcome-modal');
+  showToast('Demo data loaded — explore freely!');
+}
+
+function startFresh() {
+  // Clear all income history
+  if (D.income_history) D.income_history = [];
+
+  // Clear all expense history
+  if (D.expense_history) D.expense_history = [];
+
+  // Remove all demo venues, busking spots, and house concerts
+  D.venues = [];
+  D.busking_spots = [];
+  D.house_concerts = [];
+
+  // Reset all tour stops: clear actuals, clear linked IDs, set statuses
+  if (D.tour_stops) {
+    D.tour_stops.forEach(function(stop) {
+      // Reset financials for this stop
+      if (stop.financials) {
+        stop.financials.actual_income = 0;
+        stop.financials.actual_expenses = 0;
+        stop.financials.net = 0;
+      }
+      // Reset actuals object
+      if (stop.actuals) {
+        if (stop.actuals.busking) {
+          stop.actuals.busking.sessions_completed = 0;
+          stop.actuals.busking.spots_scouted = 0;
+          stop.actuals.busking.spots_confirmed = 0;
+          stop.actuals.busking.earnings_actual = 0;
+        }
+        if (stop.actuals.venue_gig) {
+          stop.actuals.venue_gig.gigs_booked = 0;
+          stop.actuals.venue_gig.venues_contacted = 0;
+          stop.actuals.venue_gig.gigs_played = 0;
+          stop.actuals.venue_gig.earnings_actual = 0;
+        }
+        if (stop.actuals.house_concert) {
+          stop.actuals.house_concert.shows_confirmed = 0;
+          stop.actuals.house_concert.hosts_contacted = 0;
+          stop.actuals.house_concert.shows_played = 0;
+          stop.actuals.house_concert.earnings_actual = 0;
+        }
+      }
+      // Clear linked ID arrays
+      stop.busking_spot_ids = [];
+      stop.venue_ids = [];
+      stop.house_concert_ids = [];
+      stop.marketing_id = null;
+
+      // Set Perth → Planned, Adelaide → Current (home base)
+      if (stop.name === 'Perth') {
+        stop.status = 'Planned';
+        stop.transit_status = 'Scheduled';
+      }
+      if (stop.name === 'Adelaide' || stop.is_ground_ops_base) {
+        stop.status = 'Current';
+        stop.transit_status = 'Arrived';
+      }
+    });
+  }
+
+  // Reset ground_ops to 0
+  if (D.ground_ops) {
+    D.ground_ops.local_busking_earnings = 0;
+    D.ground_ops.expenses = 0;
+    D.ground_ops.cash_float = 0;
+    D.ground_ops.operational_bank = 0;
+    D.ground_ops.transaction_history = [];
+  }
+
+  // Reset top-level financials tour summary
+  if (D.financials && D.financials.tour) {
+    D.financials.tour.current_earnings = 0;
+    D.financials.tour.total_expenses = 0;
+    D.financials.tour.net_earnings = 0;
+    D.financials.tour.progress_to_target_pct = 0;
+    if (D.financials.tour.income_by_stream) {
+      D.financials.tour.income_by_stream.busking = 0;
+      D.financials.tour.income_by_stream.venue_gig = 0;
+      D.financials.tour.income_by_stream.house_concert = 0;
+      D.financials.tour.income_by_stream.merch = 0;
+    }
+    if (D.financials.tour.expenses_by_category) {
+      Object.keys(D.financials.tour.expenses_by_category).forEach(function(k) {
+        D.financials.tour.expenses_by_category[k] = 0;
+      });
+    }
+  }
+
+  // Remove demo marketing entries
+  D.marketing = [];
+
+  // Mark as onboarded, persist, recalc, re-render
+  try { localStorage.setItem('tourOS_onboarded', '1'); } catch(e) {}
+  recalcFinancials();
+  saveEdits();
+  checkStorageQuota();
+
+  closeModal('welcome-modal');
+
+  // Reload current view
+  if (typeof currentView !== 'undefined') {
+    switchView(currentView);
+  } else {
+    renderCommand();
+  }
+
+  showToast('Fresh start! Add your first venue or log a session.');
+}
+
+function openSettings() {
+  var html = '' +
+    '<div class="modal-hdr">' +
+      '<div class="modal-title">⚙️ Settings</div>' +
+      '<button class="modal-close" onclick="closeModal(\'settings-modal\')">✕</button>' +
+    '</div>' +
+    '<div class="settings-list">' +
+      '<button class="settings-row" onclick="exportData()">' +
+        '<span class="settings-icon">📥</span>' +
+        '<span class="settings-label">Export Data</span>' +
+        '<span class="settings-arrow">›</span>' +
+      '</button>' +
+      '<button class="settings-row" onclick="document.getElementById(\'import-file-input\').click()">' +
+        '<span class="settings-icon">📥</span>' +
+        '<span class="settings-label">Import Data</span>' +
+        '<span class="settings-arrow">›</span>' +
+      '</button>' +
+      '<button class="settings-row" onclick="openImportPaste()">' +
+        '<span class="settings-icon">📋</span>' +
+        '<span class="settings-label">Paste JSON Instead</span>' +
+        '<span class="settings-arrow">›</span>' +
+      '</button>' +
+      '<button class="settings-row settings-danger" onclick="resetData()">' +
+        '<span class="settings-icon">🔄</span>' +
+        '<span class="settings-label">Reset to Defaults</span>' +
+        '<span class="settings-arrow">›</span>' +
+      '</button>' +
+    '</div>' +
+    '<div class="settings-about">' +
+      '<div class="about-title">About</div>' +
+      '<div class="about-text">Dylan Crowe Tour OS v3.0</div>' +
+      '<div class="about-sub">Built by Hermes Agent</div>' +
+    '</div>';
+
+  var sheet = document.getElementById('settings-sheet');
+  if (sheet) {
+    sheet.innerHTML = html;
+    openModal('settings-modal');
+  }
+}
+
+function openImportPaste() {
+  var html = '' +
+    '<div class="modal-hdr">' +
+      '<div class="modal-title">Paste JSON Data</div>' +
+      '<button class="modal-close" onclick="closeModal(\'import-paste-modal\')">✕</button>' +
+    '</div>' +
+    '<div class="modal-field">' +
+      '<label>Paste your exported JSON below</label>' +
+      '<textarea id="import-paste-area" rows="10" placeholder=\'{"tour_stops":[...], ...}\' style="font-family:monospace;font-size:0.7rem;min-height:180px"></textarea>' +
+    '</div>' +
+    '<button class="modal-submit" onclick="importData()">Import Data</button>';
+
+  var sheet = document.getElementById('import-paste-sheet');
+  if (sheet) {
+    sheet.innerHTML = html;
+    openModal('import-paste-modal');
+  }
+}
+
+function importData() {
+  var textarea = document.getElementById('import-paste-area');
+  if (!textarea) {
+    showToast('Import textarea not found');
+    return;
+  }
+  var raw = textarea.value.trim();
+  if (!raw) {
+    showToast('Please paste JSON data first');
+    return;
+  }
+
+  var parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch(e) {
+    showToast('Invalid data format');
+    return;
+  }
+
+  // Validate expected structure
+  if (!parsed || typeof parsed !== 'object' ||
+      !parsed.tour_stops || !Array.isArray(parsed.tour_stops)) {
+    showToast('Invalid data format');
+    return;
+  }
+  // Check for at least some of the expected arrays
+  if (!parsed.venues && !parsed.busking_spots && !parsed.house_concerts) {
+    showToast('Invalid data format');
+    return;
+  }
+
+  // Replace D with imported data, ensuring all expected keys exist
+  D = parsed;
+  if (!D.meta) D.meta = {};
+  if (!D.config) D.config = {};
+  if (!D.tour_stops) D.tour_stops = [];
+  if (!D.busking_spots) D.busking_spots = [];
+  if (!D.venues) D.venues = [];
+  if (!D.house_concerts) D.house_concerts = [];
+  if (!D.financials) D.financials = {};
+  if (!D.ground_ops) D.ground_ops = {};
+  if (!D.todos) D.todos = [];
+  if (!D.income_history) D.income_history = [];
+  if (!D.expense_history) D.expense_history = [];
+  if (!D.booking_summary) D.booking_summary = {};
+  if (!D.marketing) D.marketing = [];
+
+  try { localStorage.setItem('tourOS_onboarded', '1'); } catch(e) {}
+  saveEdits();
+  recalcFinancials();
+  checkStorageQuota();
+
+  closeModal('import-paste-modal');
+  closeModal('settings-modal');
+
+  // Re-render current view
+  if (typeof currentView !== 'undefined') {
+    switchView(currentView);
+  } else {
+    renderCommand();
+  }
+
+  showToast('Data imported successfully!');
+}
+
+function handleImportFile(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var raw = e.target.result;
+    var parsed;
+    try {
+      parsed = JSON.parse(raw);
+    } catch(err) {
+      showToast('Invalid data format');
+      event.target.value = '';  // reset input
+      return;
+    }
+
+    // Validate expected structure
+    if (!parsed || typeof parsed !== 'object' ||
+        !parsed.tour_stops || !Array.isArray(parsed.tour_stops)) {
+      showToast('Invalid data format');
+      event.target.value = '';
+      return;
+    }
+    if (!parsed.venues && !parsed.busking_spots && !parsed.house_concerts) {
+      showToast('Invalid data format');
+      event.target.value = '';
+      return;
+    }
+
+    // Replace D with imported data, ensuring all expected keys exist
+    D = parsed;
+    if (!D.meta) D.meta = {};
+    if (!D.config) D.config = {};
+    if (!D.tour_stops) D.tour_stops = [];
+    if (!D.busking_spots) D.busking_spots = [];
+    if (!D.venues) D.venues = [];
+    if (!D.house_concerts) D.house_concerts = [];
+    if (!D.financials) D.financials = {};
+    if (!D.ground_ops) D.ground_ops = {};
+    if (!D.todos) D.todos = [];
+    if (!D.income_history) D.income_history = [];
+    if (!D.expense_history) D.expense_history = [];
+    if (!D.booking_summary) D.booking_summary = {};
+    if (!D.marketing) D.marketing = [];
+
+    try { localStorage.setItem('tourOS_onboarded', '1'); } catch(err) {}
+    saveEdits();
+    recalcFinancials();
+    checkStorageQuota();
+
+    closeModal('settings-modal');
+
+    // Re-render current view
+    if (typeof currentView !== 'undefined') {
+      switchView(currentView);
+    } else {
+      renderCommand();
+    }
+
+    showToast('Data imported successfully!');
+    event.target.value = '';  // reset so same file can be re-imported
+  };
+  reader.onerror = function() {
+    showToast('Could not read file');
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function checkStorageQuota() {
+  try {
+    var data = localStorage.getItem('tourOS_data');
+    if (!data) return;
+    // Each UTF-16 char in JS string is ~2 bytes; localStorage measures UTF-16
+    var sizeBytes = data.length * 2;
+    var sizeMB = sizeBytes / (1024 * 1024);
+    var FIVE_MB = 5 * 1024 * 1024;
+    if (sizeBytes > 4 * 1024 * 1024) {  // > 4MB threshold
+      showToast('⚠️ Storage almost full — consider exporting a backup');
+    }
+  } catch(e) { /* ignore */ }
+}
+
 // ═══ DATA EXPORT / RESET ═══
 function exportData() {
   const data = JSON.stringify(D, null, 2);
@@ -4029,6 +4513,7 @@ function resetData() {
 loadData();
 recalcFinancials();
 renderCommand();
+checkStorageQuota();
 </script>
 </body>
 </html>
