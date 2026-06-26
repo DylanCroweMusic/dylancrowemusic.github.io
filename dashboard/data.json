@@ -2,7 +2,7 @@
   "meta": {
     "schema_version": "2.0.0",
     "system_name": "Dylan Crowe Musician Business OS",
-    "last_updated": "2026-06-26T06:00:00.000000Z",
+    "last_updated": "2026-06-26T11:34:28.671503Z",
     "tour_name": "One Guitar. One Dog. Every Town in Australia.",
     "tour_start": "2026-08-15",
     "tour_end": "2026-12-08",
@@ -45,7 +45,10 @@
         "label": "Venue Gig",
         "color": "#00B4D8",
         "avg_fee": 400.0,
-        "fee_range": [200, 500],
+        "fee_range": [
+          200,
+          500
+        ],
         "weekly_target_gigs": 3.5,
         "weekly_target_earnings": 1400.0
       },
@@ -53,7 +56,10 @@
         "label": "House Concert",
         "color": "#D97706",
         "avg_revenue": 700.0,
-        "revenue_range": [500, 1250],
+        "revenue_range": [
+          500,
+          1250
+        ],
         "weekly_target_shows": 1,
         "weekly_target_earnings": 700.0
       }
@@ -61,29 +67,47 @@
     "house_concert_tiers": {
       "starter": {
         "label": "Intimate",
-        "guest_range": [20, 25],
+        "guest_range": [
+          20,
+          25
+        ],
         "ticket_price": 25.0,
         "early_bird_price": 20.0,
         "door_price": 30.0,
-        "revenue_range": [500, 625],
+        "revenue_range": [
+          500,
+          625
+        ],
         "host_free": true
       },
       "standard": {
         "label": "Classic",
-        "guest_range": [25, 35],
+        "guest_range": [
+          25,
+          35
+        ],
         "ticket_price": 25.0,
         "early_bird_price": 20.0,
         "door_price": 30.0,
-        "revenue_range": [625, 875],
+        "revenue_range": [
+          625,
+          875
+        ],
         "host_free": true
       },
       "premium": {
         "label": "Big Night",
-        "guest_range": [35, 50],
+        "guest_range": [
+          35,
+          50
+        ],
         "ticket_price": 25.0,
         "early_bird_price": 20.0,
         "door_price": 30.0,
-        "revenue_range": [875, 1250],
+        "revenue_range": [
+          875,
+          1250
+        ],
         "host_free": true
       }
     },
@@ -104,10 +128,32 @@
       "completed",
       "cancelled"
     ],
-    "tour_stop_statuses": ["Planned", "Current", "Completed", "Skipped"],
-    "transit_statuses": ["Scheduled", "In_Transit", "Arrived", "Departed", "Dreaming"],
-    "expense_categories": ["fuel", "accommodation", "food", "gear", "maverick", "marketing", "misc"],
-    "expense_sources": ["tour", "local"],
+    "tour_stop_statuses": [
+      "Planned",
+      "Current",
+      "Completed",
+      "Skipped"
+    ],
+    "transit_statuses": [
+      "Scheduled",
+      "In_Transit",
+      "Arrived",
+      "Departed",
+      "Dreaming"
+    ],
+    "expense_categories": [
+      "fuel",
+      "accommodation",
+      "food",
+      "gear",
+      "maverick",
+      "marketing",
+      "misc"
+    ],
+    "expense_sources": [
+      "tour",
+      "local"
+    ],
     "facebook_groups": [
       "Perth Music Lovers",
       "Fremantle Community Board",
@@ -206,33 +252,43 @@
       },
       "actuals": {
         "busking": {
-          "sessions_completed": 2,
+          "sessions_completed": 3,
           "spots_scouted": 2,
           "spots_confirmed": 2,
           "earnings_actual": 620.0
         },
         "venue_gig": {
           "gigs_booked": 2,
-          "venues_contacted": 6,
+          "venues_contacted": 3,
           "gigs_played": 1,
           "earnings_actual": 400.0
         },
         "house_concert": {
           "shows_confirmed": 1,
-          "hosts_contacted": 3,
+          "hosts_contacted": 2,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 3800.0,
-        "actual_income": 1020.0,
-        "actual_expenses": 380.0,
-        "net": 640.0
+        "actual_income": 1090.0,
+        "actual_expenses": 470.0,
+        "net": 620.0
       },
-      "busking_spot_ids": ["bsk-perth-raine-sq", "bsk-perth-murray-st"],
-      "venue_ids": ["ven-perth-irish-rose", "ven-perth-moon-cafe", "ven-perth-velveteen"],
-      "house_concert_ids": ["hc-perth-sarah-mitchell", "hc-perth-james-wong"],
+      "busking_spot_ids": [
+        "bsk-perth-raine-sq",
+        "bsk-perth-murray-st"
+      ],
+      "venue_ids": [
+        "ven-perth-irish-rose",
+        "ven-perth-moon-cafe",
+        "ven-perth-velveteen"
+      ],
+      "house_concert_ids": [
+        "hc-perth-sarah-mitchell",
+        "hc-perth-james-wong"
+      ],
       "marketing_id": "mkt-perth-001"
     },
     {
@@ -272,24 +328,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 2800.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -335,24 +391,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 1700.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -398,24 +454,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 3500.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -461,24 +517,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 1700.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -524,24 +580,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 1000.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -587,24 +643,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 1400.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -651,26 +707,26 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 500.0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 4500.0,
-        "actual_income": 0.0,
+        "actual_income": 500.0,
         "actual_expenses": 0.0,
-        "net": 0.0
+        "net": 500.0
       },
       "busking_spot_ids": [],
       "venue_ids": [],
@@ -714,24 +770,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 1000.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -777,24 +833,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 1000.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -840,24 +896,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 2800.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -903,24 +959,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 5200.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -966,24 +1022,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 5200.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -1029,24 +1085,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 2800.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -1092,24 +1148,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 1700.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -1155,24 +1211,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 1700.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -1218,24 +1274,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 3800.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -1281,24 +1337,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 1000.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -1344,24 +1400,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 3100.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -1407,24 +1463,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 3800.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -1470,24 +1526,24 @@
           "sessions_completed": 0,
           "spots_scouted": 0,
           "spots_confirmed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "venue_gig": {
           "gigs_booked": 0,
           "venues_contacted": 0,
           "gigs_played": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         },
         "house_concert": {
           "shows_confirmed": 0,
           "hosts_contacted": 0,
           "shows_completed": 0,
-          "earnings_actual": 0.0
+          "earnings_actual": 0
         }
       },
       "financials": {
         "projected_income": 3800.0,
-        "actual_income": 0.0,
+        "actual_income": 0,
         "actual_expenses": 0.0,
         "net": 0.0
       },
@@ -1515,7 +1571,7 @@
       "permit_cost": 0.0,
       "best_time_of_day": "lunch_rush",
       "best_time_notes": "11:30am-2pm office workers on lunch break. High foot traffic, high tips.",
-      "acoustics_notes": "Covered arcade — good natural reverb, protected from wind.",
+      "acoustics_notes": "Covered arcade \u2014 good natural reverb, protected from wind.",
       "earnings_history": [
         {
           "date": "2026-08-16",
@@ -1535,9 +1591,14 @@
       "total_earnings_logged": 500.0,
       "total_sessions": 2,
       "avg_earnings_per_session": 250.0,
-      "status": "confirmed",
+      "status": "played",
       "discovered_date": "2026-08-15",
-      "tags": ["covered", "high_traffic", "lunch_rush", "permit_free"]
+      "tags": [
+        "covered",
+        "high_traffic",
+        "lunch_rush",
+        "permit_free"
+      ]
     },
     {
       "id": "bsk-perth-murray-st",
@@ -1546,8 +1607,8 @@
       "city": "Perth",
       "address": "Murray Street Mall, Perth WA 6000",
       "coordinates": {
-        "lat": -31.9530,
-        "lng": 115.8590
+        "lat": -31.953,
+        "lng": 115.859
       },
       "foot_traffic_rating": 4,
       "permit_required": true,
@@ -1556,7 +1617,7 @@
       "permit_cost": 0.0,
       "best_time_of_day": "afternoon",
       "best_time_notes": "2pm-5pm shoppers and tourists. Busiest Thu-Sat.",
-      "acoustics_notes": "Open mall — some wind exposure. Position near Hay St entrance for shelter.",
+      "acoustics_notes": "Open mall \u2014 some wind exposure. Position near Hay St entrance for shelter.",
       "earnings_history": [
         {
           "date": "2026-08-17",
@@ -1569,9 +1630,13 @@
       "total_earnings_logged": 120.0,
       "total_sessions": 1,
       "avg_earnings_per_session": 120.0,
-      "status": "confirmed",
+      "status": "played",
       "discovered_date": "2026-08-15",
-      "tags": ["open_air", "shopping", "weekend_peak"]
+      "tags": [
+        "open_air",
+        "shopping",
+        "weekend_peak"
+      ]
     }
   ],
   "venues": [
@@ -1617,7 +1682,10 @@
       "gig": {
         "date": "2026-08-21",
         "fee": 400.0,
-        "set_times": ["20:00", "21:15"],
+        "set_times": [
+          "20:00",
+          "21:15"
+        ],
         "set_duration_minutes": 45,
         "sound_check_time": "18:30",
         "stage_type": "small_stage",
@@ -1639,18 +1707,22 @@
       "status": "booked",
       "priority": "high",
       "first_contacted_date": "2026-06-05",
-      "tags": ["pub", "live_music_friendly", "fri_night"]
+      "tags": [
+        "pub",
+        "live_music_friendly",
+        "fri_night"
+      ]
     },
     {
       "id": "ven-perth-moon-cafe",
       "tour_stop_id": 1,
-      "name": "Moon Café",
+      "name": "Moon Caf\u00e9",
       "city": "Perth",
       "state": "WA",
       "phone": "(08) 9221 5678",
       "email": "hello@mooncafeperth.com.au",
       "contact_name": "Sophie Chen",
-      "venue_type": "Café/Bar",
+      "venue_type": "Caf\u00e9/Bar",
       "address": "150 James St, Northbridge WA 6003",
       "website": "https://mooncafeperth.com.au",
       "pipeline_stage": "follow_up_1",
@@ -1689,7 +1761,11 @@
       "status": "in_pipeline",
       "priority": "medium",
       "first_contacted_date": "2026-06-08",
-      "tags": ["cafe", "northbridge", "weekend"]
+      "tags": [
+        "cafe",
+        "northbridge",
+        "weekend"
+      ]
     },
     {
       "id": "ven-perth-velveteen",
@@ -1733,14 +1809,17 @@
       "gig": {
         "date": "2026-08-19",
         "fee": 400.0,
-        "set_times": ["19:30", "20:45"],
+        "set_times": [
+          "19:30",
+          "20:45"
+        ],
         "set_duration_minutes": 45,
         "sound_check_time": "18:00",
         "stage_type": "raised_stage",
         "pa_provided": true,
         "accommodation_offered": false,
         "rider_notes": "Drinks tab $50. Meal provided.",
-        "venue_notes": "Sound system is excellent. Stage lighting is moody — great for photos."
+        "venue_notes": "Sound system is excellent. Stage lighting is moody \u2014 great for photos."
       },
       "marketing": {
         "epk_sent": true,
@@ -1750,12 +1829,16 @@
         "venue_posted_content": true,
         "venue_tagged_dylan": true,
         "social_posts_made": 1,
-        "content_notes": "Marcus posted on venue IG. Got 2 great reels — one crowd singing along."
+        "content_notes": "Marcus posted on venue IG. Got 2 great reels \u2014 one crowd singing along."
       },
       "status": "played",
       "priority": "high",
       "first_contacted_date": "2026-06-03",
-      "tags": ["live_venue", "good_sound", "repeat_booking"]
+      "tags": [
+        "live_venue",
+        "good_sound",
+        "repeat_booking"
+      ]
     }
   ],
   "house_concerts": [
@@ -1799,12 +1882,19 @@
         "revenue_projected": 700.0,
         "revenue_actual": 0.0,
         "humanitix_link": "https://events.humanitix.com/dylan-crowe-perth-sarah",
-        "set_times": ["19:30", "20:30"],
+        "set_times": [
+          "19:30",
+          "20:30"
+        ],
         "venue_notes": "Large living room. Sarah says can fit 35 if needed. BYO drinks, potluck."
       },
       "outreach": {
-        "facebook_groups_posted": ["Perth Music Lovers"],
-        "post_dates": ["2026-07-10"],
+        "facebook_groups_posted": [
+          "Perth Music Lovers"
+        ],
+        "post_dates": [
+          "2026-07-10"
+        ],
         "follow_up_messages_sent": 1,
         "personal_messages_sent": 2,
         "referral_source": "Facebook group post"
@@ -1819,7 +1909,11 @@
       "status": "confirmed",
       "priority": "high",
       "first_contact_date": "2026-07-14",
-      "tags": ["facebook_referral", "classic_tier", "weeknight"]
+      "tags": [
+        "facebook_referral",
+        "classic_tier",
+        "weeknight"
+      ]
     },
     {
       "id": "hc-perth-james-wong",
@@ -1862,7 +1956,11 @@
       "status": "in_pipeline",
       "priority": "medium",
       "first_contact_date": "2026-07-15",
-      "tags": ["venue_referral", "outdoor_space", "potential_premium"]
+      "tags": [
+        "venue_referral",
+        "outdoor_space",
+        "potential_premium"
+      ]
     }
   ],
   "financials": {
@@ -1870,7 +1968,7 @@
       "target": 37000.0,
       "gross_target": 52200.0,
       "expense_budget": 15200.0,
-      "current_earnings": 1020.0,
+      "current_earnings": 1090.0,
       "expenses_by_category": {
         "fuel": 350.0,
         "accommodation": 0.0,
@@ -1881,8 +1979,8 @@
         "misc": 0.0
       },
       "total_expenses": 470.0,
-      "net_earnings": 550.0,
-      "progress_to_target_pct": 1.49,
+      "net_earnings": 620.0,
+      "progress_to_target_pct": 1.68,
       "income_by_stream": {
         "busking": 620.0,
         "venue_gig": 400.0,
@@ -1903,11 +2001,11 @@
   },
   "ground_ops": {
     "base_city": "Adelaide",
-    "description": "Adelaide local busking float — separate from tour savings. Funds day-to-day ops when passing through Adelaide.",
-    "local_busking_earnings": 0.0,
-    "expenses": 0.0,
+    "description": "Adelaide local busking float \u2014 separate from tour savings. Funds day-to-day ops when passing through Adelaide.",
+    "local_busking_earnings": 500.0,
+    "expenses": 0,
     "cash_float": 0.0,
-    "operational_bank": 0.0,
+    "operational_bank": 500.0,
     "transaction_history": []
   },
   "marketing": [
@@ -1926,7 +2024,7 @@
           "platform": "instagram",
           "post_type": "reel",
           "date": "2026-08-16",
-          "description": "Busking at Raine Square — crowd singing along to 'Wanderin' Man'",
+          "description": "Busking at Raine Square \u2014 crowd singing along to 'Wanderin' Man'",
           "views": 1200,
           "engagement_rate": 8.5
         },
@@ -1934,7 +2032,7 @@
           "platform": "instagram",
           "post_type": "story",
           "date": "2026-08-19",
-          "description": "The Velveteen gig — backstage + crowd shots",
+          "description": "The Velveteen gig \u2014 backstage + crowd shots",
           "views": 850,
           "engagement_rate": 7.2
         },
@@ -1963,7 +2061,11 @@
           "date": "2026-08-21"
         }
       ],
-      "epk_sent_to_venues": ["ven-perth-irish-rose", "ven-perth-moon-cafe", "ven-perth-velveteen"],
+      "epk_sent_to_venues": [
+        "ven-perth-irish-rose",
+        "ven-perth-moon-cafe",
+        "ven-perth-velveteen"
+      ],
       "content_summary": "Strong content from Perth. 3 venues posted and tagged. Raine Square busking reel performing well.",
       "next_actions": [
         "Edit Velveteen gig footage into highlight reel",
@@ -2024,7 +2126,7 @@
       "location": "Perth",
       "venue_id": "ven-perth-velveteen",
       "tour_stop_id": 1,
-      "description": "The Velveteen — Wed 19 Aug, 2 sets",
+      "description": "The Velveteen \u2014 Wed 19 Aug, 2 sets",
       "date": "2026-08-19T21:00:00Z",
       "source": "tour"
     },
@@ -2038,6 +2140,16 @@
       "description": "Monday session, rain affected traffic",
       "date": "2026-08-18T13:00:00Z",
       "source": "tour"
+    },
+    {
+      "id": "inc-007",
+      "type": "busking",
+      "amount": 500.0,
+      "location": "Glenelg, SA",
+      "tour_stop_id": 8,
+      "description": "Test session \u2014 Coles Glenelg, 3 hours",
+      "date": "2026-06-26T11:34:13.904953Z",
+      "source": "local"
     }
   ],
   "expense_history": [
@@ -2130,7 +2242,7 @@
       {
         "old_path": "income_history[].type",
         "new_path": "income_history[].type",
-        "notes": "Expanded choices: busking, venue_gig, house_concert, merch. Old 'gig' → 'venue_gig', 'tour-busking'/'busking' → 'busking', 'local-busking' stays as source='local'."
+        "notes": "Expanded choices: busking, venue_gig, house_concert, merch. Old 'gig' \u2192 'venue_gig', 'tour-busking'/'busking' \u2192 'busking', 'local-busking' stays as source='local'."
       },
       {
         "old_path": "income_history[] (no source)",
@@ -2140,7 +2252,7 @@
       {
         "old_path": "expense_history[].category (fuel/food/gear/dog/other)",
         "new_path": "expense_history[].category",
-        "notes": "Expanded: fuel, accommodation, food, gear, maverick, marketing, misc. Old 'dog' → 'maverick'."
+        "notes": "Expanded: fuel, accommodation, food, gear, maverick, marketing, misc. Old 'dog' \u2192 'maverick'."
       },
       {
         "old_path": "todos[] (no category)",
@@ -2179,13 +2291,13 @@
       }
     ],
     "data_preservation": [
-      "21-stop tour route preserved exactly (Perth → Sunshine Coast)",
+      "21-stop tour route preserved exactly (Perth \u2192 Sunshine Coast)",
       "Original todos preserved with new optional category field",
-      "Income splitting logic preserved: source='tour' → financials.tour, source='local' → ground_ops",
+      "Income splitting logic preserved: source='tour' \u2192 financials.tour, source='local' \u2192 ground_ops",
       "Ground ops structure preserved with added transaction_history",
       "Adelaide remains the ground_ops base (is_ground_ops_base: true on stop 8)",
       "85+ venue count preserved in booking_summary.venues_mapped",
-      "House concert tiers mapped: Intimate→starter, Classic→standard, Big Night→premium"
+      "House concert tiers mapped: Intimate\u2192starter, Classic\u2192standard, Big Night\u2192premium"
     ]
   }
 }
