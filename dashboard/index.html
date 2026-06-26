@@ -414,6 +414,131 @@
       overflow: hidden;
     }
 
+    /* Sub-Category Pipelines Drawer Stylings */
+    .sub-pipeline-drawer {
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.15rem;
+      margin-bottom: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      animation: expandDrawer 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes expandDrawer {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .sub-pipeline-header {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.45rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sub-track-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.25rem 0;
+    }
+
+    @media (max-width: 640px) {
+      .sub-track-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.45rem;
+      }
+    }
+
+    .sub-track-label {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      min-width: 140px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .sub-circles-container {
+      display: flex;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .sub-circle-node {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.65rem;
+      border-radius: 100px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+
+    .sub-circle-node:hover {
+      background: rgba(255, 255, 255, 0.05);
+      transform: translateY(-1px);
+    }
+
+    .sub-circle-bullet {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #15152a;
+      border: 2px solid var(--text-muted);
+      transition: all 0.25s ease;
+    }
+
+    /* Sub-circle states (Venues/Gigs = Cyan, Busking = Magenta, House = Amber) */
+    .sub-circle-node.venue.active {
+      border-color: rgba(0, 210, 255, 0.3);
+      background: rgba(0, 210, 255, 0.05);
+    }
+    .sub-circle-node.venue.active .sub-circle-bullet {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      box-shadow: 0 0 6px var(--cyan);
+    }
+
+    .sub-circle-node.busking.active {
+      border-color: rgba(255, 46, 147, 0.3);
+      background: rgba(255, 46, 147, 0.05);
+    }
+    .sub-circle-node.busking.active .sub-circle-bullet {
+      background: var(--magenta);
+      border-color: var(--magenta);
+      box-shadow: 0 0 6px var(--magenta);
+    }
+
+    .sub-circle-node.house.active {
+      border-color: rgba(255, 145, 0, 0.3);
+      background: rgba(255, 145, 0, 0.05);
+    }
+    .sub-circle-node.house.active .sub-circle-bullet {
+      background: var(--amber);
+      border-color: var(--amber);
+      box-shadow: 0 0 6px var(--amber);
+    }
+
     .timeline-rail {
       display: flex;
       gap: 1.5rem;
@@ -1031,7 +1156,7 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
         </div>
         <div class="stat-card-main color-green" id="stat-local-float">
-          $150 <span>Float</span>
+          $0 <span>Float</span>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border); margin-top: 0.45rem; padding-top: 0.35rem; font-size: 0.7rem; color: var(--text-muted);">
           <div>Busked: <span class="color-green" id="stat-float-earned">$0</span></div>
@@ -1074,6 +1199,47 @@
         <div class="timeline-connecting-line"></div>
         <div class="timeline-progress-line" id="timeline-progress-fill"></div>
         <!-- Loaded via javascript renderer dynamic stops array -->
+      </div>
+
+      <!-- Collapsible Sub-Category Pipeline Drawer -->
+      <div class="sub-pipeline-drawer" id="sub-pipeline-drawer" style="display: none;">
+        <div class="sub-pipeline-header">
+          <span>🎯 Sub-Category Pipelines: <span id="sub-pipeline-stop-name" class="color-cyan">PERTH</span></span>
+          <span style="font-size: 0.65rem; text-transform: none; font-weight: normal; color: var(--text-muted);">Tap circles to toggle booking status</span>
+        </div>
+        
+        <!-- Track 1: Venues & Gigs -->
+        <div class="sub-track-row">
+          <div class="sub-track-label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2.5"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+            <span>🎫 Gigs & Venues</span>
+          </div>
+          <div class="sub-circles-container" id="sub-circles-venues">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Track 2: Busking pitches -->
+        <div class="sub-track-row">
+          <div class="sub-track-label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--magenta)" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            <span>⚡ Busking Pitches</span>
+          </div>
+          <div class="sub-circles-container" id="sub-circles-busking">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Track 3: House concerts -->
+        <div class="sub-track-row">
+          <div class="sub-track-label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <span>🏠 House Concerts</span>
+          </div>
+          <div class="sub-circles-container" id="sub-circles-house">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
       </div>
 
       <!-- Timeline Operations Node Editor & Stop adding tool Form -->
@@ -1506,14 +1672,14 @@
       // Default base records loaded if no LocalStorage override exists
       const DEFAULT_APP_STATE = {
         tour_stops: [
-          { id: 1, name: "Perth", status: "Planned", transit_status: "Scheduled", gigs_target: 4, gigs_booked: 0 },
+          { id: 1, name: "Perth", status: "Current", transit_status: "Arrived", gigs_target: 4, gigs_booked: 0 },
           { id: 2, name: "Fremantle", status: "Planned", transit_status: "Scheduled", gigs_target: 3, gigs_booked: 0 },
           { id: 3, name: "Bunbury", status: "Planned", transit_status: "Scheduled", gigs_target: 2, gigs_booked: 0 },
           { id: 4, name: "Margaret River", status: "Planned", transit_status: "Scheduled", gigs_target: 4, gigs_booked: 0 },
           { id: 5, name: "Albany", status: "Planned", transit_status: "Scheduled", gigs_target: 2, gigs_booked: 0 },
           { id: 6, name: "Esperance", status: "Planned", transit_status: "Scheduled", gigs_target: 1, gigs_booked: 0 },
           { id: 7, name: "Kalgoorlie", status: "Planned", transit_status: "Scheduled", gigs_target: 2, gigs_booked: 0 },
-          { id: 8, name: "Adelaide", status: "Current", transit_status: "Arrived", gigs_target: 4, gigs_booked: 0 },
+          { id: 8, name: "Adelaide", status: "Planned", transit_status: "Scheduled", gigs_target: 4, gigs_booked: 0 },
           { id: 9, name: "Mount Gambier", status: "Planned", transit_status: "Scheduled", gigs_target: 1, gigs_booked: 0 },
           { id: 10, name: "Warrnambool", "status": "Planned", transit_status: "Scheduled", gigs_target: 1, gigs_booked: 0 },
           { id: 11, name: "Geelong/Torquay", "status": "Planned", transit_status: "Scheduled", gigs_target: 3, gigs_booked: 0 },
@@ -1672,7 +1838,7 @@
 
       // Dynamic metrics total ledger aggregator
       function recalculateAndRenderStats() {
-        const baseAdelaideFloatInitial = 150.0;
+        const baseAdelaideFloatInitial = 0.0;
         
         let localFloatEarned = 0.0;
         let localFloatSpent = 0.0;
@@ -1816,6 +1982,7 @@
         if (!stop) {
           document.getElementById("inspector-placeholder").style.display = "block";
           document.getElementById("inspector-editor").style.display = "none";
+          document.getElementById("sub-pipeline-drawer").style.display = "none";
           return;
         }
 
@@ -1844,6 +2011,194 @@
         } else {
           badgeContainer.innerHTML = `<span class="header-status-badge" style="background: rgba(0, 230, 118, 0.08); border-color: rgba(0, 230, 118, 0.2); color: var(--green); display: inline-flex; justify-content: center;">✅ Gig Target Reached</span>`;
         }
+
+        // Render Collapsible Sub-Category Pipelines
+        renderSubCategoryDrawer(stop);
+      }
+
+      // Hardcoded high-yield sub-category database seed arrays mapped to specific key locations
+      const LOCATION_SUB_SEEDS = {
+        "perth": {
+          venues: [
+            { name: "Clancy's Fish Pub", checked: false },
+            { name: "Freo.Social", checked: false },
+            { name: "Mojos Bar", checked: false },
+            { name: "Lyric's Underground", checked: false }
+          ],
+          busking: [
+            { name: "Fremantle Markets", checked: false },
+            { name: "Raine Square", checked: false },
+            { name: "Murray St Mall", checked: false }
+          ],
+          house: [
+            { name: "Dave & Sarah (Subiaco)", checked: false },
+            { name: "Mike & Jane (Freo)", checked: false }
+          ]
+        },
+        "adelaide": {
+          venues: [
+            { name: "Grace Emily Hotel", checked: false },
+            { name: "The Exeter Hotel", checked: false },
+            { name: "Crown & Anchor", checked: false },
+            { name: "The Wheatsheaf Hotel", checked: false }
+          ],
+          busking: [
+            { name: "Rundle Mall", checked: false },
+            { name: "Adelaide Central Market", checked: false }
+          ],
+          house: [
+            { name: "George & Lily (Thebarton)", checked: false },
+            { name: "Sam & Sarah (Adelaide Hills)", checked: false }
+          ]
+        },
+        "esperance": {
+          venues: [
+            { name: "Taylor St Quarters", checked: true },
+            { name: "Esperance Yacht Club", checked: false }
+          ],
+          busking: [
+            { name: "Esperance Foreshore", checked: false }
+          ],
+          house: [
+            { name: "Lucky Bay Campers", checked: false }
+          ]
+        },
+        "margaret river": {
+          venues: [
+            { name: "Settlers Tavern", checked: false },
+            { name: "The River", checked: false },
+            { name: "Brewhouse Margaret River", checked: false }
+          ],
+          busking: [
+            { name: "Margaret River Main Street", checked: false }
+          ],
+          house: [
+            { name: "Ella's Vineyard", checked: false }
+          ]
+        }
+      };
+
+      function renderSubCategoryDrawer(stop) {
+        const drawer = document.getElementById("sub-pipeline-drawer");
+        const stopNameDisplay = document.getElementById("sub-pipeline-stop-name");
+        
+        stopNameDisplay.textContent = stop.name.toUpperCase();
+        drawer.style.display = "flex";
+
+        // Fetch sub-items for this location. If none exist in state or seed, auto-generate fallback items
+        const locKey = stop.name.toLowerCase().trim();
+        
+        // Initialize sub arrays on stop state if missing
+        if (!stop.sub_venues) {
+          const seeds = LOCATION_SUB_SEEDS[locKey];
+          stop.sub_venues = seeds ? JSON.parse(JSON.stringify(seeds.venues)) : [
+            { name: `${stop.name} Venue A`, checked: false },
+            { name: `${stop.name} Venue B`, checked: false }
+          ];
+        }
+        if (!stop.sub_busking) {
+          const seeds = LOCATION_SUB_SEEDS[locKey];
+          stop.sub_busking = seeds ? JSON.parse(JSON.stringify(seeds.busking)) : [
+            { name: `${stop.name} Pitch A`, checked: false }
+          ];
+        }
+        if (!stop.sub_house) {
+          const seeds = LOCATION_SUB_SEEDS[locKey];
+          stop.sub_house = seeds ? JSON.parse(JSON.stringify(seeds.house)) : [
+            { name: `Host in ${stop.name}`, checked: false }
+          ];
+        }
+
+        // Render Venues
+        const venuesContainer = document.getElementById("sub-circles-venues");
+        venuesContainer.innerHTML = "";
+        stop.sub_venues.forEach((v, idx) => {
+          venuesContainer.appendChild(createSubCircleNode(v, "venue", () => {
+            v.checked = !v.checked;
+            updateBookedStateFromSubCircles(stop);
+          }));
+        });
+        venuesContainer.appendChild(createAddSubCircleButton(() => {
+          const name = prompt("Enter custom Venue Name:");
+          if (name) {
+            stop.sub_venues.push({ name: name, checked: false });
+            renderSubCategoryDrawer(stop);
+          }
+        }));
+
+        // Render Busking
+        const buskingContainer = document.getElementById("sub-circles-busking");
+        buskingContainer.innerHTML = "";
+        stop.sub_busking.forEach((b, idx) => {
+          buskingContainer.appendChild(createSubCircleNode(b, "busking", () => {
+            b.checked = !b.checked;
+            updateBookedStateFromSubCircles(stop);
+          }));
+        });
+        buskingContainer.appendChild(createAddSubCircleButton(() => {
+          const name = prompt("Enter custom Busking Pitch Location:");
+          if (name) {
+            stop.sub_busking.push({ name: name, checked: false });
+            renderSubCategoryDrawer(stop);
+          }
+        }));
+
+        // Render House Concerts
+        const houseContainer = document.getElementById("sub-circles-house");
+        houseContainer.innerHTML = "";
+        stop.sub_house.forEach((h, idx) => {
+          houseContainer.appendChild(createSubCircleNode(h, "house", () => {
+            h.checked = !h.checked;
+            updateBookedStateFromSubCircles(stop);
+          }));
+        });
+        houseContainer.appendChild(createAddSubCircleButton(() => {
+          const name = prompt("Enter custom House Concert Host Group:");
+          if (name) {
+            stop.sub_house.push({ name: name, checked: false });
+            renderSubCategoryDrawer(stop);
+          }
+        }));
+      }
+
+      function createSubCircleNode(item, type, clickCallback) {
+        const node = document.createElement("div");
+        node.className = `sub-circle-node ${type} ${item.checked ? 'active' : ''}`;
+        node.innerHTML = `
+          <div class="sub-circle-bullet"></div>
+          <span>${item.name}</span>
+        `;
+        node.addEventListener("click", () => {
+          clickCallback();
+          node.classList.toggle("active");
+        });
+        return node;
+      }
+
+      function createAddSubCircleButton(clickCallback) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn";
+        btn.style.cssText = "min-height: 24px; height: 24px; padding: 0 0.5rem; font-size: 0.65rem; border-radius: 4px; display: inline-flex; align-items: center; gap: 0.25rem; font-weight: bold; background: rgba(255,255,255,0.02); border-color: var(--border);";
+        btn.innerHTML = `
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Add
+        `;
+        btn.addEventListener("click", clickCallback);
+        return btn;
+      }
+
+      function updateBookedStateFromSubCircles(stop) {
+        // Count number of checked items across venues, busking, and house concerts
+        const checkedVenues = stop.sub_venues.filter(v => v.checked).length;
+        const checkedBusking = stop.sub_busking.filter(b => b.checked).length;
+        const checkedHouse = stop.sub_house.filter(h => h.checked).length;
+        
+        stop.gigs_booked = checkedVenues + checkedBusking + checkedHouse;
+        
+        saveStateToLocal();
+        renderEverything();
+        triggerStopInspection(stop.id);
       }
 
       // Hook up direct numeric inputs and increment/decrement buttons

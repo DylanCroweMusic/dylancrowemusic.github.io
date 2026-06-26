@@ -45,18 +45,18 @@ def get_seed_data():
         "ground_ops": {
             "local_busking_earnings": 0.0,
             "expenses": 0.0,
-            "cash_float": 150.0,
-            "operational_bank": 150.0
+            "cash_float": 0.0,
+            "operational_bank": 0.0
         },
         "tour_stops": [
-            {"id": 1, "name": "Perth", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 4, "gigs_booked": 0},
+            {"id": 1, "name": "Perth", "status": "Current", "transit_status": "Arrived", "gigs_target": 4, "gigs_booked": 0},
             {"id": 2, "name": "Fremantle", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 3, "gigs_booked": 0},
             {"id": 3, "name": "Bunbury", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 2, "gigs_booked": 0},
             {"id": 4, "name": "Margaret River", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 4, "gigs_booked": 0},
             {"id": 5, "name": "Albany", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 2, "gigs_booked": 0},
             {"id": 6, "name": "Esperance", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 1, "gigs_booked": 0},
             {"id": 7, "name": "Kalgoorlie", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 2, "gigs_booked": 0},
-            {"id": 8, "name": "Adelaide", "status": "Current", "transit_status": "Arrived", "gigs_target": 4, "gigs_booked": 0},
+            {"id": 8, "name": "Adelaide", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 4, "gigs_booked": 0},
             {"id": 9, "name": "Mount Gambier", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 1, "gigs_booked": 0},
             {"id": 10, "name": "Warrnambool", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 1, "gigs_booked": 0},
             {"id": 11, "name": "Geelong/Torquay", "status": "Planned", "transit_status": "Scheduled", "gigs_target": 3, "gigs_booked": 0},
@@ -132,12 +132,12 @@ def save_data(data):
     ground_ops = data.setdefault("ground_ops", {
         "local_busking_earnings": 0.0,
         "expenses": 0.0,
-        "cash_float": 150.0,
-        "operational_bank": 150.0
+        "cash_float": 0.0,
+        "operational_bank": 0.0
     })
     local_busking = ground_ops.setdefault("local_busking_earnings", 0.0)
     expenses = ground_ops.setdefault("expenses", 0.0)
-    cash_float = ground_ops.setdefault("cash_float", 150.0)
+    cash_float = ground_ops.setdefault("cash_float", 0.0)
     ground_ops["operational_bank"] = round(cash_float + local_busking - expenses, 2)
     
     # Save JSON file
@@ -392,8 +392,8 @@ def cmd_log_income(income_type, amount, location, description, date):
         ground_ops = data.setdefault("ground_ops", {
             "local_busking_earnings": 0.0,
             "expenses": 0.0,
-            "cash_float": 150.0,
-            "operational_bank": 150.0
+            "cash_float": 0.0,
+            "operational_bank": 0.0
         })
         ground_ops["local_busking_earnings"] = round(ground_ops.get("local_busking_earnings", 0.0) + amount, 2)
         print(f"SUCCESS: Logged local busking income of ${amount:,.2f} under Ground Operations.")
@@ -435,8 +435,8 @@ def cmd_log_expense(category, amount, location, description, source, date):
         ground_ops = data.setdefault("ground_ops", {
             "local_busking_earnings": 0.0,
             "expenses": 0.0,
-            "cash_float": 150.0,
-            "operational_bank": 150.0
+            "cash_float": 0.0,
+            "operational_bank": 0.0
         })
         ground_ops["expenses"] = round(ground_ops.get("expenses", 0.0) + amount, 2)
         print(f"SUCCESS: Logged local Ground Ops expense of ${amount:,.2f} under category '{category}'. (Local expenses increased, reducing operational bank).")
