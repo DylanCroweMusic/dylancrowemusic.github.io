@@ -489,6 +489,363 @@ body { background: var(--bg-grad); min-height:100vh; }
   font-family:inherit; font-size:0.65rem; text-align:center;
 }
 
+
+
+/* ═══ BATCH2-COMMAND CSS ═══ */
+/* ═══ SECTION 4: COMMAND CENTER / DAILY STANDUP — CSS ADDITIONS ═══ */
+
+/* ── Today's Calls section ─────────────────────────────────────── */
+.call-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--card);
+  border: 1px solid var(--card-brd);
+  border-radius: 8px;
+  margin-bottom: 0.35rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.call-item:hover, .call-item:active {
+  background: var(--card-hov, rgba(255,255,255,0.04));
+}
+.call-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 1;
+  min-width: 0;
+}
+.call-link {
+  font-size: 0.72rem;
+  color: var(--cyan, #06b6d4);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-weight: 600;
+}
+.call-link.no-phone {
+  color: var(--text-faint, #6b7280);
+  font-weight: 400;
+}
+.call-priority {
+  font-size: 0.5rem;
+  padding: 2px 5px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.call-priority.high { background: #ef444422; color: #ef4444; }
+.call-priority.medium { background: #f59e0b22; color: #f59e0b; }
+.call-priority.low { background: #6b728022; color: #6b7280; }
+
+/* ── Tappable priority items ──────────────────────────────────── */
+.priority-item.tappable {
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.priority-item.tappable:hover {
+  background: var(--card-hov, rgba(255,255,255,0.04));
+}
+.priority-item.tappable:active {
+  transform: scale(0.98);
+}
+.priority-item.high {
+  border-left: 3px solid #ef4444;
+}
+.priority-item.medium {
+  border-left: 3px solid #f59e0b;
+}
+.priority-item.low {
+  border-left: 3px solid #6b7280;
+}
+.priority-item.overdue {
+  border-left-width: 4px;
+  background: var(--card-hov, rgba(239,68,68,0.04));
+  box-shadow: 0 0 0 1px rgba(239,68,68,0.15);
+}
+.priority-item.overdue .priority-text {
+  color: var(--expense, #ef4444);
+  font-weight: 600;
+}
+
+/* ── Guided empty state ───────────────────────────────────────── */
+.empty-state.guided-empty {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.guided-prompt {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--card);
+  border: 1px solid var(--card-brd);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: var(--text-dim, #9ca3af);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.guided-prompt:hover, .guided-prompt:active {
+  background: var(--card-hov, rgba(255,255,255,0.04));
+  border-color: var(--cyan, #06b6d4);
+  color: var(--text, #f3f4f6);
+}
+.guided-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* ── Section title alignment for renamed sections ─────────────── */
+#cmd-calls {
+  margin-top: 0.25rem;
+}
+
+/* ═══ BATCH2-QUICKLOG CSS ═══ */
+/* ═══ SECTION 7: QUICK-LOG MODAL — CSS ADDITIONS ═══ */
+
+/* ── Toast notification ── */
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(120%);
+  background: rgba(20, 24, 28, 0.95);
+  color: #fff;
+  padding: 0.7rem 1.2rem;
+  border-radius: 24px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  z-index: 10000;
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  pointer-events: none;
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* ── Quick-Log type grid: expand to 3 columns to fit 6 buttons ── */
+.modal-type-grid {
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+
+/* ── Todo list inside Quick-Log modal ── */
+.ql-todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.8rem;
+}
+.ql-todo-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid var(--card-brd);
+  background: rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 44px;
+}
+.ql-todo-item:active {
+  background: rgba(0, 210, 255, 0.08);
+  border-color: var(--cyan);
+}
+.ql-todo-check {
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--text-dim, #888);
+  flex-shrink: 0;
+}
+.ql-todo-text {
+  font-size: 0.85rem;
+  color: var(--off-white);
+  flex: 1;
+}
+.ql-todo-empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text-dim, #888);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+/* ═══ BATCH3-FINANCIALS CSS ═══ */
+/* ═══ SECTION 5: FINANCIALS — CSS Additions ═══ */
+
+/* Date filter controls in transaction list */
+.fin-date-filter {
+  background: var(--card);
+  border: 1px solid var(--card-brd);
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+.fin-date-filter .inline-edit {
+  font-size: 0.6rem;
+}
+
+/* Income breakdown chart bars */
+.fin-income-chart {
+  padding: 0.25rem 0;
+}
+.fin-chart-row .stat-bar {
+  border-radius: 5px;
+  overflow: hidden;
+}
+.fin-chart-row .stat-bar-fill {
+  border-radius: 5px;
+  min-width: 2px;
+}
+
+/* Budget vs actual rows */
+.fin-row .lbl {
+  text-transform: capitalize;
+}
+
+/* Expense inline-edit wider fields */
+.fin-stop-row .inline-edit[type="text"] {
+  text-align: left;
+  font-size: 0.65rem;
+}
+.fin-stop-row .inline-edit[type="number"] {
+  text-align: right;
+}
+
+/* Quick log buttons at top of financials */
+.fin-quick-btns {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+.fin-quick-btns .venue-btn {
+  font-size: 0.7rem;
+  padding: 0.4rem 0.8rem;
+}
+
+/* Per-stop editable fields */
+.fin-stop-row .inline-edit {
+  margin: 0;
+}
+
+/* Delete expense button */
+.fin-stop-row .venue-btn.danger {
+  color: var(--expense);
+  border-color: rgba(239,68,68,0.3);
+  line-height: 1;
+}
+
+/* Transaction list scroll for long lists */
+#fin-transactions {
+  max-height: none;
+}
+
+/* ═══ BATCH3-STOPS CSS ═══ */
+/* ═══ SECTION 6: TOUR ROUTE + STOP MANAGEMENT — CSS ADDITIONS ═══ */
+
+/* ── Tour progress bar (route view header) ── */
+.route-progress {
+  background: var(--card);
+  border: 1px solid var(--card-brd);
+  border-radius: 12px;
+  padding: 0.75rem 0.85rem;
+  margin-bottom: 0.8rem;
+}
+.route-progress-hdr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.route-progress-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--off-white);
+}
+.route-progress-count {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+.route-progress-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+.route-progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--busking-l), var(--st-Completed));
+  transition: width 0.5s ease;
+}
+
+/* ── Stop status badges — more prominent ── */
+.stop-badge.current {
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--st-Current);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+  animation: badgePulse 2s infinite;
+}
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(34, 197, 94, 0.4); }
+  50% { box-shadow: 0 0 14px rgba(34, 197, 94, 0.7); }
+}
+.stop-badge.completed {
+  background: rgba(20, 184, 166, 0.2);
+  color: var(--st-Completed);
+  border: 1px solid rgba(20, 184, 166, 0.4);
+}
+.stop-badge.planned {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-dim);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* ── Stop dot glow enhancement for current ── */
+.stop-dot.current {
+  background: var(--st-Current);
+  border-color: var(--st-Current);
+  box-shadow: 0 0 14px rgba(34, 197, 94, 0.6);
+  animation: dotPulse 2s infinite;
+}
+@keyframes dotPulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(34, 197, 94, 0.5); }
+  50% { box-shadow: 0 0 18px rgba(34, 197, 94, 0.8); }
+}
+
+/* ── Drag-and-drop styling ── */
+.stop-card[draggable="true"] {
+  cursor: grab;
+}
+.stop-card[draggable="true"]:active {
+  cursor: grabbing;
+}
+.stop-card.dragging {
+  opacity: 0.5;
+  border-color: var(--magenta);
+}
+.stop-card.drag-over {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 2px rgba(0, 210, 255, 0.25);
+}
+
 </style>
 </head>
 <body>
@@ -511,6 +868,10 @@ body { background: var(--bg-grad); min-height:100vh; }
   <div class="section">
     <div class="section-title">Current Stop</div>
     <div id="cmd-current-stop"></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Today's Calls</div>
+    <div id="cmd-calls"></div>
   </div>
   <div class="section">
     <div class="section-title">Today's Priorities</div>
@@ -580,7 +941,9 @@ body { background: var(--bg-grad); min-height:100vh; }
       <button class="modal-type-btn active" data-ql-type="busking" onclick="selectQLType('busking')">🟢 Busking</button>
       <button class="modal-type-btn" data-ql-type="gig" onclick="selectQLType('gig')">🔵 Gig Income</button>
       <button class="modal-type-btn" data-ql-type="expense" onclick="selectQLType('expense')">🔴 Expense</button>
-      <button class="modal-type-btn" data-ql-type="spot" onclick="selectQLType('spot')">📍 Add Busking Spot</button>
+      <button class="modal-type-btn" data-ql-type="spot" onclick="selectQLType('spot')">📍 Add Spot</button>
+      <button class="modal-type-btn" data-ql-type="house_concert" onclick="selectQLType('house_concert')">🏠 House Concert</button>
+      <button class="modal-type-btn" data-ql-type="todo" onclick="selectQLType('todo')">✅ Todo Complete</button>
     </div>
     <div id="ql-fields"></div>
     <button class="modal-submit" onclick="submitQuickLog()">Log It</button>
@@ -641,6 +1004,118 @@ body { background: var(--bg-grad); min-height:100vh; }
     <button class="modal-submit" onclick="submitAddStop()">Add Stop</button>
   </div>
 </div>
+
+<!-- ═══ SECTION 4: COMMAND CENTER — HTML ADDITIONS ═══ -->
+
+<!-- REPLACEMENT for the Command Center view (lines ~508-523).
+     Adds "Today's Calls" section between Current Stop and Today's Tasks,
+     and renames "Today's Priorities" to "Today's Tasks". -->
+
+<!-- Insert this new section block between "Current Stop" and "Today's Tasks": -->
+
+  <div class="section">
+    <div class="section-title">Today's Calls</div>
+    <div id="cmd-calls"></div>
+  </div>
+
+<!-- FULL REPLACEMENT for the Command Center view container:
+
+<section class="view active" id="view-command">
+  <div class="stat-grid" id="cmd-stats"></div>
+  <div class="section">
+    <div class="section-title">Current Stop</div>
+    <div id="cmd-current-stop"></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Today's Calls</div>
+    <div id="cmd-calls"></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Today's Tasks</div>
+    <div id="cmd-priorities"></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Quick Tasks</div>
+    <div id="cmd-todos"></div>
+  </div>
+</section>
+
+-->
+
+<!-- ═══ SECTION 7: QUICK-LOG MODAL — HTML ADDITIONS ═══ -->
+
+<!-- ADD these two new type buttons inside .modal-type-grid (after the existing 4 buttons): -->
+<button class="modal-type-btn" data-ql-type="house_concert" onclick="selectQLType('house_concert')">🏠 House Concert</button>
+<button class="modal-type-btn" data-ql-type="todo" onclick="selectQLType('todo')">✅ Todo Complete</button>
+
+<!-- ADD this toast container element once, ideally right before the closing </body> tag: -->
+<div class="toast" id="toast"></div>
+
+<!--
+  FULL UPDATED .modal-type-grid BLOCK (replace the existing 4-button grid):
+
+  <div class="modal-type-grid">
+    <button class="modal-type-btn active" data-ql-type="busking" onclick="selectQLType('busking')">🟢 Busking</button>
+    <button class="modal-type-btn" data-ql-type="gig" onclick="selectQLType('gig')">🔵 Gig Income</button>
+    <button class="modal-type-btn" data-ql-type="expense" onclick="selectQLType('expense')">🔴 Expense</button>
+    <button class="modal-type-btn" data-ql-type="spot" onclick="selectQLType('spot')">📍 Add Busking Spot</button>
+    <button class="modal-type-btn" data-ql-type="house_concert" onclick="selectQLType('house_concert')">🏠 House Concert</button>
+    <button class="modal-type-btn" data-ql-type="todo" onclick="selectQLType('todo')">✅ Todo Complete</button>
+  </div>
+-->
+
+<!-- ═══ SECTION 6: TOUR ROUTE + STOP MANAGEMENT — HTML ADDITIONS ═══ -->
+
+<!-- ═══ EDIT STOP MODAL ═══
+     Add this after the existing Add Stop modal (after line ~643) -->
+<div class="modal-overlay" id="es-modal">
+  <div class="modal-sheet">
+    <div class="modal-hdr">
+      <div class="modal-title">Edit Tour Stop</div>
+      <button class="modal-close" onclick="closeModal('es-modal')">✕</button>
+    </div>
+    <input type="hidden" id="es-id">
+    <div class="modal-field"><label>Stop Name</label><input type="text" id="es-name" placeholder="Ceduna"></div>
+    <div class="modal-field"><label>State</label><input type="text" id="es-state" placeholder="SA"></div>
+    <div class="modal-field"><label>Segment Type</label><select id="es-segment"><option>Regional</option><option>Major Metro</option><option>Coastal</option><option>Transit</option></select></div>
+    <div class="modal-field"><label>Estimated Duration (days)</label><input type="number" id="es-days" value="3" inputmode="numeric"></div>
+    <div class="modal-field"><label>Arrival Date</label><input type="date" id="es-arrival"></div>
+    <div class="modal-field"><label>Departure Date</label><input type="date" id="es-departure"></div>
+    <div class="modal-field"><label>Week Type</label><select id="es-week"><option value="city">City</option><option value="regional">Regional</option><option value="transit">Transit</option></select></div>
+    <div class="modal-field"><label>Notes</label><textarea id="es-notes" rows="3" style="min-height:60px"></textarea></div>
+    <button class="modal-submit" onclick="submitEditStop()">Save Changes</button>
+  </div>
+</div>
+
+<!-- ═══ EDIT TARGETS MODAL ═══
+     Add this after the Edit Stop modal -->
+<div class="modal-overlay" id="et-modal">
+  <div class="modal-sheet">
+    <div class="modal-hdr">
+      <div class="modal-title">🎯 Edit Targets</div>
+      <button class="modal-close" onclick="closeModal('et-modal')">✕</button>
+    </div>
+    <input type="hidden" id="et-id">
+
+    <div class="pipe-group-title" style="color:var(--busking-l)">🟢 Busking Targets</div>
+    <div class="modal-field"><label>Sessions Target</label><input type="number" id="et-busk-sessions" value="0" inputmode="numeric"></div>
+    <div class="modal-field"><label>Earnings Target ($)</label><input type="number" id="et-busk-earnings" value="0" inputmode="numeric"></div>
+    <div class="modal-field"><label>Spots Scouted Target</label><input type="number" id="et-busk-spots" value="0" inputmode="numeric"></div>
+
+    <div class="pipe-group-title" style="color:var(--gig-l)">🔵 Venue Gig Targets</div>
+    <div class="modal-field"><label>Gigs Target</label><input type="number" id="et-gig-gigs" value="0" inputmode="numeric"></div>
+    <div class="modal-field"><label>Earnings Target ($)</label><input type="number" id="et-gig-earnings" value="0" inputmode="numeric"></div>
+
+    <div class="pipe-group-title" style="color:var(--house-l)">🏠 House Concert Targets</div>
+    <div class="modal-field"><label>Shows Target</label><input type="number" id="et-house-shows" value="0" inputmode="numeric"></div>
+    <div class="modal-field"><label>Earnings Target ($)</label><input type="number" id="et-house-earnings" value="0" inputmode="numeric"></div>
+
+    <button class="modal-submit" onclick="submitEditTargets()">Save Targets</button>
+  </div>
+</div>
+
+<!-- ═══ TOAST CONTAINER ═══ -->
+<div class="toast" id="toast-container"></div>
 
 <!-- ═══ BOTTOM TAB BAR ═══ -->
 <nav class="bottom-tabs">
@@ -752,90 +1227,106 @@ function switchView(view) {
 
 // ═══ COMMAND CENTER ═══
 function renderCommand() {
-  const stop = getCurrentStop();
-  const fin = D.financials?.tour || D.financials || {};
-  const earnings = fin.current_earnings || 0;
-  const expenses = fin.total_expenses || 0;
-  const net = fin.net_earnings || (earnings - expenses);
-  const target = fin.target || 37000;
-  const progress = target > 0 ? (net / target * 100) : 0;
-  const groundOps = D.ground_ops || {};
-  const opBank = groundOps.operational_bank || 0;
+  var stop = getCurrentStop();
+  var fin = D.financials && D.financials.tour ? D.financials.tour : (D.financials || {});
+  var earnings = fin.current_earnings || 0;
+  var expenses = fin.total_expenses || 0;
+  var net = fin.net_earnings || (earnings - expenses);
+  var target = fin.target || 37000;
+  var progress = target > 0 ? (net / target * 100) : 0;
+  var groundOps = D.ground_ops || {};
+  var opBank = groundOps.operational_bank || 0;
 
-  // Stat cards
-  const stopsDone = (D.tour_stops||[]).filter(s => s.status === 'Completed').length;
-  const totalStops = (D.tour_stops||[]).length;
-  document.getElementById('cmd-stats').innerHTML = `
-    <div class="stat-card">
-      <div class="stat-label">Tour Net</div>
-      <div class="stat-val fmt-money" style="color:${net>=0?'var(--st-booked)':'var(--expense)'}">${fmt$(net)}</div>
-      <div class="stat-sub">of ${fmt$(target)} target</div>
-      <div class="stat-bar"><div class="stat-bar-fill" style="width:${clamp(progress,0,100)}%;background:var(--cyan)"></div></div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Gross Earned</div>
-      <div class="stat-val fmt-money">${fmt$(earnings)}</div>
-      <div class="stat-sub">${fmtPct(progress)} to goal</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Ground Float</div>
-      <div class="stat-val fmt-money" style="color:var(--amber)">${fmt$(opBank)}</div>
-      <div class="stat-sub">Adelaide ops</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Route</div>
-      <div class="stat-val">${stopsDone}/${totalStops}</div>
-      <div class="stat-sub">stops done</div>
-    </div>
-  `;
+  // ── Stat cards ──
+  var stopsDone = (D.tour_stops || []).filter(function(s) { return s.status === 'Completed'; }).length;
+  var totalStops = (D.tour_stops || []).length;
 
-  // Current stop summary
+  var statsHtml = ''
+    + '<div class="stat-card">'
+    + '<div class="stat-label">Tour Net</div>'
+    + '<div class="stat-val fmt-money" style="color:' + (net >= 0 ? 'var(--st-booked)' : 'var(--expense)') + '">' + fmt$(net) + '</div>'
+    + '<div class="stat-sub">of ' + fmt$(target) + ' target</div>'
+    + '<div class="stat-bar"><div class="stat-bar-fill" style="width:' + clamp(progress, 0, 100) + '%;background:var(--cyan)"></div></div>'
+    + '</div>'
+    + '<div class="stat-card">'
+    + '<div class="stat-label">Gross Earned</div>'
+    + '<div class="stat-val fmt-money">' + fmt$(earnings) + '</div>'
+    + '<div class="stat-sub">' + fmtPct(progress) + ' to goal</div>'
+    + '</div>'
+    + '<div class="stat-card">'
+    + '<div class="stat-label">Ground Float</div>'
+    + '<div class="stat-val fmt-money" style="color:var(--amber)">' + fmt$(opBank) + '</div>'
+    + '<div class="stat-sub">Adelaide ops</div>'
+    + '</div>'
+    + '<div class="stat-card">'
+    + '<div class="stat-label">Route</div>'
+    + '<div class="stat-val">' + stopsDone + '/' + totalStops + '</div>'
+    + '<div class="stat-sub">stops done</div>'
+    + '</div>';
+  document.getElementById('cmd-stats').innerHTML = statsHtml;
+
+  // ── Current stop summary (or empty state) ──
   if (stop) {
-    const bT = stop.targets?.busking || {};
-    const bA = stop.actuals?.busking || {};
-    const gT = stop.targets?.venue_gig || {};
-    const gA = stop.actuals?.venue_gig || {};
-    const hT = stop.targets?.house_concert || {};
-    const hA = stop.actuals?.house_concert || {};
+    var bT = (stop.targets && stop.targets.busking) || {};
+    var bA = (stop.actuals && stop.actuals.busking) || {};
+    var gT = (stop.targets && stop.targets.venue_gig) || {};
+    var gA = (stop.actuals && stop.actuals.venue_gig) || {};
+    var hT = (stop.targets && stop.targets.house_concert) || {};
+    var hA = (stop.actuals && stop.actuals.house_concert) || {};
 
-    document.getElementById('cmd-current-stop').innerHTML = `
-      <div class="stop-detail-hdr">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div>
-            <div class="stop-detail-name">${stop.name}, ${stop.state}</div>
-            <div class="stop-detail-meta">${stop.segment_type} · ${stop.est_duration_days} days · ${stop.transit_status}</div>
-          </div>
-          <span class="stop-badge current">Current</span>
-        </div>
-      </div>
-      ${renderStreamMini('busking','🟢 Busking', bA.earnings_actual, bT.earnings_target, bA.sessions_completed, bT.sessions_target, 'sessions')}
-      ${renderStreamMini('gig','🔵 Venue Gigs', gA.earnings_actual, gT.earnings_target, gA.gigs_played, gT.gigs_target, 'gigs')}
-      ${renderStreamMini('house','🏠 House Concerts', hA.earnings_actual, hT.earnings_target, hA.shows_completed, hT.shows_target, 'shows')}
-    `;
+    var stopHtml = ''
+      + '<div class="stop-detail-hdr">'
+      + '<div style="display:flex;justify-content:space-between;align-items:center">'
+      + '<div>'
+      + '<div class="stop-detail-name">' + (stop.name || '') + (stop.state ? ', ' + stop.state : '') + '</div>'
+      + '<div class="stop-detail-meta">' + (stop.segment_type || '') + ' · ' + (stop.est_duration_days || '?') + ' days · ' + (stop.transit_status || '') + '</div>'
+      + '</div>'
+      + '<span class="stop-badge current">Current</span>'
+      + '</div>'
+      + '</div>'
+      + renderStreamMini('busking', '🟢 Busking', bA.earnings_actual, bT.earnings_target, bA.sessions_completed, bT.sessions_target, 'sessions')
+      + renderStreamMini('gig', '🔵 Venue Gigs', gA.earnings_actual, gT.earnings_target, gA.gigs_played, gT.gigs_target, 'gigs')
+      + renderStreamMini('house', '🏠 House Concerts', hA.earnings_actual, hT.earnings_target, hA.shows_completed, hT.shows_target, 'shows');
+    document.getElementById('cmd-current-stop').innerHTML = stopHtml;
   } else {
     document.getElementById('cmd-current-stop').innerHTML = '<div class="empty-state">No active stop</div>';
   }
 
-  // Priorities (computed from pipeline state)
-  const priorities = computePriorities(stop);
-  document.getElementById('cmd-priorities').innerHTML = priorities.length
-    ? priorities.map(p => `
-      <div class="priority-item">
-        <span class="priority-icon">${p.icon}</span>
-        <span class="priority-text">${p.text}</span>
-        <span class="priority-tag" style="background:${p.color}22;color:${p.color}">${p.tag}</span>
-      </div>`).join('')
-    : '<div class="empty-state">All caught up 🎉</div>';
+  // ── Today's Calls (new section) ──
+  var callsEl = document.getElementById('cmd-calls');
+  if (callsEl) {
+    callsEl.innerHTML = renderTodaysCalls(stop);
+  }
 
-  // Quick todos
-  const todos = (D.todos||[]).filter(t => !t.completed).slice(0,5);
-  document.getElementById('cmd-todos').innerHTML = todos.length
-    ? todos.map(t => renderTodoItem(t)).join('')
-    : '<div class="empty-state">No pending tasks</div>';
+  // ── Today's Tasks (renamed from Priorities, consolidated) ──
+  // If stop has no activity at all, show guided empty state
+  var tasksEl = document.getElementById('cmd-priorities');
+  if (tasksEl) {
+    if (stop && !stopHasActivity(stop)) {
+      tasksEl.innerHTML = renderEmptyStopState();
+    } else {
+      tasksEl.innerHTML = renderTodaysTasks(stop);
+    }
+  }
 
-  // Header
-  document.getElementById('hdr-sub').textContent = stop ? `${stop.name} · ${stop.transit_status}` : 'Tour OS';
-  document.getElementById('hdr-eta').textContent = `${fmtPct(progress)} to $37K`;
+  // ── Quick todos ──
+  var todos = (D.todos || []).filter(function(t) { return !t.completed; }).slice(0, 5);
+  var todosEl = document.getElementById('cmd-todos');
+  if (todosEl) {
+    todosEl.innerHTML = todos.length
+      ? todos.map(function(t) { return renderTodoItem(t); }).join('')
+      : '<div class="empty-state">No pending tasks</div>';
+  }
+
+  // ── Header ──
+  var hdrSub = document.getElementById('hdr-sub');
+  if (hdrSub) {
+    hdrSub.textContent = stop ? (stop.name + ' · ' + (stop.transit_status || '')) : 'Tour OS';
+  }
+  var hdrEta = document.getElementById('hdr-eta');
+  if (hdrEta) {
+    hdrEta.textContent = fmtPct(progress) + ' to $37K';
+  }
 }
 
 function renderStreamMini(streamType, label, actual, target, done, total, unit) {
@@ -855,47 +1346,212 @@ function renderStreamMini(streamType, label, actual, target, done, total, unit) 
     </div>`;
 }
 
-function computePriorities(stop) {
-  const p = [];
-  if (!stop) return p;
-  const venues = getStopVenues(stop.id);
-  const spots = getStopBuskingSpots(stop.id);
-  const hcs = getStopHouseConcerts(stop.id);
+var PRIO_WEIGHT = { high: 0, medium: 1, low: 2 };
 
-  // Venues needing follow-up
-  const needFollow = venues.filter(v => ['emailed','follow_up_1'].includes(v.pipeline_stage));
-  needFollow.forEach(v => {
-    p.push({icon:'📞', text:`Follow up with ${v.name} — ${STAGE_LABELS[v.pipeline_stage]||v.pipeline_stage}`, color:'#f59e0b', tag:'Gig'});
+function computePriorities(stop) {
+  var p = [];
+  if (!stop) return p;
+
+  var venues = getStopVenues(stop.id);
+  var spots = getStopBuskingSpots(stop.id);
+  var hcs = getStopHouseConcerts(stop.id);
+  var today = todayStr();
+  var yesterday = yesterdayStr();
+
+  // ── Rule 1: 72-hour follow-up for emailed venues ──
+  venues.forEach(function(v) {
+    if (v.pipeline_stage !== 'emailed') return;
+    var lastEmail = lastStageEntry(v, 'emailed');
+    if (!lastEmail) return;
+    var daysSince = getDaysSince(lastEmail.date);
+    if (daysSince >= 3) {  // 72+ hours ≈ 3 days
+      p.push({
+        icon: '📧',
+        text: 'Follow up #1 — email ' + (v.contact_name || 'booker') + ' at ' + v.name,
+        color: '#f59e0b',
+        tag: 'Follow',
+        level: 'medium',
+        overdue: daysSince >= 4,
+        action: 'pipeline',
+        venueId: v.id
+      });
+    }
   });
 
-  // Venues not contacted
-  const notContacted = venues.filter(v => v.pipeline_stage === 'not_contacted');
-  if (notContacted.length) {
-    p.push({icon:'☎️', text:`Call ${notContacted[0].name} — ${notContacted[0].phone||'no phone'}`, color:'#3b82f6', tag:'Call'});
-  }
+  // ── Rule 2: 5-day rule for follow_up_1 venues ──
+  venues.forEach(function(v) {
+    if (v.pipeline_stage !== 'follow_up_1') return;
+    var lastF1 = lastStageEntry(v, 'follow_up_1');
+    if (!lastF1) return;
+    var daysSince = getDaysSince(lastF1.date);
+    if (daysSince >= 5) {
+      p.push({
+        icon: '📞',
+        text: 'Follow up #2 — call ' + v.name,
+        color: '#f59e0b',
+        tag: 'Follow',
+        level: 'medium',
+        overdue: daysSince >= 7,
+        action: 'pipeline',
+        venueId: v.id
+      });
+    }
+  });
 
-  // House concerts needing seeding
-  const hcPosted = hcs.filter(h => h.pipeline_stage === 'posted' || h.pipeline_stage === 'interested');
-  if (hcPosted.length) {
-    p.push({icon:'🏠', text:`Nudge ${hcPosted[0].host_name} — house concert ${hcPosted[0].pipeline_stage}`, color:'#f59e0b', tag:'House'});
-  }
+  // ── Rule 3: 14-day rule for follow_up_2 venues ──
+  venues.forEach(function(v) {
+    if (v.pipeline_stage !== 'follow_up_2') return;
+    var lastF2 = lastStageEntry(v, 'follow_up_2');
+    if (!lastF2) return;
+    var daysSince = getDaysSince(lastF2.date);
+    if (daysSince >= 14) {
+      p.push({
+        icon: '⏰',
+        text: 'Mark ' + v.name + ' declined or push harder?',
+        color: '#6b7280',
+        tag: 'Decide',
+        level: 'low',
+        overdue: false,
+        action: 'pipeline',
+        venueId: v.id
+      });
+    }
+  });
 
-  // Busking spots spotted but not played
-  const spotted = spots.filter(s => s.status === 'spotted' || s.status === 'confirmed');
-  if (spotted.length) {
-    p.push({icon:'🟢', text:`Play ${spotted[0].name} — scouted, ready to busk`, color:'#22c55e', tag:'Busk'});
-  }
+  // ── Rule 4: Seeding window alerts (tour stops within 28 days, no house concerts) ──
+  (D.tour_stops || []).forEach(function(ts) {
+    if (!ts.arrival_date) return;
+    var daysUntil = getDaysUntilArrival(ts);
+    if (daysUntil === null) return;
+    if (daysUntil < 0 || daysUntil > 28) return;  // only upcoming within 28 days
+    var stopHCs = getStopHouseConcerts(ts.id);
+    if (stopHCs.length > 0) return;  // already has house concerts
+    var city = ts.name || ts.city || 'this stop';
+    p.push({
+      icon: '🌱',
+      text: 'SEEDING WINDOW: Post to ' + city + "'s FB group — " + daysUntil + ' days to arrival',
+      color: '#ef4444',
+      tag: 'Seed',
+      level: 'high',
+      overdue: daysUntil <= 7,
+      action: 'fb',
+      stopId: ts.id
+    });
+  });
 
-  // Marketing — reels to capture
-  const bookedGigs = venues.filter(v => v.pipeline_stage === 'booked');
-  if (bookedGigs.length) {
-    const v = bookedGigs[0];
-    if (!v.marketing?.reels_captured) {
-      p.push({icon:'🎬', text:`Capture reels at ${v.name}`, color:'#a855f7', tag:'Content'});
+  // ── Rule 5: Gig-tonight alert ──
+  venues.forEach(function(v) {
+    if (v.gig && v.gig.date === today) {
+      var time = v.gig.sound_check_time || 'TBD';
+      p.push({
+        icon: '🎤',
+        text: 'GIG TONIGHT at ' + v.name + ' — sound check ' + time,
+        color: '#22c55e',
+        tag: 'Gig',
+        level: 'high',
+        overdue: false,
+        action: 'pipeline',
+        venueId: v.id
+      });
+    }
+  });
+
+  // ── Rule 6: Unlogged busking session detection ──
+  var yestBusking = (D.income_history || []).filter(function(i) {
+    return i.type === 'busking' && i.date === yesterday && i.tour_stop_id === stop.id;
+  });
+  if (yestBusking.length === 0) {
+    // Only flag if the stop is active (arrival already happened)
+    var daysUntilArr = getDaysUntilArrival(stop);
+    if (daysUntilArr !== null && daysUntilArr <= 0) {
+      p.push({
+        icon: '🟢',
+        text: "Log yesterday's busking session",
+        color: '#6b7280',
+        tag: 'Log',
+        level: 'low',
+        overdue: false,
+        action: 'quickLog'
+      });
     }
   }
 
-  return p.slice(0, 5);
+  // ── Rule 7: Called venues needing email ──
+  venues.forEach(function(v) {
+    if (v.pipeline_stage !== 'called') return;
+    if (v.email) return;  // already has email
+    p.push({
+      icon: '✉️',
+      text: 'Get booker email for ' + v.name + ', send EPK',
+      color: '#ef4444',
+      tag: 'Email',
+      level: 'high',
+      overdue: false,
+      action: 'pipeline',
+      venueId: v.id
+    });
+  });
+
+  // ── Rule 8: House concerts needing nudge (posted/interested) ──
+  hcs.forEach(function(h) {
+    if (h.pipeline_stage === 'posted' || h.pipeline_stage === 'interested') {
+      p.push({
+        icon: '🏠',
+        text: 'Nudge ' + (h.host_name || 'host') + ' — house concert ' + h.pipeline_stage,
+        color: '#f59e0b',
+        tag: 'House',
+        level: 'medium',
+        overdue: false,
+        action: 'pipeline',
+        hcId: h.id
+      });
+    }
+  });
+
+  // ── Rule 9: Busking spots spotted but not played ──
+  spots.forEach(function(s) {
+    if (s.status === 'spotted' || s.status === 'confirmed') {
+      p.push({
+        icon: '🟢',
+        text: 'Play ' + s.name + ' — scouted, ready to busk',
+        color: '#22c55e',
+        tag: 'Busk',
+        level: 'low',
+        overdue: false,
+        action: 'busking'
+      });
+    }
+  });
+
+  // ── Rule 10: Marketing — reels to capture at booked gigs ──
+  venues.forEach(function(v) {
+    if (v.pipeline_stage !== 'booked') return;
+    if (v.marketing && v.marketing.reels_captured) return;
+    p.push({
+      icon: '🎬',
+      text: 'Capture reels at ' + v.name,
+      color: '#a855f7',
+      tag: 'Content',
+      level: 'medium',
+      overdue: false,
+      action: 'pipeline',
+      venueId: v.id
+    });
+  });
+
+  // ── Sorting: priority level (high→medium→low), overdue first within each level ──
+  p.sort(function(a, b) {
+    var wa = PRIO_WEIGHT[a.level] || 2;
+    var wb = PRIO_WEIGHT[b.level] || 2;
+    if (wa !== wb) return wa - wb;
+    // Overdue items first
+    var oa = a.overdue ? 0 : 1;
+    var ob = b.overdue ? 0 : 1;
+    if (oa !== ob) return oa - ob;
+    return 0;
+  });
+
+  return p;
 }
 
 function renderTodoItem(t) {
@@ -915,51 +1571,62 @@ function toggleTodo(id) {
 
 // ═══ TOUR ROUTE ═══
 function renderRoute() {
-  const stops = D.tour_stops || [];
-  document.getElementById('route-timeline').innerHTML = stops.map(s => {
-    const bT = s.targets?.busking || {};
-    const bA = s.actuals?.busking || {};
-    const gT = s.targets?.venue_gig || {};
-    const gA = s.actuals?.venue_gig || {};
-    const hT = s.targets?.house_concert || {};
-    const hA = s.actuals?.house_concert || {};
+  var stops = D.tour_stops || [];
+  var html = renderRouteProgressBar() + renderAddStopButton();
+  html += stops.map(function(s) {
+    var bT = (s.targets && s.targets.busking) || {};
+    var bA = (s.actuals && s.actuals.busking) || {};
+    var gT = (s.targets && s.targets.venue_gig) || {};
+    var gA = (s.actuals && s.actuals.venue_gig) || {};
+    var hT = (s.targets && s.targets.house_concert) || {};
+    var hA = (s.actuals && s.actuals.house_concert) || {};
 
-    const bPct = bT.earnings_target > 0 ? clamp(bA.earnings_actual/bT.earnings_target*100,0,100) : 0;
-    const gPct = gT.earnings_target > 0 ? clamp(gA.earnings_actual/gT.earnings_target*100,0,100) : 0;
-    const hPct = hT.earnings_target > 0 ? clamp(hA.earnings_actual/hT.earnings_target*100,0,100) : 0;
+    var bPct = bT.earnings_target > 0 ? clamp(bA.earnings_actual / bT.earnings_target * 100, 0, 100) : 0;
+    var gPct = gT.earnings_target > 0 ? clamp(gA.earnings_actual / gT.earnings_target * 100, 0, 100) : 0;
+    var hPct = hT.earnings_target > 0 ? clamp(hA.earnings_actual / hT.earnings_target * 100, 0, 100) : 0;
 
-    const dotClass = s.status === 'Current' ? 'current' : s.status === 'Completed' ? 'completed' : s.status === 'Target' ? 'target' : 'planned';
-    const badgeClass = s.status.toLowerCase();
+    var dotClass = s.status === 'Current' ? 'current' : s.status === 'Completed' ? 'completed' : s.status === 'Target' ? 'target' : 'planned';
+    var badgeClass = s.status.toLowerCase();
+    var badgeText = s.status === 'Completed' ? '✓ ' + s.status : s.status;
 
-    return `
-      <div class="stop-node">
-        <div class="stop-dot ${dotClass}"></div>
-        <div class="stop-card" onclick="toggleStopExpand(${s.id})">
-          <div class="stop-hdr">
-            <div>
-              <span class="stop-name">${s.name}</span>
-              <span class="stop-num">#${s.id}</span>
-            </div>
-            <span class="stop-badge ${badgeClass}">${s.status}</span>
-          </div>
-          <div class="stop-meta">${s.state} · ${s.segment_type} · ${s.est_duration_days}d · ${s.transit_status}</div>
-          <div class="stop-bars">
-            <div class="stop-bar"><div class="stop-bar-fill busking" style="width:${bPct}%"></div></div>
-            <div class="stop-bar"><div class="stop-bar-fill gig" style="width:${gPct}%"></div></div>
-            <div class="stop-bar"><div class="stop-bar-fill house" style="width:${hPct}%"></div></div>
-          </div>
-          <div class="stop-expand" id="stop-expand-${s.id}">
-            <div class="stream-mini"><span style="color:var(--busking-l)">🟢 Busking</span><span>${bA.sessions_completed||0}/${bT.sessions_target||0} · ${fmt$(bA.earnings_actual||0)}/${fmt$(bT.earnings_target||0)}</span></div>
-            <div class="stream-mini"><span style="color:var(--gig-l)">🔵 Gigs</span><span>${gA.gigs_played||0}/${gT.gigs_target||0} · ${fmt$(gA.earnings_actual||0)}/${fmt$(gT.earnings_target||0)}</span></div>
-            <div class="stream-mini"><span style="color:var(--house-l)">🏠 House</span><span>${hA.shows_completed||0}/${hT.shows_target||0} · ${fmt$(hA.earnings_actual||0)}/${fmt$(hT.earnings_target||0)}</span></div>
-            <div class="stream-mini" style="margin-top:0.5rem;border-top:1px solid var(--card-brd);padding-top:0.3rem"><span class="text-dim">Projected</span><span>${fmt$(s.financials?.projected_income||0)}</span></div>
-            <div class="stream-mini"><span class="text-dim">Actual</span><span>${fmt$(s.financials?.actual_income||0)}</span></div>
-            <div class="stream-mini"><span class="text-dim">Net</span><span style="font-weight:700">${fmt$(s.financials?.net||0)}</span></div>
-            <div class="stop-actions"><button class="stop-btn current" onclick="event.stopPropagation();setCurrentStop(${s.id})">📍 Set Current</button><button class="stop-btn" onclick="event.stopPropagation();moveStop(${s.id},-1)">↑</button><button class="stop-btn" onclick="event.stopPropagation();moveStop(${s.id},1)">↓</button><button class="stop-btn delete" onclick="event.stopPropagation();deleteStop(${s.id})">✕</button></div><button class="venue-btn" style="width:100%;margin-top:0.4rem" onclick="event.stopPropagation();openStopDetail(${s.id})">View Details →</button>
-          </div>
-        </div>
-      </div>`;
+    var node = '';
+    node += '<div class="stop-node">';
+    node += '<div class="stop-dot ' + dotClass + '"></div>';
+    node += '<div class="stop-card" draggable="true" data-stop-id="' + s.id + '" ondragstart="handleStopDragStart(event,' + s.id + ')" ondragover="handleStopDragOver(event)" ondrop="handleStopDrop(event,' + s.id + ')" onclick="toggleStopExpand(' + s.id + ')">';
+    node += '<div class="stop-hdr">';
+    node += '<div>';
+    node += '<span class="stop-name">' + s.name + '</span>';
+    node += '<span class="stop-num">#' + s.id + '</span>';
+    node += '</div>';
+    node += '<span class="stop-badge ' + badgeClass + '">' + badgeText + '</span>';
+    node += '</div>';
+    node += '<div class="stop-meta">' + s.state + ' · ' + s.segment_type + ' · ' + s.est_duration_days + 'd · ' + s.transit_status + '</div>';
+    node += '<div class="stop-bars">';
+    node += '<div class="stop-bar"><div class="stop-bar-fill busking" style="width:' + bPct + '%"></div></div>';
+    node += '<div class="stop-bar"><div class="stop-bar-fill gig" style="width:' + gPct + '%"></div></div>';
+    node += '<div class="stop-bar"><div class="stop-bar-fill house" style="width:' + hPct + '%"></div></div>';
+    node += '</div>';
+    node += '<div class="stop-expand" id="stop-expand-' + s.id + '">';
+    node += '<div class="stream-mini"><span style="color:var(--busking-l)">🟢 Busking</span><span>' + (bA.sessions_completed || 0) + '/' + (bT.sessions_target || 0) + ' · ' + fmt$(bA.earnings_actual || 0) + '/' + fmt$(bT.earnings_target || 0) + '</span></div>';
+    node += '<div class="stream-mini"><span style="color:var(--gig-l)">🔵 Gigs</span><span>' + (gA.gigs_played || 0) + '/' + (gT.gigs_target || 0) + ' · ' + fmt$(gA.earnings_actual || 0) + '/' + fmt$(gT.earnings_target || 0) + '</span></div>';
+    node += '<div class="stream-mini"><span style="color:var(--house-l)">🏠 House</span><span>' + (hA.shows_completed || 0) + '/' + (hT.shows_target || 0) + ' · ' + fmt$(hA.earnings_actual || 0) + '/' + fmt$(hT.earnings_target || 0) + '</span></div>';
+    node += '<div class="stream-mini" style="margin-top:0.5rem;border-top:1px solid var(--card-brd);padding-top:0.3rem"><span class="text-dim">Projected</span><span>' + fmt$((s.financials && s.financials.projected_income) || 0) + '</span></div>';
+    node += '<div class="stream-mini"><span class="text-dim">Actual</span><span>' + fmt$((s.financials && s.financials.actual_income) || 0) + '</span></div>';
+    node += '<div class="stream-mini"><span class="text-dim">Net</span><span style="font-weight:700">' + fmt$((s.financials && s.financials.net) || 0) + '</span></div>';
+    node += '<div class="stop-actions">';
+    node += '<button class="stop-btn current" onclick="event.stopPropagation();setCurrentStop(' + s.id + ')">📍 Set Current</button>';
+    node += '<button class="stop-btn" onclick="event.stopPropagation();moveStop(' + s.id + ',-1)">↑</button>';
+    node += '<button class="stop-btn" onclick="event.stopPropagation();moveStop(' + s.id + ',1)">↓</button>';
+    node += '<button class="stop-btn" onclick="event.stopPropagation();openEditStopModal(' + s.id + ')">✎ Edit</button>';
+    node += '<button class="stop-btn delete" onclick="event.stopPropagation();deleteStop(' + s.id + ')">✕</button>';
+    node += '</div>';
+    node += '<button class="venue-btn" style="width:100%;margin-top:0.4rem" onclick="event.stopPropagation();openStopDetail(' + s.id + ')">View Details →</button>';
+    node += '</div>';
+    node += '</div>';
+    node += '</div>';
+    return node;
   }).join('');
+  document.getElementById('route-timeline').innerHTML = html;
 }
 
 function toggleStopExpand(id) {
@@ -974,50 +1641,51 @@ function openStopDetail(id) {
 
 // ═══ STOP DETAIL ═══
 function renderStopDetail() {
-  const stop = D.tour_stops?.find(s => s.id === selectedStopId) || getCurrentStop();
+  var stop = (D.tour_stops && D.tour_stops.find(function(s) { return s.id === selectedStopId; })) || getCurrentStop();
   if (!stop) {
     document.getElementById('stop-detail-container').innerHTML = '<div class="empty-state">No stop selected</div>';
     return;
   }
   selectedStopId = stop.id;
 
-  // Update bottom tab label
-  document.getElementById('bt-stop-label').textContent = stop.name.length > 8 ? stop.name.substring(0,7)+'…' : stop.name;
+  var btLabel = document.getElementById('bt-stop-label');
+  if (btLabel) btLabel.textContent = stop.name.length > 8 ? stop.name.substring(0, 7) + '…' : stop.name;
 
-  const venues = getStopVenues(stop.id);
-  const spots = getStopBuskingSpots(stop.id);
-  const hcs = getStopHouseConcerts(stop.id);
+  var venues = getStopVenues(stop.id);
+  var spots = getStopBuskingSpots(stop.id);
+  var hcs = getStopHouseConcerts(stop.id);
 
-  document.getElementById('stop-detail-container').innerHTML = `
-    <div class="stop-detail-hdr">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div>
-          <div class="stop-detail-name">${stop.name}, ${stop.state}</div>
-          <div class="stop-detail-meta">${stop.segment_type} · ${stop.est_duration_days} days · ${stop.arrival_date||''} → ${stop.departure_date||''}</div>
-        </div>
-        <span class="stop-badge ${stop.status.toLowerCase()}">${stop.status}</span>
-      </div>
-      ${stop.notes ? `<div style="font-size:0.7rem;color:var(--text-dim);margin-top:0.5rem">${stop.notes}</div>` : ''}
-    </div>
-    <div class="tab-bar">
-      <button class="tab-btn active busking" data-tab="busking" onclick="switchTab('busking')">🟢 Busking</button>
-      <button class="tab-btn gig" data-tab="gig" onclick="switchTab('gig')">🔵 Gigs</button>
-      <button class="tab-btn house" data-tab="house" onclick="switchTab('house')">🏠 House</button>
-      <button class="tab-btn" data-tab="fin" onclick="switchTab('fin')">📊 Financials</button>
-    </div>
-    <div id="tab-busking" class="tab-content active">
-      ${renderBuskingTab(spots, stop)}
-    </div>
-    <div id="tab-gig" class="tab-content">
-      ${renderGigsTab(venues, stop)}
-    </div>
-    <div id="tab-house" class="tab-content">
-      ${renderHouseTab(hcs, stop)}
-    </div>
-    <div id="tab-fin" class="tab-content">
-      ${renderStopFinancials(stop)}
-    </div>
-  `;
+  var badgeClass = stop.status.toLowerCase();
+  var badgeText = stop.status === 'Completed' ? '✓ ' + stop.status : stop.status;
+
+  var html = '';
+  html += '<div class="stop-detail-hdr">';
+  html += '<div style="display:flex;justify-content:space-between;align-items:center">';
+  html += '<div>';
+  html += '<div class="stop-detail-name">' + stop.name + ', ' + stop.state + '</div>';
+  html += '<div class="stop-detail-meta">' + stop.segment_type + ' · ' + stop.est_duration_days + ' days · ' + (stop.arrival_date || '') + ' → ' + (stop.departure_date || '') + '</div>';
+  html += '</div>';
+  html += '<span class="stop-badge ' + badgeClass + '">' + badgeText + '</span>';
+  html += '</div>';
+  if (stop.notes) {
+    html += '<div style="font-size:0.7rem;color:var(--text-dim);margin-top:0.5rem">' + stop.notes + '</div>';
+  }
+  html += '<div class="stop-actions">';
+  html += '<button class="stop-btn" onclick="openEditStopModal(' + stop.id + ')">✎ Edit Stop</button>';
+  html += '<button class="stop-btn" onclick="openEditTargetsModal(' + stop.id + ')">🎯 Edit Targets</button>';
+  html += '</div>';
+  html += '</div>';
+  html += '<div class="tab-bar">';
+  html += '<button class="tab-btn active busking" data-tab="busking" onclick="switchTab(\'busking\')">🟢 Busking</button>';
+  html += '<button class="tab-btn gig" data-tab="gig" onclick="switchTab(\'gig\')">🔵 Gigs</button>';
+  html += '<button class="tab-btn house" data-tab="house" onclick="switchTab(\'house\')">🏠 House</button>';
+  html += '<button class="tab-btn" data-tab="fin" onclick="switchTab(\'fin\')">📊 Financials</button>';
+  html += '</div>';
+  html += '<div id="tab-busking" class="tab-content active">' + renderBuskingTab(spots, stop) + '</div>';
+  html += '<div id="tab-gig" class="tab-content">' + renderGigsTab(venues, stop) + '</div>';
+  html += '<div id="tab-house" class="tab-content">' + renderHouseTab(hcs, stop) + '</div>';
+  html += '<div id="tab-fin" class="tab-content">' + renderStopFinancials(stop) + '</div>';
+  document.getElementById('stop-detail-container').innerHTML = html;
 }
 
 function switchTab(tab) {
@@ -1029,24 +1697,37 @@ function switchTab(tab) {
 }
 
 function renderBuskingTab(spots, stop) {
-  if (!spots.length) return '<div class="empty-state">No busking spots logged yet. Tap + to add one.</div>';
-  return spots.map(s => {
-    const spotStatus = s.status || 'spotted';
-    const statusClass = spotStatus === 'confirmed' || spotStatus === 'played' || spotStatus === 'regular' ? 'current' : 'planned';
-    let sessionsHtml = '';
+  var stopCity = (stop && stop.name) ? stop.name : '';
+  var addSpotBtn = '<button class="venue-btn" style="width:100%;margin-bottom:0.5rem;color:var(--busking-l);border-color:rgba(22,101,52,0.3)" onclick="openAddSpotModal(\'' + stopCity.replace(/'/g, "\\'") + '\')">+ Add Spot</button>';
+
+  if (!spots.length) {
+    return '<div class="empty-state">No busking spots logged yet. Tap + Add Spot to scout one.</div>' + addSpotBtn;
+  }
+
+  return addSpotBtn + spots.map(function(s) {
+    var spotStatus = s.status || 'spotted';
+    var statusClass = (spotStatus === 'confirmed' || spotStatus === 'played' || spotStatus === 'regular') ? 'current' : 'planned';
+
+    // Best-spot highlight: avg > $250 AND sessions >= 3
+    var isBest = (s.avg_earnings_per_session > 250) && ((s.total_sessions||0) >= 3);
+    var bestBadge = isBest ? '<span class="best-spot-badge" title="Top-earning spot">⭐</span>' : '';
+
+    var sessionsHtml = '';
     if (s.earnings_history && s.earnings_history.length) {
-      sessionsHtml = s.earnings_history.map((e, idx) => {
-        return '<div class="session-log-item">' +
+      sessionsHtml = s.earnings_history.map(function(e, idx) {
+        return '<div class="session-log-item" style="cursor:pointer" onclick="editBuskingSession(\'' + s.id + '\',' + idx + ')">' +
           '<div><div style="font-weight:600">' + (e.date||'') + '</div>' +
           '<div style="font-size:0.6rem;color:var(--text-dim)">' + (e.duration_minutes||0) + 'min' + (e.notes ? ' · ' + e.notes : '') + '</div></div>' +
           '<div style="text-align:right"><span style="color:var(--busking-l);font-weight:600">' + fmt$(e.earnings||0) + (e.merch_sales ? ' +' + fmt$(e.merch_sales) : '') + '</span>' +
-          '<button class="session-log-del" onclick="deleteBuskingSession(\'' + s.id + '\',' + idx + ')">✕</button></div></div>';
+          '<button class="session-log-del" onclick="event.stopPropagation();deleteBuskingSession(\'' + s.id + '\',' + idx + ')">✕</button></div></div>';
       }).join('');
     }
+
     return '<div class="entity-card">' +
-      '<div class="entity-hdr"><div><div class="entity-name">📍 ' + s.name + '</div>' +
+      '<div class="entity-hdr"><div>' +
+        '<div class="entity-name" style="cursor:pointer" onclick="openSpotDetail(\'' + s.id + '\')">📍 ' + s.name + ' ' + bestBadge + '</div>' +
       '<div class="entity-sub">' + (s.address || s.city || '') + '</div></div>' +
-      '<span class="stop-badge ' + statusClass + '" onclick="cycleSpotStatus(\'' + s.id + '\')">' + spotStatus + '</span></div>' +
+      '<span class="stop-badge ' + statusClass + '" onclick="cycleSpotStatus(\'' + s.id + '\')" style="cursor:pointer">' + spotStatus + '</span></div>' +
       '<div class="entity-row"><span class="lbl">Foot Traffic</span><span>' + '★'.repeat(s.foot_traffic_rating||0) + '☆'.repeat(5-(s.foot_traffic_rating||0)) + '</span></div>' +
       '<div class="entity-row"><span class="lbl">Best Time</span><span>' + (s.best_time_of_day||'—') + '</span></div>' +
       '<div class="entity-row"><span class="lbl">Permit</span><span>' + (s.permit_required ? (s.permit_obtained ? '✅ Obtained' : '⚠️ Required') : 'Not required') + '</span></div>' +
@@ -1055,10 +1736,11 @@ function renderBuskingTab(spots, stop) {
       (s.avg_earnings_per_session ? '<div class="entity-row"><span class="lbl">Avg/Session</span><span>' + fmt$(s.avg_earnings_per_session) + '</span></div>' : '') +
       (s.best_time_notes ? '<div style="font-size:0.68rem;color:var(--text-dim);margin-top:0.4rem;padding:0.4rem;background:rgba(0,0,0,0.2);border-radius:6px">' + s.best_time_notes + '</div>' : '') +
       sessionsHtml +
-      '<button class="venue-btn" style="width:100%;margin-top:0.3rem;color:var(--expense)" onclick="deleteBuskingSpot(\'' + s.id + '\')">Delete Spot</button>' +
+      '<button class="venue-btn" style="width:100%;margin-top:0.3rem;color:var(--busking-l)" onclick="openSpotDetail(\'' + s.id + '\')">Edit Spot</button>' +
     '</div>';
   }).join('');
 }
+
 function renderGigsTab(venues, stop) {
   if (!venues.length) return '<div class="empty-state">No venues in pipeline yet. Use the Pipeline tab to manage bookings.</div>';
   return venues.map(v => `
@@ -1129,33 +1811,51 @@ function advanceVenue(venueId) {
 }
 
 function renderHouseTab(hcs, stop) {
-  if (!hcs.length) return '<div class="empty-state">No house concerts in pipeline. Tap + Add Host to start.</div>';
-  const hcStageLabels = {posted:'Posted',interested:'Interested',confirmed:'Confirmed',completed:'Completed',cancelled:'Cancelled'};
-  const hcStageColors = {posted:'#6b7280',interested:'#f59e0b',confirmed:'#22c55e',completed:'#14b8a6',cancelled:'#ef4444'};
-  let html = '<button class="venue-btn" style="width:100%;margin-bottom:0.6rem" onclick="openAddHostModal()">+ Add Host</button>';
-  html += hcs.map(h => {
-    const color = hcStageColors[h.pipeline_stage] || '#6b7280';
-    let detail = '';
+  var hcStageLabels = {posted:'Posted',interested:'Interested',confirmed:'Confirmed',completed:'Completed',cancelled:'Cancelled'};
+  var hcStageColors = {posted:'#6b7280',interested:'#f59e0b',confirmed:'#22c55e',completed:'#14b8a6',cancelled:'#ef4444'};
+  var html = '<button class="venue-btn" style="width:100%;margin-bottom:0.6rem" onclick="openAddHostModal()">+ Add Host</button>';
+
+  // Flywheel status badge
+  if (stop) {
+    var fw = computeFlywheelStatus(stop.id);
+    html += '<div class="hd-flywheel-badge" style="background:' + fw.color + '22;border:1px solid ' + fw.color + '44">' +
+      '<span style="color:' + fw.color + '">' + fw.label + '</span>' +
+      '<span class="flywheel-detail">' + fw.detail + '</span>' +
+      '</div>';
+  }
+
+  if (!hcs.length) {
+    html += '<div class="empty-state">No house concerts in pipeline. Tap + Add Host to start.</div>';
+    return html;
+  }
+
+  html += hcs.map(function(h) {
+    var color = hcStageColors[h.pipeline_stage] || '#6b7280';
+    var detail = '';
     if (h.event) {
       detail = '<div style="margin-top:0.5rem;padding:0.5rem;background:rgba(217,119,6,0.06);border-radius:6px">';
       if (h.event.date) detail += '<div class="entity-row"><span class="lbl">Date</span><span>' + h.event.date + '</span></div>';
       if (h.event.tier_label) detail += '<div class="entity-row"><span class="lbl">Tier</span><span>' + h.event.tier_label + '</span></div>';
       if (h.event.ticket_count) detail += '<div class="entity-row"><span class="lbl">Tickets</span><span>' + h.event.ticket_count + '</span></div>';
-      if (h.event.revenue) detail += '<div class="entity-row"><span class="lbl">Revenue</span><span style="color:var(--house-l);font-weight:700">' + fmt$(h.event.revenue) + '</span></div>';
+      if (h.event.revenue_actual) detail += '<div class="entity-row"><span class="lbl">Revenue</span><span style="color:var(--house-l);font-weight:700">' + fmt$(h.event.revenue_actual) + '</span></div>';
+      else if (h.event.revenue_projected) detail += '<div class="entity-row"><span class="lbl">Rev (proj)</span><span style="color:var(--house-l);font-weight:700">' + fmt$(h.event.revenue_projected) + '</span></div>';
       detail += '</div>';
     }
-    let history = '';
+    var history = '';
     if (h.stage_history && h.stage_history.length) {
-      history = h.stage_history.map(sh => '<div class="entity-row"><span class="lbl">' + (hcStageLabels[sh.stage]||sh.stage) + '</span><span>' + sh.date + (sh.notes ? ' — ' + sh.notes : '') + '</span></div>').join('');
+      history = h.stage_history.map(function(sh) {
+        return '<div class="entity-row"><span class="lbl">' + (hcStageLabels[sh.stage]||sh.stage) + '</span><span>' + sh.date + (sh.notes ? ' — ' + sh.notes : '') + '</span></div>';
+      }).join('');
     }
-    const showAdvance = h.pipeline_stage !== 'completed' && h.pipeline_stage !== 'cancelled';
-    const nextLabel = nextHCStageLabel(h.pipeline_stage);
-    let actions = '<div class="venue-actions">';
-    if (showAdvance) actions += '<button class="venue-btn advance" onclick="advanceHouseConcert(\'' + h.id + '\')">→ ' + nextLabel + '</button>';
-    if (showAdvance) actions += '<button class="venue-btn" style="color:var(--expense)" onclick="cancelHouseConcert(\'' + h.id + '\')">✕ Cancel</button>';
+    var showAdvance = h.pipeline_stage !== 'completed' && h.pipeline_stage !== 'cancelled';
+    var nextLabel = nextHCStageLabel(h.pipeline_stage);
+    var actions = '<div class="venue-actions" onclick="event.stopPropagation()">';
+    if (showAdvance) actions += '<button class="venue-btn advance" onclick="advanceHouseConcert(\'' + h.id + '\');event.stopPropagation()">→ ' + nextLabel + '</button>';
+    if (showAdvance) actions += '<button class="venue-btn" style="color:var(--expense)" onclick="cancelHouseConcert(\'' + h.id + '\');event.stopPropagation()">✕ Cancel</button>';
+    actions += '<button class="venue-btn" onclick="openHostDetail(\'' + h.id + '\');event.stopPropagation()">📋 Details</button>';
     actions += '</div>';
-    const fbTracker = renderFBTracker(h);
-    return '<div class="entity-card" style="border-left:3px solid ' + color + '">' +
+    var fbTracker = renderFBTracker(h);
+    return '<div class="entity-card" style="border-left:3px solid ' + color + ';cursor:pointer" onclick="openHostDetail(\'' + h.id + '\')">' +
       '<div class="entity-hdr"><div><div class="entity-name">🏠 ' + h.host_name + '</div>' +
       '<div class="entity-sub">Source: ' + (h.source||'—') + '</div></div>' +
       '<span class="venue-stage-badge" style="background:' + color + '22;color:' + color + '">' + (hcStageLabels[h.pipeline_stage]||h.pipeline_stage) + '</span></div>' +
@@ -1164,6 +1864,7 @@ function renderHouseTab(hcs, stop) {
   }).join('');
   return html;
 }
+
 function renderStopFinancials(stop) {
   const proj = stop.financials?.projected_income || 0;
   const actual = stop.financials?.actual_income || 0;
@@ -1189,63 +1890,6 @@ function renderStopFinancials(stop) {
       <div class="fin-row"><span class="lbl">Variance</span><span class="val" style="color:${actual>=proj?'var(--st-booked)':'var(--amber)'}">${actual>=proj?'+':''}${fmt$(actual-proj)}</span></div>
     </div>
   `;
-}
-
-// ═══ PIPELINE VIEW ═══
-function renderPipeline() {
-  const stop = getCurrentStop();
-  if (!stop) {
-    document.getElementById('pipeline-container').innerHTML = '<div class="empty-state">No active stop</div>';
-    return;
-  }
-  const venues = getStopVenues(stop.id);
-  // Also show venues from next stop if current has few
-  let allVenues = venues;
-  if (venues.length < 3) {
-    const nextStop = D.tour_stops?.find(s => s.id === stop.id + 1);
-    if (nextStop) allVenues = [...venues, ...getStopVenues(nextStop.id)];
-  }
-
-  const stages = ['not_contacted','called','emailed','follow_up_1','follow_up_2','booked','played','declined'];
-  let html = `<div class="filter-bar"><select onchange="renderPipelineFiltered(this.value)"><option value="all">All Stages</option><option value="not_contacted">Not Contacted</option><option value="called">Called</option><option value="emailed">Emailed</option><option value="follow_up_1">Follow Up 1</option><option value="follow_up_2">Follow Up 2</option><option value="booked">Booked</option><option value="played">Played</option><option value="declined">Declined</option></select></div><div style="font-size:0.8rem;color:var(--text-dim);margin-bottom:0.8rem">Showing venues for ${stop.name}${allVenues.length>venues.length?' + next stop':''} — ${allVenues.length} total</div>`;
-
-  const filteredStages = pipeFilterStage === 'all' ? stages : stages.filter(s => s === pipeFilterStage);
-  filteredStages.forEach(stage => {
-    const stageVenues = allVenues.filter(v => v.pipeline_stage === stage);
-    if (!stageVenues.length) return;
-    const color = STAGE_COLORS[stage];
-    html += `
-      <div class="pipe-group">
-        <div class="pipe-group-title" style="color:${color}">
-          <span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block"></span>
-          ${STAGE_LABELS[stage]}
-          <span class="pipe-count">${stageVenues.length}</span>
-        </div>
-        ${stageVenues.map(v => `
-          <div class="entity-card venue-card stage-${stage}" onclick="openStopDetail(${v.tour_stop_id})">
-            <div class="entity-hdr">
-              <div>
-                <div class="entity-name">${v.name}</div>
-                <div class="entity-sub">${v.venue_type} · ${v.city}</div>
-              </div>
-            </div>
-            ${v.phone ? `<div class="entity-row"><span class="lbl">📞</span><span><a href="tel:${v.phone}" style="color:var(--cyan)" onclick="event.stopPropagation()">${v.phone}</a></span></div>` : ''}
-            ${v.contact_name ? `<div class="entity-row"><span class="lbl">Contact</span><span>${v.contact_name}</span></div>` : ''}
-            ${v.gig?.date ? `<div class="entity-row"><span class="lbl">Gig Date</span><span style="color:var(--st-booked)">${v.gig.date}</span></div>` : ''}
-            <div class="venue-actions" onclick="event.stopPropagation()">
-              ${v.phone ? `<a href="tel:${v.phone}" class="venue-btn call">📞 Call</a>` : ''}
-              <button class="venue-btn advance" onclick="advanceVenue('${v.id}')">→ ${nextStageLabel(stage)}</button>
-            </div>
-          </div>
-        `).join('')}
-      </div>`;
-  });
-
-  if (!allVenues.length) {
-    html = '<div class="empty-state">No venues in pipeline. Add venues via the CLI or start calling!</div>';
-  }
-
-  document.getElementById('pipeline-container').innerHTML = html;
 }
 
 // ═══ FINANCIALS VIEW ═══
@@ -1280,89 +1924,98 @@ function recalcFinancials() {
 }
 
 function renderFinancials() {
-  const fin = D.financials?.tour || D.financials || {};
-  const earnings = fin.current_earnings || 0;
-  const expenses = fin.total_expenses || 0;
-  const net = fin.net_earnings || (earnings - expenses);
-  const target = fin.target || 37000;
-  const progress = target > 0 ? (net / target * 100) : 0;
-  const groundOps = D.ground_ops || {};
-  const incomeByStream = fin.income_by_stream || {};
+  var fin = (D.financials && D.financials.tour) ? D.financials.tour : (D.financials || {});
+  var earnings = fin.current_earnings || 0;
+  var expenses = fin.total_expenses || 0;
+  var net = fin.net_earnings || (earnings - expenses);
+  var target = fin.target || 37000;
+  var progress = target > 0 ? (net / target * 100) : 0;
+  var groundOps = D.ground_ops || {};
+  var incomeByStream = fin.income_by_stream || {};
+  var expensesByCategory = fin.expenses_by_category || {};
 
-  // Overview
-  document.getElementById('fin-overview').innerHTML = `
-    <div class="fin-card">
-      <div class="fin-row income"><span class="lbl">Gross Earnings</span><span class="val">${fmt$(earnings)}</span></div>
-      <div class="fin-row"><span class="lbl">🟢 Busking</span><span style="color:var(--busking-l)">${fmt$(incomeByStream.busking||0)}</span></div>
-      <div class="fin-row"><span class="lbl">🔵 Venue Gigs</span><span style="color:var(--gig-l)">${fmt$(incomeByStream.venue_gig||0)}</span></div>
-      <div class="fin-row"><span class="lbl">🏠 House Concerts</span><span style="color:var(--house-l)">${fmt$(incomeByStream.house_concert||0)}</span></div>
-      <div class="fin-row"><span class="lbl">🎟️ Merch</span><span style="color:var(--merch)">${fmt$(incomeByStream.merch||0)}</span></div>
-      <div class="fin-row expense"><span class="lbl">Total Expenses</span><span class="val">${fmt$(expenses)}</span></div>
-      <div class="fin-total" style="display:flex;justify-content:space-between">
-        <span>Net Earnings</span><span style="color:${net>=0?'var(--st-booked)':'var(--expense)'}">${fmt$(net)}</span>
-      </div>
-      <div style="margin-top:0.5rem">
-        <div style="display:flex;justify-content:space-between;font-size:0.7rem;margin-bottom:0.25rem">
-          <span class="text-dim">Progress to ${fmt$(target)}</span>
-          <span style="font-weight:700;color:var(--cyan)">${fmtPct(progress)}</span>
-        </div>
-        <div class="stat-bar" style="height:8px"><div class="stat-bar-fill" style="width:${clamp(progress,0,100)}%;background:linear-gradient(90deg,var(--cyan),var(--magenta))"></div></div>
-      </div>
-    </div>
-    <div class="fin-card">
-      <div class="section-title">Ground Ops (Adelaide)</div>
-      <div class="fin-row"><span class="lbl">Local Busking</span><span>${fmt$(groundOps.local_busking_earnings||0)}</span></div>
-      <div class="fin-row expense"><span class="lbl">Local Expenses</span><span>${fmt$(groundOps.expenses||0)}</span></div>
-      <div class="fin-row"><span class="lbl">Cash Float</span><span>${fmt$(groundOps.cash_float||0)}</span></div>
-      <div class="fin-total" style="display:flex;justify-content:space-between">
-        <span>Operational Bank</span><span style="color:var(--amber)">${fmt$(groundOps.operational_bank||0)}</span>
-      </div>
-    </div>
-    <div class="fin-card">
-      <div class="section-title">Expense Breakdown</div>
-      ${(Object.entries(fin.expenses_by_category||{})).map(([cat, amt]) => `
-        <div class="fin-row"><span class="lbl">${cat}</span><span>${fmt$(amt)}</span></div>
-      `).join('')}
-    </div>
-  `;
+  // ── Quick Log buttons ──
+  var quickBtns = '<div style="display:flex;gap:0.5rem;margin-bottom:0.6rem">' +
+    '<button class="venue-btn" onclick="openQuickLogIncome()" style="font-size:0.7rem;padding:0.4rem 0.8rem">💰 Log Income</button>' +
+    '<button class="venue-btn" onclick="openQuickLogExpense()" style="font-size:0.7rem;padding:0.4rem 0.8rem;color:var(--expense)">🔴 Log Expense</button>' +
+  '</div>';
 
-  // Per-stop breakdown
-  document.getElementById('fin-stops').innerHTML = (D.tour_stops||[]).map(s => {
-    const proj = s.financials?.projected_income || 0;
-    const actual = s.financials?.actual_income || 0;
-    const net = s.financials?.net || 0;
-    const pct = proj > 0 ? (actual/proj*100) : 0;
-    return `
-      <div class="fin-stop-row" onclick="openStopDetail(${s.id})" style="cursor:pointer">
-        <div>
-          <div style="font-weight:600">${s.name}</div>
-          <div style="font-size:0.6rem;color:var(--text-faint)">${s.status}</div>
-        </div>
-        <div style="text-align:right">
-          <div style="color:var(--off-white)">${fmt$(actual)} <span style="color:var(--text-faint);font-size:0.65rem">/ ${fmt$(proj)}</span></div>
-          <div style="font-size:0.6rem;color:${net>=0?'var(--st-booked)':'var(--expense)'}">Net ${fmt$(net)}</div>
-        </div>
-      </div>`;
+  // ── Income Breakdown Chart ──
+  var chartHtml = renderIncomeChart(incomeByStream);
+
+  // ── Overview card ──
+  var overviewHtml = quickBtns +
+    '<div class="fin-card">' +
+      '<div class="fin-row income"><span class="lbl">Gross Earnings</span><span class="val">' + fmt$(earnings) + '</span></div>' +
+      '<div class="fin-row"><span class="lbl">🟢 Busking</span><span style="color:var(--busking-l)">' + fmt$(incomeByStream.busking||0) + '</span></div>' +
+      '<div class="fin-row"><span class="lbl">🔵 Venue Gigs</span><span style="color:var(--gig-l)">' + fmt$(incomeByStream.venue_gig||0) + '</span></div>' +
+      '<div class="fin-row"><span class="lbl">🏠 House Concerts</span><span style="color:var(--house-l)">' + fmt$(incomeByStream.house_concert||0) + '</span></div>' +
+      '<div class="fin-row"><span class="lbl">🎟️ Merch</span><span style="color:var(--merch)">' + fmt$(incomeByStream.merch||0) + '</span></div>' +
+      '<div class="fin-row expense"><span class="lbl">Total Expenses</span><span class="val">' + fmt$(expenses) + '</span></div>' +
+      '<div class="fin-total" style="display:flex;justify-content:space-between">' +
+        '<span>Net Earnings</span><span style="color:' + (net>=0?'var(--st-booked)':'var(--expense)') + '">' + fmt$(net) + '</span>' +
+      '</div>' +
+      '<div style="margin-top:0.5rem">' +
+        '<div style="display:flex;justify-content:space-between;font-size:0.7rem;margin-bottom:0.25rem">' +
+          '<span class="text-dim">Progress to ' + fmt$(target) + '</span>' +
+          '<span style="font-weight:700;color:var(--cyan)">' + fmtPct(progress) + '</span>' +
+        '</div>' +
+        '<div class="stat-bar" style="height:8px"><div class="stat-bar-fill" style="width:' + clamp(progress,0,100) + '%;background:linear-gradient(90deg,var(--cyan),var(--magenta))"></div></div>' +
+      '</div>' +
+    '</div>' +
+    // Income chart card
+    '<div class="fin-card">' +
+      '<div class="section-title">Income Breakdown</div>' +
+      chartHtml +
+    '</div>' +
+    // Ground Ops card
+    '<div class="fin-card">' +
+      '<div class="section-title">Ground Ops (Adelaide)</div>' +
+      '<div class="fin-row"><span class="lbl">Local Busking</span><span>' + fmt$(groundOps.local_busking_earnings||0) + '</span></div>' +
+      '<div class="fin-row expense"><span class="lbl">Local Expenses</span><span>' + fmt$(groundOps.expenses||0) + '</span></div>' +
+      '<div class="fin-row"><span class="lbl">Cash Float</span><span>' + fmt$(groundOps.cash_float||0) + '</span></div>' +
+      '<div class="fin-total" style="display:flex;justify-content:space-between">' +
+        '<span>Operational Bank</span><span style="color:var(--amber)">' + fmt$(groundOps.operational_bank||0) + '</span>' +
+      '</div>' +
+    '</div>' +
+    // Expense Breakdown card
+    '<div class="fin-card">' +
+      '<div class="section-title">Expense Breakdown</div>' +
+      renderBudgetVsActual(expensesByCategory) +
+    '</div>';
+
+  document.getElementById('fin-overview').innerHTML = overviewHtml;
+
+  // ── Per-stop breakdown (with editable projected_income & actual_expenses) ──
+  var stopsHtml = (D.tour_stops||[]).map(function(s) {
+    var proj = (s.financials && s.financials.projected_income) || 0;
+    var actual = (s.financials && s.financials.actual_income) || 0;
+    var stopExpenses = (s.financials && s.financials.actual_expenses) || 0;
+    var stopNet = (s.financials && s.financials.net) || (actual - stopExpenses);
+    var pct = proj > 0 ? (actual/proj*100) : 0;
+    return '<div class="fin-stop-row" style="cursor:default">' +
+      '<div style="flex:1">' +
+        '<div style="font-weight:600" onclick="openStopDetail(' + s.id + '); event.stopPropagation()">' + s.name + '</div>' +
+        '<div style="font-size:0.6rem;color:var(--text-faint)">' + s.status + '</div>' +
+      '</div>' +
+      '<div style="text-align:right;display:flex;flex-direction:column;gap:0.2rem;align-items:flex-end">' +
+        '<div style="display:flex;align-items:center;gap:0.3rem">' +
+          '<span style="color:var(--text-faint);font-size:0.6rem">Proj:</span>' +
+          '<input class="inline-edit" type="number" style="width:70px" value="' + proj + '" onchange="updateStopFinancial(' + s.id + ',\'projected_income\',parseFloat(this.value)||0)">' +
+        '</div>' +
+        '<div style="display:flex;align-items:center;gap:0.3rem">' +
+          '<span style="color:var(--text-faint);font-size:0.6rem">Exp:</span>' +
+          '<input class="inline-edit" type="number" style="width:70px" value="' + stopExpenses + '" onchange="updateStopFinancial(' + s.id + ',\'actual_expenses\',parseFloat(this.value)||0)">' +
+        '</div>' +
+        '<div style="color:var(--off-white);font-size:0.72rem">' + fmt$(actual) + ' <span style="color:var(--text-faint);font-size:0.65rem">/ ' + fmt$(proj) + '</span></div>' +
+        '<div style="font-size:0.6rem;color:' + (stopNet>=0?'var(--st-booked)':'var(--expense)') + '">Net ' + fmt$(stopNet) + '</div>' +
+      '</div>' +
+    '</div>';
   }).join('');
+  document.getElementById('fin-stops').innerHTML = stopsHtml;
 
-  // Recent transactions
-  const incTransactions = (D.income_history||[]).slice(-8).reverse();
-  const expTransactions = (D.expense_history||[]).slice(-8).reverse();
-  let txns = [
-    ...incTransactions.map(i => ({date:i.date, desc:`${i.type} — ${i.location||''}`, amount:i.amount, type:'income'})),
-    ...expTransactions.map(e => ({date:e.date, desc:`${e.category} — ${e.description||''}`, amount:e.amount, type:'expense'}))
-  ].sort((a,b) => (b.date||'').localeCompare(a.date||'')).slice(0,12);
-
-  document.getElementById('fin-transactions').innerHTML = txns.length
-    ? txns.map(t => `
-      <div class="fin-stop-row">
-        <div>
-          <div style="font-weight:600">${t.desc}</div>
-          <div style="font-size:0.6rem;color:var(--text-faint)">${t.date||''}</div>
-        </div>
-        <div style="font-weight:700;color:${t.type==='income'?'var(--st-booked)':'var(--expense)'}">${t.type==='income'?'+':'-'}${fmt$(t.amount)}</div>
-      </div>`).join('')
-    : '<div class="empty-state">No transactions logged yet</div>';
+  // ── Full transaction list with date filter ──
+  renderTransactions();
 }
 
 // ═══ QUICK-LOG MODAL ═══
@@ -1381,134 +2034,208 @@ function selectQLType(type) {
 }
 
 function renderQLFields(type) {
-  const stop = getCurrentStop();
-  const stopName = stop ? stop.name : '';
-  const stopOptions = (D.tour_stops||[]).map(s => `<option value="${s.name}" ${s.name===stopName?'selected':''}>${s.name}</option>`).join('');
+  var stop = getCurrentStop();
+  var stopName = stop ? stop.name : '';
+  var stopOptions = (D.tour_stops || []).map(function(s) {
+    return '<option value="' + s.name + '"' + (s.name === stopName ? ' selected' : '') + '>' + s.name + '</option>';
+  }).join('');
 
-  let html = '';
+  var html = '';
+
   if (type === 'busking') {
-    html = `
-      <div class="modal-field"><label>Location</label><select id="ql-location"><option value="">Select…</option>${stopOptions}</select></div>
-      <div class="modal-field"><label>Amount ($)</label><input type="number" id="ql-amount" placeholder="300" inputmode="numeric"></div>
-      <div class="modal-field"><label>Duration (min)</label><input type="number" id="ql-duration" placeholder="180" inputmode="numeric"></div>
-      <div class="modal-field"><label>Merch Sales ($)</label><input type="number" id="ql-merch" placeholder="0" inputmode="numeric"></div>
-      <div class="modal-field"><label>Notes</label><textarea id="ql-notes" placeholder="Saturday lunch rush, good crowd…" rows="2"></textarea></div>
-    `;
+    html = '<div class="modal-field"><label>Location</label><select id="ql-location"><option value="">Select…</option>' + stopOptions + '</select></div>' +
+      '<div class="modal-field"><label>Amount ($)</label><input type="number" id="ql-amount" placeholder="300" inputmode="numeric"></div>' +
+      '<div class="modal-field"><label>Duration</label>' +
+        '<div class="duration-chips">' +
+          '<button class="duration-chip" data-min="60" onclick="selectDurationChip(this,60)">60</button>' +
+          '<button class="duration-chip" data-min="90" onclick="selectDurationChip(this,90)">90</button>' +
+          '<button class="duration-chip" data-min="120" onclick="selectDurationChip(this,120)">120</button>' +
+          '<button class="duration-chip" data-min="180" onclick="selectDurationChip(this,180)">180</button>' +
+          '<button class="duration-chip duration-chip-custom" onclick="selectDurationChip(this,\'custom\')">Custom</button>' +
+        '</div>' +
+        '<input type="number" id="ql-duration-custom" placeholder="Enter minutes" inputmode="numeric" style="display:none;margin-top:0.4rem">' +
+        '<input type="hidden" id="ql-duration" value="0">' +
+      '</div>' +
+      '<div class="modal-field"><label>Merch Sales ($)</label><input type="number" id="ql-merch" placeholder="0" inputmode="numeric"></div>' +
+      '<div class="modal-field"><label>Notes</label><textarea id="ql-notes" placeholder="Saturday lunch rush, good crowd…" rows="2"></textarea></div>';
+    // Auto-default the busking location to the current stop's city
+    var autoSet = stopName ? stopName : '';
+    // Defer setting the value until the HTML is in the DOM
+    var _buskAuto = autoSet;
+    setTimeout(function() {
+      var locEl = document.getElementById('ql-location');
+      if (locEl && _buskAuto) locEl.value = _buskAuto;
+    }, 0);
+
   } else if (type === 'gig') {
-    html = `
-      <div class="modal-field"><label>Venue</label><input type="text" id="ql-venue" placeholder="Venue name"></div>
-      <div class="modal-field"><label>Location</label><select id="ql-location"><option value="">Select…</option>${stopOptions}</select></div>
-      <div class="modal-field"><label>Fee ($)</label><input type="number" id="ql-amount" placeholder="400" inputmode="numeric"></div>
-      <div class="modal-field"><label>Date</label><input type="date" id="ql-date"></div>
-      <div class="modal-field"><label>Content Captured?</label><select id="ql-content"><option value="false">No</option><option value="true">Yes — Reels</option></select></div>
-    `;
+    // Venue dropdown: list venues for the current stop, fall back to text input if none
+    var stopId = stop ? stop.id : 0;
+    var stopVenues = getStopVenues(stopId);
+    var venueField = '';
+    if (stopVenues.length > 0) {
+      var venueOpts = stopVenues.map(function(v) {
+        return '<option value="' + (v.name || '') + '">' + (v.name || '(unnamed)') + '</option>';
+      }).join('');
+      venueField = '<div class="modal-field"><label>Venue</label><select id="ql-venue"><option value="">Select venue…</option>' + venueOpts + '</select></div>';
+    } else {
+      venueField = '<div class="modal-field"><label>Venue</label><input type="text" id="ql-venue" placeholder="Venue name"></div>';
+    }
+    html = venueField +
+      '<div class="modal-field"><label>Location</label><select id="ql-location"><option value="">Select…</option>' + stopOptions + '</select></div>' +
+      '<div class="modal-field"><label>Fee ($)</label><input type="number" id="ql-amount" placeholder="400" inputmode="numeric"></div>' +
+      '<div class="modal-field"><label>Date</label><input type="date" id="ql-date"></div>' +
+      '<div class="modal-field"><label>Content Captured?</label><select id="ql-content"><option value="false">No</option><option value="true">Yes — Reels</option></select></div>';
+
   } else if (type === 'expense') {
-    const cats = (D.config?.expense_categories || ['fuel','food','gear','accommodation','maverick','marketing','misc']);
-    html = `
-      <div class="modal-field"><label>Category</label><select id="ql-category">${cats.map(c=>`<option value="${c}">${c}</option>`).join('')}</select></div>
-      <div class="modal-field"><label>Amount ($)</label><input type="number" id="ql-amount" placeholder="50" inputmode="numeric"></div>
-      <div class="modal-field"><label>Source</label><select id="ql-source"><option value="tour">Tour</option><option value="local">Local (Adelaide)</option></select></div>
-      <div class="modal-field"><label>Description</label><input type="text" id="ql-desc" placeholder="Fuel, strings, dog food…"></div>
-    `;
+    var cats = (D.config && D.config.expense_categories) || ['fuel','food','gear','accommodation','maverick','marketing','misc'];
+    var catOpts = cats.map(function(c) { return '<option value="' + c + '">' + c + '</option>'; }).join('');
+    html = '<div class="modal-field"><label>Category</label><select id="ql-category">' + catOpts + '</select></div>' +
+      '<div class="modal-field"><label>Amount ($)</label><input type="number" id="ql-amount" placeholder="50" inputmode="numeric"></div>' +
+      '<div class="modal-field"><label>Source</label><select id="ql-source"><option value="tour">Tour</option><option value="local">Local (Adelaide)</option></select></div>' +
+      '<div class="modal-field"><label>Description</label><input type="text" id="ql-desc" placeholder="Fuel, strings, dog food…"></div>';
+
   } else if (type === 'spot') {
-    html = `
-      <div class="modal-field"><label>Spot Name</label><input type="text" id="ql-spot-name" placeholder="Raine Square"></div>
-      <div class="modal-field"><label>City</label><select id="ql-location"><option value="">Select…</option>${stopOptions}</select></div>
-      <div class="modal-field"><label>Address</label><input type="text" id="ql-address" placeholder="Street address or landmark"></div>
-      <div class="modal-field"><label>Foot Traffic (1-5)</label><select id="ql-traffic"><option value="3">3 — Moderate</option><option value="5">5 — Very High</option><option value="4">4 — High</option><option value="2">2 — Low</option><option value="1">1 — Very Low</option></select></div>
-      <div class="modal-field"><label>Permit Required?</label><select id="ql-permit"><option value="false">No</option><option value="true">Yes</option></select></div>
-      <div class="modal-field"><label>Best Time</label><input type="text" id="ql-besttime" placeholder="11am-2pm lunch rush"></div>
-      <div class="modal-field"><label>Notes</label><textarea id="ql-notes" placeholder="Covered area, good acoustics…" rows="2"></textarea></div>
-    `;
+    html = '<div class="modal-field"><label>Spot Name</label><input type="text" id="ql-spot-name" placeholder="Raine Square"></div>' +
+      '<div class="modal-field"><label>City</label><select id="ql-location"><option value="">Select…</option>' + stopOptions + '</select></div>' +
+      '<div class="modal-field"><label>Address</label><input type="text" id="ql-address" placeholder="Street address or landmark"></div>' +
+      '<div class="modal-field"><label>Foot Traffic (1-5)</label><select id="ql-traffic"><option value="3">3 — Moderate</option><option value="5">5 — Very High</option><option value="4">4 — High</option><option value="2">2 — Low</option><option value="1">1 — Very Low</option></select></div>' +
+      '<div class="modal-field"><label>Permit Required?</label><select id="ql-permit"><option value="false">No</option><option value="true">Yes</option></select></div>' +
+      '<div class="modal-field"><label>Best Time</label><input type="text" id="ql-besttime" placeholder="11am-2pm lunch rush"></div>' +
+      '<div class="modal-field"><label>Notes</label><textarea id="ql-notes" placeholder="Covered area, good acoustics…" rows="2"></textarea></div>';
+
+  } else if (type === 'house_concert') {
+    // 5th type: House Concert Income
+    var hcStopId = stop ? stop.id : 0;
+    var hcs = getStopHouseConcerts(hcStopId);
+    var hostField = '';
+    if (hcs.length > 0) {
+      var hostOpts = hcs.map(function(hc) {
+        return '<option value="' + hc.id + '">' + (hc.host_name || hc.event_name || ('HC ' + hc.id)) + '</option>';
+      }).join('');
+      hostField = '<div class="modal-field"><label>Host</label><select id="ql-host">' + hostOpts + '</select></div>';
+    } else {
+      hostField = '<div class="modal-field"><label>Host</label><input type="text" id="ql-host" placeholder="No house concerts for this stop — enter host name"></div>';
+    }
+    html = hostField +
+      '<div class="modal-field"><label>Revenue ($)</label><input type="number" id="ql-amount" placeholder="800" inputmode="numeric"></div>' +
+      '<div class="modal-field"><label>Date</label><input type="date" id="ql-date"></div>' +
+      '<div class="modal-field"><label>Notes</label><textarea id="ql-notes" placeholder="Attendance, merch sold, etc." rows="2"></textarea></div>';
+
+  } else if (type === 'todo') {
+    // 6th type: Todo Complete — list of incomplete todos as tappable items
+    var todos = (D.todos || []).filter(function(t) { return !t.completed; });
+    if (todos.length === 0) {
+      html = '<div class="ql-todo-empty">All caught up! No pending tasks. 🎉</div>';
+    } else {
+      html = '<div class="ql-todo-list">';
+      html += todos.map(function(t) {
+        var tid = t.id || (t.text || '').replace(/[^a-zA-Z0-9]/g, '');
+        return '<div class="ql-todo-item" onclick="toggleTodoFromQuickLog(\'' + String(tid).replace(/'/g, "\\'") + '\')">' +
+          '<span class="ql-todo-check">☐</span>' +
+          '<span class="ql-todo-text">' + (t.text || t.title || '(untitled)') + '</span>' +
+        '</div>';
+      }).join('');
+      html += '</div>';
+    }
   }
+
   document.getElementById('ql-fields').innerHTML = html;
 }
 
 function submitQuickLog() {
-  const stop = getCurrentStop();
-  const today = new Date().toISOString().slice(0,10);
+  var stop = getCurrentStop();
+  var today = new Date().toISOString().slice(0, 10);
 
   if (qlType === 'busking') {
-    const location = val('ql-location');
-    const amount = parseFloat(val('ql-amount') || '0');
-    const merch = parseFloat(val('ql-merch') || '0');
-    const duration = parseInt(val('ql-duration') || '0');
-    const notes = val('ql-notes');
+    var location = val('ql-location');
+    var amount = parseFloat(val('ql-amount') || '0');
+    var merch = parseFloat(val('ql-merch') || '0');
+    var duration = parseInt(val('ql-duration') || '0', 10);
+    var notes = val('ql-notes');
     if (!location || !amount) { alert('Enter location and amount'); return; }
 
     // Route to ground_ops if Adelaide local busking
-    const isLocal = location === 'Adelaide';
-    const stopObj = D.tour_stops.find(s => s.name === location);
-    const stopId = stopObj ? stopObj.id : 0;
+    var isLocal = location === 'Adelaide';
+    var stopObj = D.tour_stops.find(function(s) { return s.name === location; });
+    var stopId = stopObj ? stopObj.id : 0;
     // Find the first busking spot for this stop
-    const spots = (D.busking_spots || []).filter(sp => sp.tour_stop_id === stopId);
-    const spot = spots[0];
-    const incomeId = `inc-${Date.now()}`;
-    D.income_history.push({id:incomeId,type:'busking',amount:amount+merch,location,date:today,notes,
+    var spots = (D.busking_spots || []).filter(function(sp) { return sp.tour_stop_id === stopId; });
+    var spot = spots[0];
+    var incomeId = 'inc-' + Date.now();
+    D.income_history.push({id: incomeId, type: 'busking', amount: amount + merch, location: location, date: today, notes: notes,
       source: isLocal ? 'local' : 'tour', tour_stop_id: stopId, busking_spot_id: spot ? spot.id : null});
 
     if (isLocal) {
-      D.ground_ops.local_busking_earnings = (D.ground_ops.local_busking_earnings||0) + amount;
-      D.ground_ops.operational_bank = (D.ground_ops.cash_float||0) + (D.ground_ops.local_busking_earnings||0) - (D.ground_ops.expenses||0);
+      D.ground_ops.local_busking_earnings = (D.ground_ops.local_busking_earnings || 0) + amount;
+      D.ground_ops.operational_bank = (D.ground_ops.cash_float || 0) + (D.ground_ops.local_busking_earnings || 0) - (D.ground_ops.expenses || 0);
     } else {
       // Update stop actuals
       if (stopObj) {
-        stopObj.actuals.busking.earnings_actual = (stopObj.actuals.busking.earnings_actual||0) + amount + merch;
-        stopObj.actuals.busking.sessions_completed = (stopObj.actuals.busking.sessions_completed||0) + 1;
+        stopObj.actuals.busking.earnings_actual = (stopObj.actuals.busking.earnings_actual || 0) + amount + merch;
+        stopObj.actuals.busking.sessions_completed = (stopObj.actuals.busking.sessions_completed || 0) + 1;
       }
     }
     // Write to busking spot's earnings_history + recalc aggregates
     if (spot) {
       if (!spot.earnings_history) spot.earnings_history = [];
-      spot.earnings_history.push({date: today, duration_minutes: duration, earnings: amount, merch_sales: merch, notes, income_history_id: incomeId});
+      spot.earnings_history.push({date: today, duration_minutes: duration, earnings: amount, merch_sales: merch, notes: notes, income_history_id: incomeId});
       spot.total_sessions = spot.earnings_history.length;
-      spot.total_earnings_logged = spot.earnings_history.reduce((s,e) => s + (e.earnings||0), 0);
+      spot.total_earnings_logged = spot.earnings_history.reduce(function(s, e) { return s + (e.earnings || 0); }, 0);
       spot.avg_earnings_per_session = spot.total_sessions > 0 ? Math.round(spot.total_earnings_logged / spot.total_sessions * 100) / 100 : 0;
     }
     // Recalculate tour financials from income_history
     recalcFinancials();
     saveEdits();
+    showToast('✅ Logged!');
 
   } else if (qlType === 'gig') {
-    const venue = val('ql-venue');
-    const location = val('ql-location');
-    const amount = parseFloat(val('ql-amount') || '0');
-    const date = val('ql-date') || today;
-    if (!venue || !amount) { alert('Enter venue and fee'); return; }
-    const gigStop = D.tour_stops.find(s => s.name === location);
-    D.income_history.push({id:`inc-${Date.now()}`,type:'venue_gig',amount,location:location||venue,date,venue_name:venue,notes:`Gig at ${venue}`,source:'tour',tour_stop_id: gigStop ? gigStop.id : 0});
+    var venue = val('ql-venue');
+    var gigLocation = val('ql-location');
+    var gigAmount = parseFloat(val('ql-amount') || '0');
+    var gigDate = val('ql-date') || today;
+    if (!venue || !gigAmount) { alert('Enter venue and fee'); return; }
+    var gigStop = D.tour_stops.find(function(s) { return s.name === gigLocation; });
+    var gigStopId = gigStop ? gigStop.id : (stop ? stop.id : 0);
+    D.income_history.push({id: 'inc-' + Date.now(), type: 'venue_gig', amount: gigAmount, location: gigLocation || venue, date: gigDate, venue_name: venue, notes: 'Gig at ' + venue, source: 'tour', tour_stop_id: gigStopId});
     if (gigStop) {
-      gigStop.actuals.venue_gig.earnings_actual = (gigStop.actuals.venue_gig.earnings_actual||0) + amount;
+      gigStop.actuals.venue_gig.earnings_actual = (gigStop.actuals.venue_gig.earnings_actual || 0) + gigAmount;
+    } else if (stop) {
+      // ensure actuals object exists and credit current stop if no explicit location match
+      stop.actuals = stop.actuals || {};
+      stop.actuals.venue_gig = stop.actuals.venue_gig || {};
+      stop.actuals.venue_gig.earnings_actual = (stop.actuals.venue_gig.earnings_actual || 0) + gigAmount;
     }
     recalcFinancials();
     saveEdits();
+    showToast('✅ Logged!');
 
   } else if (qlType === 'expense') {
-    const category = val('ql-category');
-    const amount = parseFloat(val('ql-amount') || '0');
-    const source = val('ql-source');
-    const desc = val('ql-desc');
-    if (!amount) { alert('Enter amount'); return; }
-    D.expense_history.push({id:`exp-${Date.now()}`,category,amount,source,description:desc,date:today});
+    var category = val('ql-category');
+    var expAmount = parseFloat(val('ql-amount') || '0');
+    var source = val('ql-source');
+    var desc = val('ql-desc');
+    if (!expAmount) { alert('Enter amount'); return; }
+    D.expense_history.push({id: 'exp-' + Date.now(), category: category, amount: expAmount, source: source, description: desc, date: today});
     if (source === 'local') {
-      D.ground_ops.expenses = (D.ground_ops.expenses||0) + amount;
-      D.ground_ops.operational_bank = (D.ground_ops.cash_float||0) + (D.ground_ops.local_busking_earnings||0) - (D.ground_ops.expenses||0);
+      D.ground_ops.expenses = (D.ground_ops.expenses || 0) + expAmount;
+      D.ground_ops.operational_bank = (D.ground_ops.cash_float || 0) + (D.ground_ops.local_busking_earnings || 0) - (D.ground_ops.expenses || 0);
     }
     recalcFinancials();
     saveEdits();
+    showToast('✅ Logged!');
 
   } else if (qlType === 'spot') {
-    const name = val('ql-spot-name');
-    const location = val('ql-location');
-    if (!name || !location) { alert('Enter spot name and city'); return; }
-    const stopObj = D.tour_stops.find(s => s.name === location);
-    const stopId = stopObj ? stopObj.id : 0;
-    const spotId = `bsk-${location.toLowerCase().replace(/[^a-z]/g,'-')}-${name.toLowerCase().replace(/[^a-z]/g,'-')}`;
-    const newSpot = {
-      id: spotId, tour_stop_id: stopId,
-      name, city: location,
+    var spotName = val('ql-spot-name');
+    var spotLocation = val('ql-location');
+    if (!spotName || !spotLocation) { alert('Enter spot name and city'); return; }
+    var spotStopObj = D.tour_stops.find(function(s) { return s.name === spotLocation; });
+    var spotStopId = spotStopObj ? spotStopObj.id : 0;
+    var spotId = 'bsk-' + spotLocation.toLowerCase().replace(/[^a-z]/g, '-') + '-' + spotName.toLowerCase().replace(/[^a-z]/g, '-');
+    var newSpot = {
+      id: spotId, tour_stop_id: spotStopId,
+      name: spotName, city: spotLocation,
       address: val('ql-address'),
-      foot_traffic_rating: parseInt(val('ql-traffic')||'3'),
+      foot_traffic_rating: parseInt(val('ql-traffic') || '3', 10),
       permit_required: val('ql-permit') === 'true',
       permit_obtained: false,
       best_time_of_day: val('ql-besttime'),
@@ -1523,18 +2250,69 @@ function submitQuickLog() {
     };
     D.busking_spots = D.busking_spots || [];
     D.busking_spots.push(newSpot);
-    if (stopObj) {
-      stopObj.busking_spot_ids = stopObj.busking_spot_ids || [];
-      stopObj.busking_spot_ids.push(spotId);
-      stopObj.actuals.busking.spots_scouted = (stopObj.actuals.busking.spots_scouted||0) + 1;
+    if (spotStopObj) {
+      spotStopObj.busking_spot_ids = spotStopObj.busking_spot_ids || [];
+      spotStopObj.busking_spot_ids.push(spotId);
+      spotStopObj.actuals.busking.spots_scouted = (spotStopObj.actuals.busking.spots_scouted || 0) + 1;
     }
     saveEdits();
+    showToast('✅ Spot added!');
+
+  } else if (qlType === 'house_concert') {
+    var hcHost = val('ql-host');
+    var hcAmount = parseFloat(val('ql-amount') || '0');
+    var hcDate = val('ql-date') || today;
+    var hcNotes = val('ql-notes');
+    if (!hcHost || !hcAmount) { alert('Select a host and enter revenue'); return; }
+
+    // Find the house concert record
+    var hc = (D.house_concerts || []).find(function(h) { return h.id === hcHost; });
+
+    // Log to income_history
+    D.income_history.push({
+      id: 'inc-' + Date.now(),
+      type: 'house_concert',
+      amount: hcAmount,
+      location: stop ? stop.name : '',
+      date: hcDate,
+      venue_name: hc ? (hc.host_name || hc.event_name) : hcHost,
+      notes: hcNotes || 'House concert',
+      source: 'tour',
+      tour_stop_id: stop ? stop.id : 0,
+      house_concert_id: hcHost
+    });
+
+    // Update the HC's event.revenue_actual
+    if (hc) {
+      hc.event = hc.event || {};
+      hc.event.revenue_actual = (hc.event.revenue_actual || 0) + hcAmount;
+    }
+
+    // Update stop.actuals.house_concert.earnings_actual
+    if (stop) {
+      stop.actuals = stop.actuals || {};
+      stop.actuals.house_concert = stop.actuals.house_concert || {};
+      stop.actuals.house_concert.earnings_actual = (stop.actuals.house_concert.earnings_actual || 0) + hcAmount;
+    }
+
+    recalcFinancials();
+    saveEdits();
+    showToast('✅ Logged!');
+
+  } else if (qlType === 'todo') {
+    // Todo type: tapping an item handles submission via toggleTodoFromQuickLog.
+    // If the user somehow hits submit with no selection, just close.
+    closeQuickLog();
+    return;
   }
 
   closeQuickLog();
   // Re-render current view
-  const activeView = document.querySelector('.view.active')?.id?.replace('view-','');
-  if (activeView) switchView(activeView);
+  var activeViewEl = document.querySelector('.view.active');
+  var activeView = activeViewEl && activeViewEl.id ? activeViewEl.id.replace('view-', '') : null;
+  if (activeView) {
+    try { switchView(activeView); } catch(e) {}
+  }
 }
 
 function val(id) {
@@ -1709,6 +2487,111 @@ function venueNeedsFollowUp(v) {
 
 // ── PIPELINE FILTER ──
 let pipeFilterStage = 'all';
+let pipeSearchTerm = '';
+let pipeShowAllStops = false;
+function renderPipeline() {
+  var stop = getCurrentStop();
+  if (!stop) {
+    document.getElementById('pipeline-container').innerHTML = '<div class="empty-state">No active stop</div>';
+    return;
+  }
+
+  // Determine venue set based on pipeShowAllStops toggle
+  var allVenues;
+  var scopeLabel;
+  if (pipeShowAllStops) {
+    allVenues = D.venues || [];
+    scopeLabel = 'All stops';
+  } else {
+    var venues = getStopVenues(stop.id);
+    allVenues = venues;
+    // Also show venues from next stop if current has few
+    if (venues.length < 3) {
+      var nextStop = D.tour_stops && D.tour_stops.find(function(s){ return s.id === stop.id + 1; });
+      if (nextStop) allVenues = venues.concat(getStopVenues(nextStop.id));
+    }
+    scopeLabel = 'Showing venues for ' + stop.name + (allVenues.length > venues.length ? ' + next stop' : '');
+  }
+
+  var stages = ['not_contacted','called','emailed','follow_up_1','follow_up_2','booked','played','declined'];
+
+  // ── Filter bar: stage select + name search + show-all toggle ──
+  var html = '<div class="filter-bar">' +
+    '<select onchange="renderPipelineFiltered(this.value)">' +
+      '<option value="all"' + (pipeFilterStage==='all'?' selected':'') + '>All Stages</option>' +
+      '<option value="not_contacted"' + (pipeFilterStage==='not_contacted'?' selected':'') + '>Not Contacted</option>' +
+      '<option value="called"' + (pipeFilterStage==='called'?' selected':'') + '>Called</option>' +
+      '<option value="emailed"' + (pipeFilterStage==='emailed'?' selected':'') + '>Emailed</option>' +
+      '<option value="follow_up_1"' + (pipeFilterStage==='follow_up_1'?' selected':'') + '>Follow Up 1</option>' +
+      '<option value="follow_up_2"' + (pipeFilterStage==='follow_up_2'?' selected':'') + '>Follow Up 2</option>' +
+      '<option value="booked"' + (pipeFilterStage==='booked'?' selected':'') + '>Booked</option>' +
+      '<option value="played"' + (pipeFilterStage==='played'?' selected':'') + '>Played</option>' +
+      '<option value="declined"' + (pipeFilterStage==='declined'?' selected':'') + '>Declined</option>' +
+    '</select>' +
+    '<input type="text" placeholder="🔍 Search venue name…" value="' + (pipeSearchTerm||'').replace(/"/g,'&quot;') + '" oninput="setPipeSearch(this.value)">' +
+    '<label class="pipe-toggle"><input type="checkbox" ' + (pipeShowAllStops?'checked':'') + ' onchange="setPipeShowAll(this.checked)"> Show all stops</label>' +
+  '</div>' +
+  '<div style="font-size:0.8rem;color:var(--text-dim);margin-bottom:0.8rem">' + scopeLabel + ' — ' + allVenues.length + ' total</div>';
+
+  var filteredStages = pipeFilterStage === 'all' ? stages : stages.filter(function(s){ return s === pipeFilterStage; });
+
+  // Apply search filter once for the whole set
+  var searchLower = (pipeSearchTerm || '').toLowerCase();
+
+  filteredStages.forEach(function(stage){
+    var stageVenues = allVenues.filter(function(v){
+      if (v.pipeline_stage !== stage) return false;
+      if (searchLower && v.name.toLowerCase().indexOf(searchLower) === -1) return false;
+      return true;
+    });
+    if (!stageVenues.length) return;
+
+    var color = STAGE_COLORS[stage] || '#888';
+    html += '<div class="pipe-group">' +
+      '<div class="pipe-group-title" style="color:' + color + '">' +
+        '<span style="width:8px;height:8px;border-radius:50%;background:' + color + ';display:inline-block"></span>' +
+        (STAGE_LABELS[stage] || stage) +
+        '<span class="pipe-count">' + stageVenues.length + '</span>' +
+      '</div>';
+
+    stageVenues.forEach(function(v){
+      // ── Priority badge ──
+      var prio = v.priority || 'medium';
+      var prioColor, prioBg, prioText;
+      if (prio === 'high') { prioColor = '#ef4444'; prioBg = 'rgba(239,68,68,0.15)'; prioText = 'HIGH'; }
+      else if (prio === 'low') { prioColor = '#9ca3af'; prioBg = 'rgba(156,163,175,0.12)'; prioText = 'LOW'; }
+      else { prioColor = '#f59e0b'; prioBg = 'rgba(245,158,11,0.15)'; prioText = 'MED'; }
+      var prioBadge = '<span class="venue-stage-badge venue-priority-badge" style="background:' + prioBg + ';color:' + prioColor + '">' + prioText + '</span>';
+
+      var vid = v.id.replace(/'/g, "\\'");
+
+      html += '<div class="entity-card venue-card stage-' + stage + '" onclick="openVenueDetail(\'' + vid + '\')">' +
+        '<div class="entity-hdr">' +
+          '<div>' +
+            '<div class="entity-name">' + v.name + ' ' + prioBadge + '</div>' +
+            '<div class="entity-sub">' + (v.venue_type||'') + ' · ' + v.city + '</div>' +
+          '</div>' +
+        '</div>' +
+        (v.phone ? '<div class="entity-row"><span class="lbl">📞</span><span><a href="tel:' + encodeURIComponent(v.phone) + '" style="color:var(--cyan)" onclick="event.stopPropagation()">' + v.phone + '</a></span></div>' : '') +
+        (v.contact_name ? '<div class="entity-row"><span class="lbl">Contact</span><span>' + v.contact_name + '</span></div>' : '') +
+        (v.gig && v.gig.date ? '<div class="entity-row"><span class="lbl">Gig Date</span><span style="color:var(--st-booked)">' + v.gig.date + '</span></div>' : '') +
+        '<div class="venue-actions" onclick="event.stopPropagation()">' +
+          (v.phone ? '<a href="tel:' + encodeURIComponent(v.phone) + '" class="venue-btn call">📞 Call</a>' : '') +
+          '<button class="venue-btn advance" onclick="advanceVenue(\'' + vid + '\')">→ ' + nextStageLabel(stage) + '</button>' +
+        '</div>' +
+      '</div>';
+    });
+
+    html += '</div>';
+  });
+
+  if (!allVenues.length) {
+    html = '<div class="empty-state">No venues in pipeline. Add venues via the CLI or start calling!</div>';
+  }
+
+  document.getElementById('pipeline-container').innerHTML = html;
+}
+
 function renderPipelineFiltered(stage) {
   pipeFilterStage = stage;
   renderPipeline();
@@ -1968,6 +2851,1159 @@ function renderFBTracker(h) {
       ${post?`<span class="fb-post-date">${post.post_date}</span><span class="fb-resp-count">${post.responses||0} resp</span>`:''}
     </div>`;
   }).join('')}</div>`;
+}
+
+function editBuskingSession(spotId, sessionIdx) {
+  var spot = (D.busking_spots||[]).find(function(s) { return s.id === spotId; });
+  if (!spot || !spot.earnings_history || !spot.earnings_history[sessionIdx]) return;
+  var sess = spot.earnings_history[sessionIdx];
+
+  var html = '<div class="modal-hdr">' +
+    '<div class="modal-title">Edit Session</div>' +
+    '<button class="modal-close" onclick="closeModal(\'sd-modal\')">✕</button>' +
+  '</div>' +
+  '<div class="modal-field"><label>Date</label><input type="date" id="sd-edit-date" value="' + (sess.date||'') + '"></div>' +
+  '<div class="modal-field"><label>Earnings ($)</label><input type="number" id="sd-edit-amount" value="' + (sess.earnings||0) + '" inputmode="numeric"></div>' +
+  '<div class="modal-field"><label>Duration (min)</label><input type="number" id="sd-edit-duration" value="' + (sess.duration_minutes||0) + '" inputmode="numeric"></div>' +
+  '<div class="modal-field"><label>Merch Sales ($)</label><input type="number" id="sd-edit-merch" value="' + (sess.merch_sales||0) + '" inputmode="numeric"></div>' +
+  '<div class="modal-field"><label>Notes</label><textarea id="sd-edit-notes" rows="2">' + (sess.notes||'') + '</textarea></div>' +
+  '<button class="modal-submit" onclick="saveBuskingSessionEdit(\'' + spotId + '\',' + sessionIdx + ')">Save Changes</button>';
+
+  // Store context on the modal element for the save handler
+  var modal = document.getElementById('sd-modal');
+  if (!modal) return;
+  var sheet = modal.querySelector('.modal-sheet');
+  if (sheet) sheet.innerHTML = html;
+  openModal('sd-modal');
+}
+
+// ── 3. saveBuskingSessionEdit (helper for editBuskingSession) ──
+function saveBuskingSessionEdit(spotId, sessionIdx) {
+  var spot = (D.busking_spots||[]).find(function(s) { return s.id === spotId; });
+  if (!spot || !spot.earnings_history || !spot.earnings_history[sessionIdx]) return;
+  var sess = spot.earnings_history[sessionIdx];
+
+  var newDate = val('sd-edit-date');
+  var newAmount = parseFloat(val('sd-edit-amount') || '0');
+  var newDuration = parseInt(val('sd-edit-duration') || '0');
+  var newMerch = parseFloat(val('sd-edit-merch') || '0');
+  var newNotes = val('sd-edit-notes');
+
+  // Update the session entry
+  sess.date = newDate;
+  sess.earnings = newAmount;
+  sess.duration_minutes = newDuration;
+  sess.merch_sales = newMerch;
+  sess.notes = newNotes;
+
+  // Recalc spot aggregates (total_sessions stays same)
+  spot.total_sessions = spot.earnings_history.length;
+  spot.total_earnings_logged = spot.earnings_history.reduce(function(sum, e) { return sum + (e.earnings||0); }, 0);
+  spot.avg_earnings_per_session = spot.total_sessions > 0 ? Math.round(spot.total_earnings_logged / spot.total_sessions * 100) / 100 : 0;
+
+  // Update linked income_history entry (match by income_history_id)
+  if (sess.income_history_id) {
+    var inc = (D.income_history||[]).find(function(i) { return i.id === sess.income_history_id; });
+    if (inc) {
+      inc.amount = newAmount + newMerch;
+      inc.date = newDate;
+      inc.notes = newNotes;
+    }
+  }
+
+  // Recalc stop actuals
+  var stop = (D.tour_stops||[]).find(function(s) { return s.id === spot.tour_stop_id; });
+  if (stop) {
+    var spots = getStopBuskingSpots(stop.id);
+    stop.actuals.busking.sessions_completed = spots.reduce(function(sum, sp) { return sum + (sp.total_sessions||0); }, 0);
+    stop.actuals.busking.earnings_actual = spots.reduce(function(sum, sp) { return sum + (sp.total_earnings_logged||0); }, 0);
+  }
+
+  recalcFinancials();
+  saveEdits();
+  closeModal('sd-modal');
+  var av = document.querySelector('.view.active') ? document.querySelector('.view.active').id.replace('view-','') : null;
+  if (av) switchView(av);
+}
+
+function selectDurationChip(btn, minutes) {
+  // Clear active state on all sibling chips
+  var chips = btn.parentNode.querySelectorAll('.duration-chip');
+  for (var i = 0; i < chips.length; i++) chips[i].classList.remove('active');
+  btn.classList.add('active');
+
+  var hidden = document.getElementById('ql-duration');
+  var customInput = document.getElementById('ql-duration-custom');
+
+  if (minutes === 'custom') {
+    if (customInput) {
+      customInput.style.display = 'block';
+      customInput.focus();
+      // Wire up live update of hidden value
+      customInput.oninput = function() {
+        if (hidden) hidden.value = customInput.value || '0';
+      };
+    }
+    if (hidden) hidden.value = customInput ? (customInput.value || '0') : '0';
+  } else {
+    if (customInput) customInput.style.display = 'none';
+    if (hidden) hidden.value = String(minutes);
+  }
+}
+
+// ── 6. openAddSpotModal ──
+// Opens the Quick-Log modal pre-set to 'spot' type, pre-fills city with current stop.
+function openAddSpotModal(prefillCity) {
+  qlType = 'spot';
+  openModal('ql-modal');
+  // Set active state on the 'spot' type button
+  var typeBtns = document.querySelectorAll('.modal-type-btn');
+  for (var i = 0; i < typeBtns.length; i++) typeBtns[i].classList.remove('active');
+  var spotBtn = document.querySelector('.modal-type-btn[data-ql-type="spot"]');
+  if (spotBtn) spotBtn.classList.add('active');
+  renderQLFields('spot');
+  // Pre-fill city with current stop
+  var citySelect = document.getElementById('ql-location');
+  if (citySelect && prefillCity) {
+    citySelect.value = prefillCity;
+  }
+}
+
+// ── 7. openSpotDetail ──
+// Opens a modal with full earnings history + editable spot fields.
+function openSpotDetail(spotId) {
+  var spot = (D.busking_spots||[]).find(function(s) { return s.id === spotId; });
+  if (!spot) return;
+
+  var sessionsHtml = '';
+  if (spot.earnings_history && spot.earnings_history.length) {
+    sessionsHtml = spot.earnings_history.map(function(e, idx) {
+      return '<div class="session-log-item" style="cursor:pointer" onclick="editBuskingSession(\'' + spot.id + '\',' + idx + ')">' +
+        '<div><div style="font-weight:600">' + (e.date||'') + '</div>' +
+        '<div style="font-size:0.6rem;color:var(--text-dim)">' + (e.duration_minutes||0) + 'min' + (e.notes ? ' · ' + e.notes : '') + '</div></div>' +
+        '<div style="text-align:right"><span style="color:var(--busking-l);font-weight:600">' + fmt$(e.earnings||0) + (e.merch_sales ? ' +' + fmt$(e.merch_sales) : '') + '</span>' +
+        '<button class="session-log-del" onclick="event.stopPropagation();deleteBuskingSession(\'' + spot.id + '\',' + idx + ')">✕</button></div></div>';
+    }).join('');
+  } else {
+    sessionsHtml = '<div class="empty-state" style="padding:0.5rem">No sessions logged yet.</div>';
+  }
+
+  var trafficOpts = '';
+  for (var r = 1; r <= 5; r++) {
+    var labels = {1:'1 — Very Low',2:'2 — Low',3:'3 — Moderate',4:'4 — High',5:'5 — Very High'};
+    trafficOpts += '<option value="' + r + '"' + ((spot.foot_traffic_rating||0)===r ? ' selected' : '') + '>' + labels[r] + '</option>';
+  }
+
+  var html = '<div class="modal-hdr">' +
+    '<div class="modal-title">📍 ' + spot.name + '</div>' +
+    '<button class="modal-close" onclick="closeModal(\'sd-modal\')">✕</button>' +
+  '</div>' +
+  '<div class="modal-field"><label>Spot Name</label><input type="text" id="sd-name" value="' + (spot.name||'').replace(/"/g,'&quot;') + '"></div>' +
+  '<div class="modal-field"><label>Foot Traffic (1-5)</label><select id="sd-traffic">' + trafficOpts + '</select></div>' +
+  '<div class="modal-field"><label>Best Time of Day</label><input type="text" id="sd-besttime" value="' + (spot.best_time_of_day||'').replace(/"/g,'&quot;') + '"></div>' +
+  '<div class="modal-field"><label>Permit Required</label><select id="sd-permit-req"><option value="false"' + (!spot.permit_required ? ' selected' : '') + '>No</option><option value="true"' + (spot.permit_required ? ' selected' : '') + '>Yes</option></select></div>' +
+  '<div class="modal-field"><label>Permit Obtained</label><select id="sd-permit-obt"><option value="false"' + (!spot.permit_obtained ? ' selected' : '') + '>No</option><option value="true"' + (spot.permit_obtained ? ' selected' : '') + '>Yes</option></select></div>' +
+  '<div class="modal-field"><label>Address</label><input type="text" id="sd-address" value="' + (spot.address||'').replace(/"/g,'&quot;') + '"></div>' +
+  '<div class="modal-field"><label>Notes</label><textarea id="sd-notes" rows="3">' + (spot.best_time_notes||spot.notes||'') + '</textarea></div>' +
+  '<div style="margin-top:0.6rem;margin-bottom:0.3rem;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-dim);font-weight:600">Earnings History</div>' +
+  '<div class="entity-row"><span class="lbl">Total Sessions</span><span>' + (spot.total_sessions||0) + '</span></div>' +
+  '<div class="entity-row"><span class="lbl">Total Earned</span><span class="text-green" style="font-weight:700">' + fmt$(spot.total_earnings_logged||0) + '</span></div>' +
+  '<div class="entity-row" style="margin-bottom:0.5rem"><span class="lbl">Avg/Session</span><span>' + fmt$(spot.avg_earnings_per_session||0) + '</span></div>' +
+  sessionsHtml +
+  '<button class="modal-submit" onclick="saveSpotDetail(\'' + spot.id + '\')">Save Changes</button>' +
+  '<button class="venue-btn" style="width:100%;margin-top:0.3rem;color:var(--expense)" onclick="closeModal(\'sd-modal\');deleteBuskingSpot(\'' + spot.id + '\')">Delete Spot</button>';
+
+  var modal = document.getElementById('sd-modal');
+  if (!modal) return;
+  var sheet = modal.querySelector('.modal-sheet');
+  if (sheet) sheet.innerHTML = html;
+  openModal('sd-modal');
+}
+
+// ── 8. updateSpotField ──
+// Generic field updater for a busking spot (useful for inline edits if needed).
+function updateSpotField(spotId, field, value) {
+  var spot = (D.busking_spots||[]).find(function(s) { return s.id === spotId; });
+  if (!spot) return;
+  spot[field] = value;
+  saveEdits();
+  // Optionally re-render the spot detail modal if open
+  var modal = document.getElementById('sd-modal');
+  if (modal && modal.classList.contains('show')) {
+    openSpotDetail(spotId);
+  }
+}
+
+// ── 9. saveSpotDetail ──
+// Saves all editable fields from the spot detail modal form.
+function saveSpotDetail(spotId) {
+  var spot = (D.busking_spots||[]).find(function(s) { return s.id === spotId; });
+  if (!spot) return;
+
+  spot.name = val('sd-name');
+  spot.foot_traffic_rating = parseInt(val('sd-traffic') || '3');
+  spot.best_time_of_day = val('sd-besttime');
+  spot.permit_required = val('sd-permit-req') === 'true';
+  spot.permit_obtained = val('sd-permit-obt') === 'true';
+  spot.address = val('sd-address');
+  spot.best_time_notes = val('sd-notes');
+
+  saveEdits();
+  closeModal('sd-modal');
+  var av = document.querySelector('.view.active') ? document.querySelector('.view.active').id.replace('view-','') : null;
+  if (av) switchView(av);
+}
+
+function openHostDetail(hcId) {
+  var h = D.house_concerts.find(function(x) { return x.id === hcId; });
+  if (!h) return;
+  var stop = D.tour_stops.find(function(s) { return s.id === h.tour_stop_id; });
+  var hcStageLabels = {posted:'Posted',interested:'Interested',confirmed:'Confirmed',completed:'Completed',cancelled:'Cancelled'};
+  var hcStageColors = {posted:'#6b7280',interested:'#f59e0b',confirmed:'#22c55e',completed:'#14b8a6',cancelled:'#ef4444'};
+  var color = hcStageColors[h.pipeline_stage] || '#6b7280';
+
+  var html = '';
+  // Header
+  html += '<div class="modal-hdr">';
+  html += '<div class="modal-title">🏠 ' + h.host_name + '</div>';
+  html += '<button class="modal-close" onclick="closeModal(\'hd-modal\')">✕</button>';
+  html += '</div>';
+
+  // Flywheel badge
+  if (stop) {
+    var fw = computeFlywheelStatus(stop.id);
+    html += '<div class="hd-flywheel-badge" style="background:' + fw.color + '22;border:1px solid ' + fw.color + '44;margin-bottom:0.6rem">' +
+      '<span style="color:' + fw.color + '">' + fw.label + '</span>' +
+      '<span class="flywheel-detail">' + fw.detail + '</span>' +
+      '</div>';
+  }
+
+  // Host fields (editable)
+  html += '<div class="hd-field-group">';
+  html += '<div class="section-title">Host Details</div>';
+  html += '<div class="modal-field"><label>Host Name</label><input type="text" id="hd-host_name" value="' + escAttr(h.host_name||'') + '" onchange="updateHostField(\'' + hcId + '\',\'host_name\',this.value)"></div>';
+  html += '<div class="modal-field"><label>Phone</label><input type="tel" id="hd-host_phone" value="' + escAttr(h.host_phone||'') + '" onchange="updateHostField(\'' + hcId + '\',\'host_phone\',this.value)"></div>';
+  html += '<div class="modal-field"><label>Email</label><input type="email" id="hd-host_email" value="' + escAttr(h.host_email||'') + '" onchange="updateHostField(\'' + hcId + '\',\'host_email\',this.value)"></div>';
+  // Source select
+  var sourceOpts = ['Facebook group','Venue referral','Word of mouth','Instagram','Other'];
+  var sourceHtml = '';
+  for (var si = 0; si < sourceOpts.length; si++) {
+    sourceHtml += '<option value="' + sourceOpts[si] + '"' + (h.source === sourceOpts[si] ? ' selected' : '') + '>' + sourceOpts[si] + '</option>';
+  }
+  html += '<div class="modal-field"><label>Source</label><select id="hd-source" onchange="updateHostField(\'' + hcId + '\',\'source\',this.value)">' + sourceHtml + '</select></div>';
+  html += '<div class="modal-field"><label>Source Detail</label><input type="text" id="hd-source_detail" value="' + escAttr(h.source_detail||'') + '" onchange="updateHostField(\'' + hcId + '\',\'source_detail\',this.value)"></div>';
+  // Facebook group display
+  if (h.facebook_group) {
+    html += '<div class="entity-row"><span class="lbl">FB Group</span><span>' + h.facebook_group + '</span></div>';
+  }
+  // Notes textarea (stored in marketing.notes or h.notes)
+  var notesVal = (h.marketing && h.marketing.notes) ? h.marketing.notes : (h.notes || '');
+  html += '<div class="modal-field"><label>Notes</label><textarea id="hd-notes" rows="3" onchange="updateHostField(\'' + hcId + '\',\'notes\',this.value)">' + escAttr(notesVal) + '</textarea></div>';
+  html += '</div>';
+
+  // Event details (if exists) or init button
+  if (h.event) {
+    html += '<div class="hd-event-block">';
+    html += '<div class="section-title">Event Details</div>';
+    html += '<div class="modal-field"><label>Date</label><input type="date" id="hd-ev_date" value="' + escAttr(h.event.date||'') + '" onchange="updateHostEventField(\'' + hcId + '\',\'date\',this.value)"></div>';
+    // Tier select
+    var tierOpts = ['starter','standard','premium'];
+    var tierHtml = '';
+    for (var ti = 0; ti < tierOpts.length; ti++) {
+      tierHtml += '<option value="' + tierOpts[ti] + '"' + (h.event.tier === tierOpts[ti] ? ' selected' : '') + '>' + tierOpts[ti] + '</option>';
+    }
+    html += '<div class="modal-field"><label>Tier</label><select id="hd-ev_tier" onchange="updateHostEventField(\'' + hcId + '\',\'tier\',this.value)">' + tierHtml + '</select></div>';
+    html += '<div class="modal-field"><label>Ticket Price $</label><input type="number" id="hd-ev_ticket_price" value="' + (h.event.ticket_price||0) + '" onchange="updateHostEventField(\'' + hcId + '\',\'ticket_price\',parseFloat(this.value)||0)"></div>';
+    html += '<div class="modal-field"><label>Tickets Sold</label><input type="number" id="hd-ev_tickets_sold" value="' + (h.event.tickets_sold||0) + '" onchange="updateHostEventField(\'' + hcId + '\',\'tickets_sold\',parseInt(this.value)||0)"></div>';
+    html += '<div class="modal-field"><label>Tickets Target</label><input type="number" id="hd-ev_tickets_target" value="' + (h.event.tickets_target||0) + '" onchange="updateHostEventField(\'' + hcId + '\',\'tickets_target\',parseInt(this.value)||0)"></div>';
+    html += '<div class="modal-field"><label>Humanitix Link</label><input type="text" id="hd-ev_humanitix_link" value="' + escAttr(h.event.humanitix_link||'') + '" onchange="updateHostEventField(\'' + hcId + '\',\'humanitix_link\',this.value)"></div>';
+    html += '<div class="modal-field"><label>Revenue Actual $</label><input type="number" id="hd-ev_revenue_actual" value="' + (h.event.revenue_actual||0) + '" onchange="updateHostEventField(\'' + hcId + '\',\'revenue_actual\',parseFloat(this.value)||0)"></div>';
+    if (h.event.venue_notes) {
+      html += '<div class="entity-row"><span class="lbl">Venue Notes</span><span>' + h.event.venue_notes + '</span></div>';
+    }
+    html += '</div>';
+  } else if (h.pipeline_stage === 'confirmed') {
+    html += '<button class="modal-submit" onclick="initHostEvent(\'' + hcId + '\')">Add Event Details</button>';
+  }
+
+  // FB posting schedule
+  if (stop) {
+    html += renderFBSchedule(h, stop);
+  }
+
+  // Stage history (read-only)
+  var stageHistory = '';
+  if (h.stage_history && h.stage_history.length) {
+    stageHistory = h.stage_history.map(function(sh) {
+      return '<div class="entity-row"><span class="lbl">' + (hcStageLabels[sh.stage]||sh.stage) + '</span><span>' + sh.date + (sh.notes ? ' — ' + sh.notes : '') + '</span></div>';
+    }).join('');
+  }
+  html += '<div class="hd-history-block">';
+  html += '<div class="section-title" style="margin:0.4rem 0">Stage History</div>';
+  html += stageHistory || '<div class="empty-state">No history</div>';
+  html += '</div>';
+
+  // Actions
+  var showAdvance = h.pipeline_stage !== 'completed' && h.pipeline_stage !== 'cancelled';
+  var nextLabel = nextHCStageLabel(h.pipeline_stage);
+  html += '<div class="hd-actions">';
+  html += '<button class="venue-btn" onclick="logHCIncome(\'' + hcId + '\')">💰 Log Income</button>';
+  if (showAdvance) {
+    html += '<button class="venue-btn advance" onclick="advanceHouseConcert(\'' + hcId + '\');openHostDetail(\'' + hcId + '\')">→ ' + nextLabel + '</button>';
+    html += '<button class="venue-btn" style="color:var(--expense)" onclick="cancelHouseConcert(\'' + hcId + '\');closeModal(\'hd-modal\')">✕ Cancel</button>';
+  }
+  html += '</div>';
+
+  document.getElementById('hd-content').innerHTML = html;
+  openModal('hd-modal');
+}
+
+// ── 3. updateHostField(hcId, field, value) ──
+function updateHostField(hcId, field, value) {
+  var h = D.house_concerts.find(function(x) { return x.id === hcId; });
+  if (!h) return;
+  if (field === 'notes') {
+    h.marketing = h.marketing || {};
+    h.marketing.notes = value;
+    h.notes = value;
+  } else {
+    h[field] = value;
+  }
+  saveEdits();
+}
+
+// ── 4. updateHostEventField(hcId, field, value) ──
+function updateHostEventField(hcId, field, value) {
+  var h = D.house_concerts.find(function(x) { return x.id === hcId; });
+  if (!h || !h.event) return;
+  h.event[field] = value;
+  // Auto-set tier_label when tier changes
+  if (field === 'tier') {
+    var tierLabels = {starter:'Starter',standard:'Standard',premium:'Premium'};
+    h.event.tier_label = tierLabels[value] || value;
+  }
+  // Recompute projected revenue when ticket_price or tickets_target changes
+  if (field === 'ticket_price' || field === 'tickets_target') {
+    var price = h.event.ticket_price || 0;
+    var target = h.event.tickets_target || 0;
+    h.event.revenue_projected = price * target;
+  }
+  // Update stop actuals if revenue_actual changes
+  if (field === 'revenue_actual') {
+    var stop = D.tour_stops.find(function(s) { return s.id === h.tour_stop_id; });
+    if (stop) {
+      stop.actuals = stop.actuals || {};
+      stop.actuals.house_concert = stop.actuals.house_concert || {};
+      // Recalculate earnings_actual from all completed HC events for this stop
+      var totalEarnings = 0;
+      var stopHCs = (D.house_concerts||[]).filter(function(x) { return x.tour_stop_id === h.tour_stop_id; });
+      stopHCs.forEach(function(sh) {
+        if (sh.event && sh.event.revenue_actual) totalEarnings += sh.event.revenue_actual;
+      });
+      stop.actuals.house_concert.earnings_actual = totalEarnings;
+      recalcFinancials();
+    }
+  }
+  saveEdits();
+}
+
+// ── 5. initHostEvent(hcId) ──
+function initHostEvent(hcId) {
+  var h = D.house_concerts.find(function(x) { return x.id === hcId; });
+  if (!h) return;
+  var stop = D.tour_stops.find(function(s) { return s.id === h.tour_stop_id; });
+  h.event = {
+    date: stop ? (stop.arrival_date || '') : '',
+    tier: 'standard',
+    tier_label: 'Standard',
+    ticket_price: 30,
+    early_bird_price: 25,
+    door_price: 35,
+    ticket_count: 0,
+    tickets_sold: 0,
+    tickets_target: 25,
+    revenue_projected: 750,
+    revenue_actual: 0,
+    humanitix_link: '',
+    set_times: [],
+    venue_notes: ''
+  };
+  saveEdits();
+  openHostDetail(hcId);
+}
+
+// ── 6. logHCIncome(hcId) ──
+function logHCIncome(hcId) {
+  var h = D.house_concerts.find(function(x) { return x.id === hcId; });
+  if (!h) return;
+  var defaultAmt = (h.event && h.event.revenue_actual) ? h.event.revenue_actual : ((h.event && h.event.revenue_projected) ? h.event.revenue_projected : 0);
+  var input = prompt('House concert income amount ($):', String(defaultAmt));
+  if (input === null) return;
+  var amount = parseFloat(input);
+  if (isNaN(amount) || amount < 0) { alert('Enter a valid amount'); return; }
+  var today = new Date().toISOString().slice(0,10);
+  var stop = D.tour_stops.find(function(s) { return s.id === h.tour_stop_id; });
+
+  // Update event revenue_actual
+  if (h.event) {
+    h.event.revenue_actual = amount;
+  }
+
+  // Update stop actuals
+  if (stop) {
+    stop.actuals = stop.actuals || {};
+    stop.actuals.house_concert = stop.actuals.house_concert || {};
+    var totalEarnings = 0;
+    var stopHCs = (D.house_concerts||[]).filter(function(x) { return x.tour_stop_id === h.tour_stop_id; });
+    stopHCs.forEach(function(sh) {
+      if (sh.event && sh.event.revenue_actual) totalEarnings += sh.event.revenue_actual;
+    });
+    stop.actuals.house_concert.earnings_actual = totalEarnings;
+  }
+
+  // Create income_history entry (replace any existing HC income for this host to avoid dupes)
+  D.income_history = D.income_history || [];
+  var existingIdx = -1;
+  for (var i = 0; i < D.income_history.length; i++) {
+    if (D.income_history[i].type === 'house_concert' && D.income_history[i].tour_stop_id === h.tour_stop_id && D.income_history[i].notes && D.income_history[i].notes.indexOf(h.host_name) !== -1) {
+      existingIdx = i;
+      break;
+    }
+  }
+  var incEntry = {
+    id: 'inc-' + Date.now(),
+    type: 'house_concert',
+    amount: amount,
+    location: h.city || (stop ? stop.name : '') || '',
+    date: today,
+    notes: 'House concert at ' + h.host_name,
+    source: 'tour',
+    tour_stop_id: h.tour_stop_id
+  };
+  if (existingIdx >= 0) {
+    D.income_history[existingIdx] = incEntry;
+  } else {
+    D.income_history.push(incEntry);
+  }
+
+  recalcFinancials();
+  saveEdits();
+  openHostDetail(hcId);
+}
+
+// ── 7. computeFlywheelStatus(stopId) ──
+function computeFlywheelStatus(stopId) {
+  var stop = D.tour_stops.find(function(s) { return s.id === stopId; });
+  if (!stop) return {status:'not_seeded', color:'#ef4444', label:'🔴 Not Seeded', detail:'No stop found'};
+  var hcs = (D.house_concerts||[]).filter(function(h) { return h.tour_stop_id === stopId; });
+  var today = new Date().toISOString().slice(0,10);
+  var arrivalPassed = stop.arrival_date && stop.arrival_date < today;
+
+  // Check for completed
+  var hasCompleted = hcs.some(function(h) { return h.pipeline_stage === 'completed'; });
+  if (hasCompleted) return {status:'completed', color:'#14b8a6', label:'✅ Completed', detail:'Capture reels, thank host'};
+
+  // Check for cancelled-only (all cancelled)
+  var allCancelled = hcs.length > 0 && hcs.every(function(h) { return h.pipeline_stage === 'cancelled'; });
+
+  // Check for confirmed
+  var hasConfirmed = hcs.some(function(h) { return h.pipeline_stage === 'confirmed'; });
+  if (hasConfirmed) return {status:'confirmed', color:'#22c55e', label:'🟢 Confirmed', detail:'Ready to go'};
+
+  // Check for interested
+  var hasInterested = hcs.some(function(h) { return h.pipeline_stage === 'interested'; });
+  if (hasInterested) return {status:'interest', color:'#f97316', label:'🟠 Interest, Unconfirmed', detail:'Push for confirmation'};
+
+  // Check for posted (seeded)
+  var hasPosted = hcs.some(function(h) { return h.pipeline_stage === 'posted'; });
+  if (hasPosted) return {status:'seeded', color:'#f59e0b', label:'🟡 Seeded, Waiting', detail:'Waiting for host responses'};
+
+  // No HCs at all
+  if (allCancelled || (hcs.length === 0 && arrivalPassed)) {
+    return {status:'skipped', color:'#6b7280', label:'⚫ Skipped', detail:'No show happened'};
+  }
+
+  // Arrival passed with no completed → skipped
+  if (arrivalPassed && !hasCompleted) {
+    return {status:'skipped', color:'#6b7280', label:'⚫ Skipped', detail:'No show happened'};
+  }
+
+  // No HCs and arrival within 28 days → not_seeded (urgent)
+  return {status:'not_seeded', color:'#ef4444', label:'🔴 Not Seeded', detail:'Post to FB group urgently'};
+}
+
+// ── 8. renderFBSchedule(h, stop) ──
+// Computes FB posting schedule based on tour stop arrival_date.
+// Uses .hc-schedule CSS classes.
+function renderFBSchedule(h, stop) {
+  if (!stop || !stop.arrival_date) return '';
+  var arrival = new Date(stop.arrival_date + 'T00:00:00');
+  if (isNaN(arrival.getTime())) return '';
+
+  // Compute due dates: days before arrival
+  function daysBefore(days) {
+    var d = new Date(arrival);
+    d.setDate(d.getDate() - days);
+    return d.toISOString().slice(0,10);
+  }
+
+  var schedule = [
+    {action:'Initial seed post', days:28, dueDate: daysBefore(28)},
+    {action:'Follow-up post', days:14, dueDate: daysBefore(14)},
+    {action:'Personal DMs', days:10, dueDate: daysBefore(10)},
+    {action:'Confirm or pivot', days:7, dueDate: daysBefore(7)},
+    {action:'Host reminder', days:3, dueDate: daysBefore(3)}
+  ];
+
+  // Determine completion based on outreach.post_dates
+  var postDates = (h.outreach && h.outreach.post_dates) ? h.outreach.post_dates : [];
+  var followUps = (h.outreach && h.outreach.follow_up_messages_sent) ? h.outreach.follow_up_messages_sent : 0;
+  var personalMsgs = (h.outreach && h.outreach.personal_messages_sent) ? h.outreach.personal_messages_sent : 0;
+  var today = new Date().toISOString().slice(0,10);
+
+  // Completion logic:
+  // 0: Initial seed post — done if any post_dates exist
+  // 1: Follow-up post — done if follow_up_messages_sent >= 1
+  // 2: Personal DMs — done if personal_messages_sent >= 1
+  // 3: Confirm or pivot — done if stage is confirmed or cancelled or beyond
+  // 4: Host reminder — done if stage is completed (or confirmed + within 3 days)
+  var completions = [
+    postDates.length > 0,
+    followUps >= 1,
+    personalMsgs >= 1,
+    (h.pipeline_stage === 'confirmed' || h.pipeline_stage === 'completed' || h.pipeline_stage === 'cancelled'),
+    (h.pipeline_stage === 'completed')
+  ];
+
+  var rows = '';
+  for (var i = 0; i < schedule.length; i++) {
+    var s = schedule[i];
+    var done = completions[i];
+    var overdue = !done && s.dueDate < today;
+    var rowClass = 'hc-schedule-row' + (done ? ' done' : '');
+    var statusIcon = done ? '✅' : (overdue ? '🔴' : '⬜');
+    var dueLabel = s.dueDate + (overdue ? ' (overdue)' : '');
+    rows += '<div class="' + rowClass + '"><span>' + statusIcon + ' ' + s.action + '</span><span>' + dueLabel + '</span></div>';
+  }
+
+  var html = '<div class="hc-schedule">';
+  html += '<div class="hc-schedule-title">FB Posting Schedule (arrival: ' + stop.arrival_date + ')</div>';
+  html += rows;
+  html += '</div>';
+  return html;
+}
+
+// ── Helper: escape attribute values to prevent breaking HTML ──
+function escAttr(s) {
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function updateVenueField(venueId, field, value) {
+  var v = D.venues.find(function(x){ return x.id === venueId; });
+  if (!v) return;
+  v[field] = value;
+  saveEdits();
+}
+
+
+// ── NEW: updateVenueTags(venueId, tagsStr) ──
+// Parses a comma-separated tags string into an array.
+function updateVenueTags(venueId, tagsStr) {
+  var v = D.venues.find(function(x){ return x.id === venueId; });
+  if (!v) return;
+  v.tags = tagsStr.split(',').map(function(t){ return t.trim(); }).filter(function(t){ return t.length > 0; });
+  saveEdits();
+}
+
+
+// ── NEW: logVenueIncome(venueId) ──
+// Closes venue detail, opens Quick-Log, selects gig type, prefills venue + city.
+function logVenueIncome(venueId) {
+  var v = D.venues.find(function(x){ return x.id === venueId; });
+  closeModal('vd-modal');
+  openQuickLog();
+  selectQLType('gig');
+  // Fields are rendered synchronously by selectQLType → renderQLFields
+  if (v) {
+    var venueInput = document.getElementById('ql-venue');
+    if (venueInput) venueInput.value = v.name;
+    var locSelect = document.getElementById('ql-location');
+    if (locSelect && v.city) {
+      // Match by stop name (the select uses stop.name as option values)
+      for (var i = 0; i < locSelect.options.length; i++) {
+        if (locSelect.options[i].value === v.city) { locSelect.selectedIndex = i; break; }
+      }
+    }
+  }
+}
+
+function setPipeSearch(term) {
+  pipeSearchTerm = term;
+  renderPipeline();
+}
+
+
+// ── NEW: setPipeShowAll(val) ──
+// Toggles cross-stop display and re-renders.
+function setPipeShowAll(val) {
+  pipeShowAllStops = val;
+  renderPipeline();
+}
+
+
+// ═══ BATCH2-COMMAND NEW FUNCTIONS ═══
+function getDaysSince(dateStr) {
+  if (!dateStr) return 0;
+  var parts = String(dateStr).split('-');
+  if (parts.length < 3) return 0;
+  var d = new Date(parseInt(parts[0],10), parseInt(parts[1],10)-1, parseInt(parts[2],10));
+  var now = new Date();
+  var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.round((today - d) / 86400000);
+}
+
+function getDaysUntilArrival(stop) {
+  if (!stop || !stop.arrival_date) return null;
+  var parts = String(stop.arrival_date).split('-');
+  if (parts.length < 3) return null;
+  var d = new Date(parseInt(parts[0],10), parseInt(parts[1],10)-1, parseInt(parts[2],10));
+  var now = new Date();
+  var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.round((d - today) / 86400000);
+}
+
+
+// ═══ BATCH2-QUICKLOG NEW FUNCTIONS ═══
+function showToast(message) {
+  var toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(function() { toast.classList.remove('show'); }, 2000);
+}
+
+
+// ═══ BATCH3-FINANCIALS NEW FUNCTIONS ═══
+function deleteExpense(expenseId) {
+  if (!D.expense_history) return;
+  D.expense_history = D.expense_history.filter(function(e) { return e.id !== expenseId; });
+  recalcFinancials();
+  saveEdits();
+  renderFinancials();
+}
+
+function updateExpense(expenseId, field, value) {
+  if (!D.expense_history) return;
+  var exp = D.expense_history.find(function(e) { return e.id === expenseId; });
+  if (!exp) return;
+  exp[field] = value;
+  recalcFinancials();
+  saveEdits();
+  renderFinancials();
+}
+
+function updateStopFinancial(stopId, field, value) {
+  if (!D.tour_stops) return;
+  var stop = D.tour_stops.find(function(s) { return s.id === stopId; });
+  if (!stop) return;
+  if (!stop.financials) stop.financials = {};
+  stop.financials[field] = value;
+  // Recalculate stop net
+  var act = stop.financials.actual_income || 0;
+  var exp = stop.financials.actual_expenses || 0;
+  stop.financials.net = act - exp;
+  saveEdits();
+  renderFinancials();
+}
+
+function renderIncomeChart(incomeByStream) {
+  var streams = [
+    { key:'busking', label:'🟢 Busking', color:'#22c55e', amount: incomeByStream.busking || 0 },
+    { key:'venue_gig', label:'🔵 Venue Gigs', color:'#00d2ff', amount: incomeByStream.venue_gig || 0 },
+    { key:'house_concert', label:'🏠 House Concerts', color:'#f59e0b', amount: incomeByStream.house_concert || 0 },
+    { key:'merch', label:'🎟️ Merch', color:'#a855f7', amount: incomeByStream.merch || 0 }
+  ];
+  var total = streams.reduce(function(s, st) { return s + st.amount; }, 0);
+  if (total === 0) {
+    return '<div class="empty-state" style="padding:0.5rem">No income recorded yet</div>';
+  }
+  var html = '<div class="fin-income-chart" style="margin-top:0.5rem">';
+  for (var i = 0; i < streams.length; i++) {
+    var st = streams[i];
+    var pct = total > 0 ? (st.amount / total * 100) : 0;
+    var widthPct = clamp(pct, 0, 100);
+    html += '<div class="fin-chart-row" style="margin-bottom:0.4rem">' +
+      '<div style="display:flex;justify-content:space-between;font-size:0.65rem;margin-bottom:0.15rem">' +
+        '<span>' + st.label + '</span>' +
+        '<span style="color:' + st.color + ';font-weight:600">' + fmt$(st.amount) + ' (' + pct.toFixed(1) + '%)</span>' +
+      '</div>' +
+      '<div class="stat-bar" style="height:10px;background:rgba(255,255,255,0.05)">' +
+        '<div class="stat-bar-fill" style="width:' + widthPct + '%;background:' + st.color + ';transition:width 0.3s ease"></div>' +
+      '</div>' +
+    '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+
+// ═══ BATCH3-STOPS NEW FUNCTIONS ═══
+function openEditStopModal(stopId) {
+  var stop = D.tour_stops && D.tour_stops.find(function(s) { return s.id === stopId; });
+  if (!stop) return;
+  document.getElementById('es-id').value = stop.id;
+  document.getElementById('es-name').value = stop.name || '';
+  document.getElementById('es-state').value = stop.state || '';
+  document.getElementById('es-segment').value = stop.segment_type || 'Regional';
+  document.getElementById('es-days').value = stop.est_duration_days || 3;
+  document.getElementById('es-arrival').value = stop.arrival_date || '';
+  document.getElementById('es-departure').value = stop.departure_date || '';
+  document.getElementById('es-week').value = stop.week_type || 'regional';
+  document.getElementById('es-notes').value = stop.notes || '';
+  openModal('es-modal');
+}
+
+function submitEditStop() {
+  var stopId = parseInt(val('es-id'));
+  var stop = D.tour_stops && D.tour_stops.find(function(s) { return s.id === stopId; });
+  if (!stop) return;
+  var name = val('es-name');
+  if (!name) { alert('Enter stop name'); return; }
+  stop.name = name;
+  stop.state = val('es-state');
+  stop.segment_type = val('es-segment');
+  stop.est_duration_days = parseInt(val('es-days') || '3');
+  stop.arrival_date = val('es-arrival');
+  stop.departure_date = val('es-departure');
+  stop.week_type = val('es-week');
+  stop.notes = val('es-notes');
+  saveEdits();
+  closeModal('es-modal');
+  var av = document.querySelector('.view.active') && document.querySelector('.view.active').id.replace('view-', '');
+  if (av) switchView(av);
+}
+
+function openEditTargetsModal(stopId) {
+  var stop = D.tour_stops && D.tour_stops.find(function(s) { return s.id === stopId; });
+  if (!stop) return;
+  var t = stop.targets || {};
+  var b = t.busking || {};
+  var g = t.venue_gig || {};
+  var h = t.house_concert || {};
+  document.getElementById('et-id').value = stop.id;
+  document.getElementById('et-busk-sessions').value = b.sessions_target || 0;
+  document.getElementById('et-busk-earnings').value = b.earnings_target || 0;
+  document.getElementById('et-busk-spots').value = b.spots_scouted_target || 0;
+  document.getElementById('et-gig-gigs').value = g.gigs_target || 0;
+  document.getElementById('et-gig-earnings').value = g.earnings_target || 0;
+  document.getElementById('et-house-shows').value = h.shows_target || 0;
+  document.getElementById('et-house-earnings').value = h.earnings_target || 0;
+  openModal('et-modal');
+}
+
+function submitEditTargets() {
+  var stopId = parseInt(val('et-id'));
+  var stop = D.tour_stops && D.tour_stops.find(function(s) { return s.id === stopId; });
+  if (!stop) return;
+  stop.targets = stop.targets || {};
+  stop.targets.busking = stop.targets.busking || {};
+  stop.targets.venue_gig = stop.targets.venue_gig || {};
+  stop.targets.house_concert = stop.targets.house_concert || {};
+
+  stop.targets.busking.sessions_target = parseInt(val('et-busk-sessions') || '0');
+  stop.targets.busking.earnings_target = parseFloat(val('et-busk-earnings') || '0');
+  stop.targets.busking.spots_scouted_target = parseInt(val('et-busk-spots') || '0');
+
+  stop.targets.venue_gig.gigs_target = parseInt(val('et-gig-gigs') || '0');
+  stop.targets.venue_gig.earnings_target = parseFloat(val('et-gig-earnings') || '0');
+
+  stop.targets.house_concert.shows_target = parseInt(val('et-house-shows') || '0');
+  stop.targets.house_concert.earnings_target = parseFloat(val('et-house-earnings') || '0');
+
+  // Recalculate projected_income = sum of all earnings targets
+  var projected = (stop.targets.busking.earnings_target || 0)
+    + (stop.targets.venue_gig.earnings_target || 0)
+    + (stop.targets.house_concert.earnings_target || 0);
+  stop.financials = stop.financials || {};
+  stop.financials.projected_income = projected;
+  stop.financials.net = (stop.financials.actual_income || 0) - (stop.financials.actual_expenses || 0);
+
+  saveEdits();
+  closeModal('et-modal');
+  if (typeof recalcFinancials === 'function') recalcFinancials();
+  var av = document.querySelector('.view.active') && document.querySelector('.view.active').id.replace('view-', '');
+  if (av) switchView(av);
+}
+
+function handleStopDragStart(e, stopId) {
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', String(stopId));
+  if (e.target) e.target.classList.add('dragging');
+}
+
+function handleStopDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  return false;
+}
+
+function handleStopDrop(e, targetStopId) {
+  e.preventDefault();
+  e.stopPropagation();
+  var draggedId = parseInt(e.dataTransfer.getData('text/plain'));
+  if (!draggedId || draggedId === targetStopId) return;
+
+  var stops = D.tour_stops;
+  var fromIdx = -1, toIdx = -1;
+  for (var i = 0; i < stops.length; i++) {
+    if (stops[i].id === draggedId) fromIdx = i;
+    if (stops[i].id === targetStopId) toIdx = i;
+  }
+  if (fromIdx < 0 || toIdx < 0 || fromIdx === toIdx) return;
+
+  // Remove dragged element and insert at target position
+  var moved = stops.splice(fromIdx, 1)[0];
+  stops.splice(toIdx, 0, moved);
+
+  saveEdits();
+  renderRoute();
+  return false;
+}
+
+function renderRouteProgressBar() {
+  var stops = D.tour_stops || [];
+  var total = stops.length;
+  var completed = 0;
+  for (var i = 0; i < stops.length; i++) {
+    if (stops[i].status === 'Completed') completed++;
+  }
+  var pct = total > 0 ? Math.round(completed / total * 100) : 0;
+  var html = '';
+  html += '<div class="route-progress">';
+  html += '<div class="route-progress-hdr">';
+  html += '<span class="route-progress-label">Tour Progress</span>';
+  html += '<span class="route-progress-count">' + completed + ' of ' + total + ' stops complete</span>';
+  html += '</div>';
+  html += '<div class="route-progress-bar">';
+  html += '<div class="route-progress-fill" style="width:' + pct + '%"></div>';
+  html += '</div>';
+  html += '</div>';
+  return html;
+}
+
+
+function renderTodaysCalls(stop) {
+  if (!stop) return '<div class="empty-state">No active stop</div>';
+  var venues = getStopVenues(stop.id);
+  var notContacted = venues.filter(function(v) { return v.pipeline_stage === 'not_contacted'; });
+
+  // Sort by priority (high first), using numeric priority field if present
+  var PRIO_ORDER = { high: 0, medium: 1, low: 2, '': 3 };
+  notContacted.sort(function(a, b) {
+    var pa = PRIO_ORDER[a.priority] || 3;
+    var pb = PRIO_ORDER[b.priority] || 3;
+    return pa - pb;
+  });
+
+  if (!notContacted.length) {
+    return '<div class="empty-state">No calls queued — all venues contacted</div>';
+  }
+
+  var html = '';
+  for (var i = 0; i < notContacted.length; i++) {
+    var v = notContacted[i];
+    var phone = v.phone || '';
+    var prioTag = v.priority ? (' <span class="call-priority ' + v.priority + '">' + v.priority + '</span>') : '';
+    var callLink = phone
+      ? '<a class="call-link" href="tel:' + phone + '">📞 ' + phone + '</a>'
+      : '<span class="call-link no-phone">no phone</span>';
+    html += '<div class="call-item" onclick="handlePriorityAction({action:\'pipeline\'})">'
+      + '<div class="call-name">' + v.name + prioTag + '</div>'
+      + callLink
+      + '</div>';
+  }
+  return html;
+}
+
+function renderBudgetVsActual(expensesByCategory) {
+  var cats = (D.config && D.config.expense_categories) || ['fuel','food','gear','accommodation','maverick','marketing','misc'];
+  var budgets = (D.config && D.config.expense_budgets) || {};
+  var html = '';
+  var totalBudget = 0;
+  var totalActual = 0;
+  for (var i = 0; i < cats.length; i++) {
+    var cat = cats[i];
+    var budget = budgets[cat] || 0;
+    var actual = expensesByCategory[cat] || 0;
+    var variance = budget - actual;
+    totalBudget += budget;
+    totalActual += actual;
+    html += '<div class="fin-row">' +
+      '<span class="lbl">' + cat + '</span>' +
+      '<span>' +
+        '<span style="color:var(--text-dim)">' + fmt$(budget) + '</span>' +
+        ' <span style="color:var(--text-faint)">vs</span> ' +
+        '<span style="font-weight:600">' + fmt$(actual) + '</span>' +
+        ' <span style="color:' + (variance>=0?'var(--st-booked)':'var(--expense)') + ';font-size:0.65rem">(' + (variance>=0?'+':'') + fmt$(variance) + ')</span>' +
+      '</span>' +
+    '</div>';
+  }
+  // Totals row
+  var totalVariance = totalBudget - totalActual;
+  html += '<div class="fin-total" style="display:flex;justify-content:space-between">' +
+    '<span>Total</span>' +
+    '<span>' +
+      '<span style="color:var(--text-dim)">' + fmt$(totalBudget) + '</span>' +
+      ' <span style="color:var(--text-faint)">vs</span> ' +
+      '<span>' + fmt$(totalActual) + '</span>' +
+      ' <span style="color:' + (totalVariance>=0?'var(--st-booked)':'var(--expense)') + ';font-size:0.7rem">(' + (totalVariance>=0?'+':'') + fmt$(totalVariance) + ')</span>' +
+    '</span>' +
+  '</div>';
+  // Legend
+  html += '<div style="font-size:0.55rem;color:var(--text-faint);margin-top:0.3rem">Budget vs Actual — positive variance = under budget</div>';
+  return html;
+}
+
+function renderTodaysTasks(stop) {
+  var priorities = computePriorities(stop);
+  if (!priorities.length) {
+    return '<div class="empty-state">All caught up 🎉</div>';
+  }
+
+  var html = '';
+  for (var i = 0; i < priorities.length; i++) {
+    var pr = priorities[i];
+    var overdueClass = pr.overdue ? ' overdue' : '';
+    var levelClass = pr.level || 'medium';
+    // Build onclick — serialize minimal action info
+    var actionArg = '{action:\'' + (pr.action || 'pipeline') + '\'}';
+    html += '<div class="priority-item tappable ' + levelClass + overdueClass + '" onclick="handlePriorityAction(' + actionArg + ')">'
+      + '<span class="priority-icon">' + pr.icon + '</span>'
+      + '<span class="priority-text">' + pr.text + '</span>'
+      + '<span class="priority-tag" style="background:' + pr.color + '22;color:' + pr.color + '">' + pr.tag + '</span>'
+      + '</div>';
+  }
+  return html;
+}
+
+function renderEmptyStopState() {
+  var html = '<div class="empty-state guided-empty">'
+    + '<div class="guided-prompt" onclick="openAddVenueModal()">'
+    + '<span class="guided-icon">🎤</span> Add your first venue →'
+    + '</div>'
+    + '<div class="guided-prompt" onclick="openQuickLog()">'
+    + '<span class="guided-icon">🟢</span> Log your first busking session →'
+    + '</div>'
+    + '<div class="guided-prompt" onclick="openAddHostModal()">'
+    + '<span class="guided-icon">🏠</span> Start house concert outreach →'
+    + '</div>'
+    + '</div>';
+  return html;
+}
+
+function stopHasActivity(stop) {
+  if (!stop) return false;
+  if (getStopVenues(stop.id).length > 0) return true;
+  if (getStopBuskingSpots(stop.id).length > 0) return true;
+  if (getStopHouseConcerts(stop.id).length > 0) return true;
+  return false;
+}
+
+function lastStageEntry(v, stage) {
+  if (!v || !v.stage_history || !v.stage_history.length) return null;
+  for (var i = v.stage_history.length - 1; i >= 0; i--) {
+    if (v.stage_history[i].stage === stage) return v.stage_history[i];
+  }
+  return null;
+}
+
+function todayStr() {
+  var n = new Date();
+  var m = String(n.getMonth()+1);
+  var d = String(n.getDate());
+  if (m.length < 2) m = '0' + m;
+  if (d.length < 2) d = '0' + d;
+  return n.getFullYear() + '-' + m + '-' + d;
+}
+
+function yesterdayStr() {
+  var n = new Date();
+  n.setDate(n.getDate() - 1);
+  var m = String(n.getMonth()+1);
+  var d = String(n.getDate());
+  if (m.length < 2) m = '0' + m;
+  if (d.length < 2) d = '0' + d;
+  return n.getFullYear() + '-' + m + '-' + d;
+}
+
+function renderTransactions() {
+  var txnsContainer = document.getElementById('fin-transactions');
+
+  // Build combined transaction array
+  var incTxns = (D.income_history||[]).map(function(i) {
+    return { id:i.id, date:i.date||'', desc:i.type + ' — ' + (i.location||''), amount:i.amount, type:'income',
+             category:i.type, description:i.location||'', source:i.source||'' };
+  });
+  var expTxns = (D.expense_history||[]).map(function(e) {
+    return { id:e.id, date:e.date||'', desc:e.category + ' — ' + (e.description||''), amount:e.amount, type:'expense',
+             category:e.category, description:e.description||'', source:e.source||'' };
+  });
+  var allTxns = incTxns.concat(expTxns);
+  // Sort by date descending
+  allTxns.sort(function(a,b) { return (b.date||'').localeCompare(a.date||''); });
+
+  // Determine date filter
+  var filterFrom = window._finFilterFrom || '';
+  var filterTo = window._finFilterTo || '';
+  var showAll = window._finShowAll || false;
+
+  var filtered;
+  if (showAll || (!filterFrom && !filterTo)) {
+    if (showAll) {
+      filtered = allTxns;
+    } else {
+      // Default: last 30 days
+      var thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      var cutoffStr = thirtyDaysAgo.toISOString().slice(0,10);
+      filtered = allTxns.filter(function(t) {
+        return (t.date||'') >= cutoffStr;
+      });
+    }
+  } else {
+    filtered = allTxns.filter(function(t) {
+      var d = t.date || '';
+      if (filterFrom && d < filterFrom) return false;
+      if (filterTo && d > filterTo) return false;
+      return true;
+    });
+  }
+
+  // Date filter controls
+  var filterHtml = '<div class="fin-date-filter" style="display:flex;gap:0.4rem;align-items:center;margin-bottom:0.6rem;flex-wrap:wrap">' +
+    '<span style="font-size:0.65rem;color:var(--text-dim)">From</span>' +
+    '<input class="inline-edit" type="date" id="fin-filter-from" value="' + filterFrom + '" onchange="setFinDateFilter(\'from\',this.value)" style="width:auto">' +
+    '<span style="font-size:0.65rem;color:var(--text-dim)">To</span>' +
+    '<input class="inline-edit" type="date" id="fin-filter-to" value="' + filterTo + '" onchange="setFinDateFilter(\'to\',this.value)" style="width:auto">' +
+    '<button class="venue-btn" onclick="clearFinDateFilter()" style="font-size:0.6rem;padding:0.25rem 0.5rem">Show All</button>' +
+    '<span style="font-size:0.6rem;color:var(--text-faint);margin-left:auto">' + filtered.length + ' transaction' + (filtered.length!==1?'s':'') + '</span>' +
+  '</div>';
+
+  // Transaction rows
+  var txnsHtml;
+  if (filtered.length === 0) {
+    txnsHtml = '<div class="empty-state">No transactions in this date range</div>';
+  } else {
+    txnsHtml = filtered.map(function(t) {
+      if (t.type === 'expense') {
+        // Expense row with delete + inline edit (amount, category, description)
+        return '<div class="fin-stop-row" style="align-items:flex-start">' +
+          '<div style="flex:1">' +
+            '<div style="display:flex;align-items:center;gap:0.3rem">' +
+              '<input class="inline-edit" type="text" value="' + escapeAttr(t.category) + '" onchange="updateExpense(' + t.id + ',\'category\',this.value)" style="width:80px;text-align:left">' +
+              '<input class="inline-edit" type="text" value="' + escapeAttr(t.description) + '" onchange="updateExpense(' + t.id + ',\'description\',this.value)" style="width:50%;text-align:left">' +
+            '</div>' +
+            '<div style="font-size:0.6rem;color:var(--text-faint);margin-top:0.2rem">' + (t.date||'') + (t.source?' · '+t.source:'') + '</div>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;gap:0.3rem">' +
+            '<span style="font-weight:700;color:var(--expense)">-' +
+              '<input class="inline-edit" type="number" value="' + t.amount + '" onchange="updateExpense(' + t.id + ',\'amount\',parseFloat(this.value)||0)" style="width:60px;display:inline;text-align:right">' +
+            '</span>' +
+            '<button class="venue-btn danger" onclick="deleteExpense(' + t.id + ')" style="font-size:0.6rem;padding:0.15rem 0.4rem" title="Delete expense">✕</button>' +
+          '</div>' +
+        '</div>';
+      } else {
+        // Income row (read-only display)
+        return '<div class="fin-stop-row">' +
+          '<div style="flex:1">' +
+            '<div style="font-weight:600">' + escapeHtml(t.desc) + '</div>' +
+            '<div style="font-size:0.6rem;color:var(--text-faint)">' + (t.date||'') + (t.source?' · '+t.source:'') + '</div>' +
+          '</div>' +
+          '<div style="font-weight:700;color:var(--st-booked)">+' + fmt$(t.amount) + '</div>' +
+        '</div>';
+      }
+    }).join('');
+  }
+
+  txnsContainer.innerHTML = filterHtml + txnsHtml;
+}
+
+function clearFinDateFilter() {
+  window._finFilterFrom = '';
+  window._finFilterTo = '';
+  window._finShowAll = true;
+  renderTransactions();
+}
+
+function escapeAttr(str) {
+  if (str === null || str === undefined) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function handlePriorityAction(priority) {
+  if (!priority || !priority.action) return;
+  switch (priority.action) {
+    case 'pipeline':
+      switchView('pipeline');
+      break;
+    case 'busking':
+      switchView('busking');
+      break;
+    case 'quickLog':
+      openQuickLog();
+      break;
+    case 'addHost':
+      openAddHostModal();
+      break;
+    case 'fb':
+      // Switch to house concerts view for seeding context
+      switchView('pipeline');
+      break;
+    default:
+      switchView('pipeline');
+  }
+}
+
+function openQuickLogExpense() {
+  document.getElementById('ql-modal').classList.add('show');
+  selectQLType('expense');
+}
+
+function openQuickLogIncome() {
+  document.getElementById('ql-modal').classList.add('show');
+  selectQLType('busking');
+}
+
+function setFinDateFilter(which, value) {
+  if (which === 'from') window._finFilterFrom = value;
+  if (which === 'to') window._finFilterTo = value;
+  window._finShowAll = false;
+  renderTransactions();
+}
+
+function toggleTodoFromQuickLog(todoId) {
+  var todo = (D.todos || []).find(function(t) {
+    return String(t.id || (t.text || '').replace(/[^a-zA-Z0-9]/g, '')) === String(todoId);
+  });
+  if (!todo) return;
+  todo.completed = true;
+  todo.completed_date = new Date().toISOString().slice(0, 10);
+  saveEdits();
+  showToast('✅ Done!');
+  closeQuickLog();
+  // Re-render current view
+  var activeViewEl = document.querySelector('.view.active');
+  var activeView = activeViewEl && activeViewEl.id ? activeViewEl.id.replace('view-', '') : null;
+  if (activeView) {
+    try { switchView(activeView); } catch(e) {}
+  }
 }
 
 // ═══ DATA EXPORT / RESET ═══
