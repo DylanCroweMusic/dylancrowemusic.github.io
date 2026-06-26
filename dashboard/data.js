@@ -28,11 +28,11 @@ const DASHBOARD_DATA = {
   ],
   "financials": {
     "target": 37000.0,
-    "current_earnings": 0.0,
+    "current_earnings": 400.0,
     "fuel_expenses": 350.0,
     "gear_expenses": 120.0,
     "other_expenses": 0.0,
-    "net_earnings": -470.0
+    "net_earnings": -70.0
   },
   "ground_ops": {
     "local_busking_earnings": 0.0,
@@ -87,7 +87,7 @@ const DASHBOARD_DATA = {
       "status": "Planned",
       "transit_status": "Scheduled",
       "gigs_target": 1,
-      "gigs_booked": 0
+      "gigs_booked": 1
     },
     {
       "id": 7,
@@ -134,7 +134,15 @@ const DASHBOARD_DATA = {
     "venues_mapped": 85,
     "status": "85+ venues mapped"
   },
-  "income_history": [],
+  "income_history": [
+    {
+      "type": "gig",
+      "amount": 400.0,
+      "location": "Esperance",
+      "description": "Taylor St Quarters Sunset Session",
+      "date": "2026-06-26T02:59:32.594514Z"
+    }
+  ],
   "expense_history": [],
-  "last_updated": "2026-06-26T02:59:05.299803Z"
+  "last_updated": "2026-06-26T02:59:32.594702Z"
 };
