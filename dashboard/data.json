@@ -2,7 +2,7 @@
   "meta": {
     "schema_version": "2.0.0",
     "system_name": "Dylan Crowe Musician Business OS",
-    "last_updated": "2026-06-26T11:34:28.671503Z",
+    "last_updated": "2026-06-26T11:40:22.724312Z",
     "tour_name": "One Guitar. One Dog. Every Town in Australia.",
     "tour_start": "2026-08-15",
     "tour_end": "2026-12-08",
@@ -252,10 +252,10 @@
       },
       "actuals": {
         "busking": {
-          "sessions_completed": 3,
+          "sessions_completed": 4,
           "spots_scouted": 2,
           "spots_confirmed": 2,
-          "earnings_actual": 620.0
+          "earnings_actual": 1120.0
         },
         "venue_gig": {
           "gigs_booked": 2,
@@ -272,9 +272,9 @@
       },
       "financials": {
         "projected_income": 3800.0,
-        "actual_income": 1090.0,
+        "actual_income": 1590.0,
         "actual_expenses": 470.0,
-        "net": 620.0
+        "net": 1120.0
       },
       "busking_spot_ids": [
         "bsk-perth-raine-sq",
@@ -1586,12 +1586,19 @@
           "earnings": 180.0,
           "merch_sales": 0.0,
           "notes": "Monday, quieter than expected. Rain affected afternoon traffic."
+        },
+        {
+          "date": "2026-06-26",
+          "duration_minutes": 180,
+          "earnings": 500.0,
+          "merch_sales": 0.0,
+          "notes": "Test session \u2014 3 hours at Coles Glenelg, logged to Perth for UI test"
         }
       ],
-      "total_earnings_logged": 500.0,
-      "total_sessions": 2,
-      "avg_earnings_per_session": 250.0,
-      "status": "played",
+      "total_earnings_logged": 1000.0,
+      "total_sessions": 3,
+      "avg_earnings_per_session": 333.33,
+      "status": "regular",
       "discovered_date": "2026-08-15",
       "tags": [
         "covered",
@@ -1968,7 +1975,7 @@
       "target": 37000.0,
       "gross_target": 52200.0,
       "expense_budget": 15200.0,
-      "current_earnings": 1090.0,
+      "current_earnings": 1590.0,
       "expenses_by_category": {
         "fuel": 350.0,
         "accommodation": 0.0,
@@ -1979,10 +1986,10 @@
         "misc": 0.0
       },
       "total_expenses": 470.0,
-      "net_earnings": 620.0,
-      "progress_to_target_pct": 1.68,
+      "net_earnings": 1120.0,
+      "progress_to_target_pct": 3.03,
       "income_by_stream": {
-        "busking": 620.0,
+        "busking": 1120.0,
         "venue_gig": 400.0,
         "house_concert": 0.0,
         "merch": 70.0
@@ -1997,7 +2004,9 @@
       "maverick": 0.0,
       "misc": 0.0,
       "total": 15200.0
-    }
+    },
+    "current_earnings": 1590.0,
+    "net_earnings": 1590.0
   },
   "ground_ops": {
     "base_city": "Adelaide",
@@ -2150,6 +2159,18 @@
       "description": "Test session \u2014 Coles Glenelg, 3 hours",
       "date": "2026-06-26T11:34:13.904953Z",
       "source": "local"
+    },
+    {
+      "id": "inc-008",
+      "date": "2026-06-26",
+      "type": "busking",
+      "amount": 500.0,
+      "location": "Perth",
+      "source": "tour",
+      "description": "Test busking session \u2014 3hrs",
+      "busking_spot_id": "bsk-perth-raine-sq",
+      "tour_stop_id": 1,
+      "timestamp": "2026-06-26T11:40:15.285093+00:00"
     }
   ],
   "expense_history": [
