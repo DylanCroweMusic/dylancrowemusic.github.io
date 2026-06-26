@@ -3,36 +3,53 @@
     {
       "id": 1,
       "task": "Service oil",
-      "completed": false
+      "completed": false,
+      "is_weekly": true
     },
     {
       "id": 2,
       "task": "Fuel to parks",
-      "completed": false
+      "completed": false,
+      "is_weekly": false
     },
     {
       "id": 3,
       "task": "Organize busking cash float",
-      "completed": false
+      "completed": false,
+      "is_weekly": false
     },
     {
       "id": 4,
       "task": "Verify council permits",
-      "completed": false
+      "completed": false,
+      "is_weekly": true
+    },
+    {
+      "id": 5,
+      "task": "Practice singing nullarbor blues",
+      "completed": true,
+      "is_weekly": false
+    },
+    {
+      "id": 6,
+      "task": "Deep clean the camper",
+      "completed": false,
+      "is_weekly": true
     }
   ],
   "financials": {
     "target": 37000.0,
     "current_earnings": 0.0,
-    "fuel_expenses": 350.0,
+    "fuel_expenses": 450.0,
     "gear_expenses": 120.0,
-    "net_earnings": -470.0
+    "other_expenses": 50.0,
+    "net_earnings": -620.0
   },
   "ground_ops": {
     "local_busking_earnings": 0.0,
-    "expenses": 0.0,
+    "expenses": 30.0,
     "cash_float": 150.0,
-    "operational_bank": 150.0
+    "operational_bank": 120.0
   },
   "tour_stops": [
     {
@@ -100,6 +117,12 @@
       "name": "Sunshine Coast",
       "status": "Target",
       "transit_status": "Dreaming"
+    },
+    {
+      "id": 12,
+      "name": "Brisbane",
+      "status": "Target",
+      "transit_status": "Dreaming"
     }
   ],
   "booking": {
@@ -107,5 +130,31 @@
     "status": "85+ venues mapped"
   },
   "income_history": [],
-  "last_updated": "2026-06-26T02:23:29.003100Z"
+  "expense_history": [
+    {
+      "category": "fuel",
+      "amount": 100.0,
+      "location": "Perth",
+      "description": "First fillup",
+      "source": "tour",
+      "date": "2026-06-26T02:36:31.361922Z"
+    },
+    {
+      "category": "food",
+      "amount": 50.0,
+      "location": "Perth",
+      "description": "Dog and human dinner",
+      "source": "tour",
+      "date": "2026-06-26T02:36:37.015014Z"
+    },
+    {
+      "category": "other",
+      "amount": 30.0,
+      "location": "Adelaide",
+      "description": "Strings",
+      "source": "local",
+      "date": "2026-06-26T02:36:41.501363Z"
+    }
+  ],
+  "last_updated": "2026-06-26T02:40:33.579378Z"
 }
