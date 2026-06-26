@@ -44,45 +44,45 @@ const DASHBOARD_DATA = {
     },
     {
       "id": 2,
-      "name": "Kalgoorlie",
+      "name": "Fremantle",
       "status": "Planned",
       "transit_status": "Scheduled"
     },
     {
       "id": 3,
-      "name": "Esperance",
-      "status": "Planned",
-      "transit_status": "Scheduled"
-    },
-    {
-      "id": 4,
-      "name": "Albany",
-      "status": "Planned",
-      "transit_status": "Scheduled"
-    },
-    {
-      "id": 5,
-      "name": "Margaret River",
-      "status": "Planned",
-      "transit_status": "Scheduled"
-    },
-    {
-      "id": 6,
       "name": "Bunbury",
       "status": "Planned",
       "transit_status": "Scheduled"
     },
     {
+      "id": 4,
+      "name": "Margaret River",
+      "status": "Planned",
+      "transit_status": "Scheduled"
+    },
+    {
+      "id": 5,
+      "name": "Albany",
+      "status": "Planned",
+      "transit_status": "Scheduled"
+    },
+    {
+      "id": 6,
+      "name": "Esperance",
+      "status": "Planned",
+      "transit_status": "Scheduled"
+    },
+    {
       "id": 7,
-      "name": "Fremantle",
+      "name": "Kalgoorlie",
       "status": "Planned",
       "transit_status": "Scheduled"
     },
     {
       "id": 8,
       "name": "Adelaide",
-      "status": "Planned",
-      "transit_status": "Scheduled"
+      "status": "Current",
+      "transit_status": "Arrived"
     },
     {
       "id": 9,
@@ -108,5 +108,5 @@ const DASHBOARD_DATA = {
     "status": "85+ venues mapped"
   },
   "income_history": [],
-  "last_updated": "2026-06-26T02:12:58.448941Z"
+  "last_updated": "2026-06-26T02:23:29.003100Z"
 };
