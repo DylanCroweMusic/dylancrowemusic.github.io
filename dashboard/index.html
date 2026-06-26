@@ -1,2782 +1,1334 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Dylan Crowe — Musician OS Workspace</title>
-  <style>
-    :root {
-      --bg: #090912; /* Obsidian Raven black */
-      --bg-gradient: radial-gradient(circle at 50% 0%, #15152a 0%, #06060c 100%);
-      --bg-card: rgba(255, 255, 255, 0.02);
-      --bg-card-hover: rgba(255, 255, 255, 0.04);
-      --bg-glass-heavy: rgba(10, 10, 20, 0.85);
-      --cyan: #00d2ff; /* Dyson neon blue */
-      --cyan-muted: rgba(0, 210, 255, 0.15);
-      --magenta: #ff2e93; /* Dyson hot pink */
-      --magenta-shadow: rgba(255, 46, 147, 0.3);
-      --amber: #ff9100; /* Dyson electric amber */
-      --green: #00e676; /* Dyson hyper green */
-      --red: #ff1744; /* Dyson scarlet red */
-      --text: #f5f5f7; /* Crisp off-white */
-      --text-muted: rgba(245, 245, 247, 0.5);
-      --border: rgba(255, 255, 255, 0.05);
-      --border-focus: rgba(0, 210, 255, 0.4);
-      --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", sans-serif;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      overflow-x: hidden;
-      box-sizing: border-box;
-      -webkit-text-size-adjust: 100%;
-    }
-
-    body {
-      font-family: var(--font-stack);
-      background: var(--bg);
-      background-image: var(--bg-gradient);
-      color: var(--text);
-      line-height: 1.4;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      -webkit-font-smoothing: antialiased;
-      padding-bottom: 3rem;
-    }
-
-    /* Custom high-fidelity scrollbar */
-    ::-webkit-scrollbar {
-      width: 5px;
-      height: 5px;
-    }
-    ::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.01);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 100px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--cyan);
-    }
-
-    header {
-      padding: 1.25rem 1.5rem;
-      background: var(--bg-glass-heavy);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .header-logo-group {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-    }
-
-    .header-logo {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      border: 1.5px solid var(--cyan);
-      box-shadow: 0 0 12px rgba(0, 210, 255, 0.25);
-      object-fit: cover;
-    }
-
-    .header-title-group h1 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      background: linear-gradient(135deg, var(--text), var(--cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .header-title-group p {
-      font-size: 0.65rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-    }
-
-    .header-status-badge {
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      background: rgba(0, 230, 118, 0.08);
-      border: 1px solid rgba(0, 230, 118, 0.15);
-      padding: 0.35rem 0.65rem;
-      border-radius: 100px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--green);
-    }
-
-    .status-pulse {
-      width: 6px;
-      height: 6px;
-      background: var(--green);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--green);
-      animation: pulse 2.2s infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(0.95); opacity: 0.7; }
-      50% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 10px var(--green); }
-      100% { transform: scale(0.95); opacity: 0.7; }
-    }
-
-    main {
-      padding: 1.25rem;
-      max-width: 1400px;
-      width: 100%;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-    }
-
-    /* Stats Grid Declarations */
-    .stats-container {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
-    }
-
-    @media (max-width: 1100px) {
-      .stats-container {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-    @media (max-width: 580px) {
-      .stats-container {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1.25rem;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .card:hover {
-      border-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .stat-card-title {
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.4rem;
-    }
-
-    .stat-card-main {
-      font-size: 1.85rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      font-feature-settings: "tnum";
-      display: flex;
-      align-items: baseline;
-      gap: 0.25rem;
-    }
-
-    .stat-card-main span {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      font-weight: 400;
-    }
-
-    /* Global layout grids */
-    .layout-columns {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-    }
-
-    @media (max-width: 1024px) {
-      .layout-columns {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* Fixed responsive styles to prevent clipping on mobile viewports */
-    @media (max-width: 768px) {
-      body {
-        padding-bottom: 2rem;
-      }
-      main {
-        padding: 0.75rem;
-        gap: 0.85rem;
-      }
-      .card {
-        padding: 0.85rem;
-        border-radius: 12px;
-      }
-      header {
-        padding: 0.85rem 1rem;
-      }
-      .header-title-group h1 {
-        font-size: 0.95rem;
-      }
-      .header-title-group p {
-        font-size: 0.58rem;
-      }
-      .header-status-badge {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.65rem;
-      }
-      .stat-card-main {
-        font-size: 1.45rem;
-      }
-      .stat-card-main span {
-        font-size: 0.75rem;
-      }
-      .sandbox-sliders-row {
-        grid-template-columns: 1fr !important;
-        gap: 1rem;
-      }
-      .stop-editor-bar {
-        grid-template-columns: 1fr !important;
-        gap: 1.25rem;
-      }
-      .stop-editor-bar > div {
-        border-right: none !important;
-        padding-right: 0 !important;
-        border-bottom: 1px solid var(--border);
-        padding-bottom: 1.25rem;
-      }
-      .stop-editor-bar > div:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-      }
-      /* Custom Forms Stack styling on mobile */
-      #todo-add-form {
-        grid-template-columns: 1fr !important;
-        gap: 0.45rem !important;
-      }
-      #todo-add-form button {
-        min-height: 38px;
-        height: 38px;
-        width: 100% !important;
-      }
-      .telemetry-grid {
-        grid-template-columns: 1fr !important;
-        gap: 0.75rem !important;
-      }
-      .dev-sync-card > div {
-        grid-template-columns: 1fr !important;
-        gap: 1rem !important;
-      }
-      .dev-sync-card textarea {
-        height: 80px !important;
-      }
-      .dev-sync-card button {
-        height: 38px !important;
-      }
-      /* Stack section titles to prevent text clipping search */
-      .section-title {
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        gap: 0.25rem !important;
-        font-size: 0.8rem !important;
-      }
-      .section-title span:last-child {
-        font-size: 0.65rem !important;
-        opacity: 0.8;
-      }
-    }
-
-    .section-title {
-      font-size: 0.82rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.85rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.4rem;
-    }
-
-    /* DYSON SLIDERS AND INPUT CONTROLS */
-    select, input, textarea {
-      font-family: inherit;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 10px;
-      padding: 0.65rem 0.85rem;
-      font-size: 0.95rem; /* Prevents auto zoom on mobile Safari */
-      outline: none;
-      transition: all 0.2s ease-in-out;
-      width: 100%;
-    }
-
-    select:focus, input:focus, textarea:focus {
-      border-color: var(--cyan);
-      box-shadow: 0 0 10px var(--cyan-muted);
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.45rem;
-      font-family: inherit;
-      font-weight: 600;
-      font-size: 0.85rem;
-      padding: 0.65rem 1rem;
-      border-radius: 10px;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--text);
-      min-height: 44px; /* Mobile touch friendly target size */
-    }
-
-    .btn:active {
-      transform: scale(0.97);
-    }
-
-    .btn-primary {
-      background: var(--cyan);
-      color: #04040a;
-      border: 1px solid var(--cyan);
-    }
-
-    .btn-primary:hover {
-      background: #00b4d8;
-      box-shadow: 0 0 15px rgba(0, 210, 255, 0.35);
-    }
-
-    .btn-magenta {
-      background: var(--magenta);
-      color: var(--text);
-      border: 1px solid var(--magenta);
-    }
-
-    .btn-magenta:hover {
-      background: #e0217f;
-      box-shadow: 0 0 15px rgba(255, 46, 147, 0.35);
-    }
-
-    .btn-danger {
-      color: #fff;
-      background: var(--red);
-      border-color: var(--red);
-    }
-
-    .btn-danger:hover {
-      background: #e50934;
-    }
-
-    /* TIMELINE FLOW CONTAINER (Stops Controller) */
-    .timeline-card {
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Sub-Category Pipelines Drawer Stylings */
-    .sub-pipeline-drawer {
-      background: rgba(255, 255, 255, 0.01);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.15rem;
-      margin-bottom: 1.15rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-      animation: expandDrawer 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    @keyframes expandDrawer {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .sub-pipeline-header {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.45rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .sub-track-row {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.25rem 0;
-    }
-
-    @media (max-width: 640px) {
-      .sub-track-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.45rem;
-      }
-    }
-
-    .sub-track-label {
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      min-width: 140px;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-    }
-
-    .sub-circles-container {
-      display: flex;
-      gap: 0.85rem;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .sub-circle-node {
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--border);
-      padding: 0.35rem 0.65rem;
-      border-radius: 100px;
-      font-size: 0.68rem;
-      font-weight: 600;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.2s ease;
-    }
-
-    .sub-circle-node:hover {
-      background: rgba(255, 255, 255, 0.05);
-      transform: translateY(-1px);
-    }
-
-    .sub-circle-bullet {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #15152a;
-      border: 2px solid var(--text-muted);
-      transition: all 0.25s ease;
-    }
-
-    /* Sub-circle states (Venues/Gigs = Cyan, Busking = Magenta, House = Amber) */
-    .sub-circle-node.venue.active {
-      border-color: rgba(0, 210, 255, 0.3);
-      background: rgba(0, 210, 255, 0.05);
-    }
-    .sub-circle-node.venue.active .sub-circle-bullet {
-      background: var(--cyan);
-      border-color: var(--cyan);
-      box-shadow: 0 0 6px var(--cyan);
-    }
-
-    .sub-circle-node.busking.active {
-      border-color: rgba(255, 46, 147, 0.3);
-      background: rgba(255, 46, 147, 0.05);
-    }
-    .sub-circle-node.busking.active .sub-circle-bullet {
-      background: var(--magenta);
-      border-color: var(--magenta);
-      box-shadow: 0 0 6px var(--magenta);
-    }
-
-    .sub-circle-node.house.active {
-      border-color: rgba(255, 145, 0, 0.3);
-      background: rgba(255, 145, 0, 0.05);
-    }
-    .sub-circle-node.house.active .sub-circle-bullet {
-      background: var(--amber);
-      border-color: var(--amber);
-      box-shadow: 0 0 6px var(--amber);
-    }
-
-    .timeline-rail {
-      display: flex;
-      gap: 1.5rem;
-      overflow-x: auto;
-      padding: 1.5rem 0.5rem;
-      position: relative;
-      margin-bottom: 1rem;
-      scroll-behavior: smooth;
-      scrollbar-width: thin;
-    }
-
-    .timeline-connecting-line {
-      position: absolute;
-      top: calc(1.5rem + 16px);
-      left: 10px;
-      right: 10px;
-      height: 3px;
-      background: rgba(255, 255, 255, 0.05);
-      z-index: 1;
-      border-radius: 10px;
-    }
-
-    .timeline-progress-line {
-      position: absolute;
-      top: calc(1.5rem + 16px);
-      left: 10px;
-      height: 3px;
-      background: var(--cyan);
-      box-shadow: 0 0 12px var(--cyan);
-      z-index: 2;
-      width: 0%;
-      border-radius: 100px;
-      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .stop-node {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      z-index: 10;
-      cursor: pointer;
-      min-width: 80px;
-      text-align: center;
-    }
-
-    .stop-dot {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: #121226;
-      border: 2px solid rgba(255, 255, 255, 0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .stop-node:hover .stop-dot {
-      transform: scale(1.15);
-      border-color: var(--cyan);
-      color: var(--cyan);
-    }
-
-    .stop-node.completed .stop-dot {
-      background: var(--cyan);
-      border-color: var(--cyan);
-      color: #04040a;
-      box-shadow: 0 0 10px var(--cyan-muted);
-    }
-
-    .stop-node.current .stop-dot {
-      background: var(--magenta);
-      border-color: var(--magenta);
-      color: #fff;
-      box-shadow: 0 0 15px var(--magenta-shadow);
-      transform: scale(1.18);
-      animation: stopPulse 2.5s infinite;
-    }
-
-    @keyframes stopPulse {
-      0% { box-shadow: 0 0 10px var(--magenta-shadow); }
-      50% { box-shadow: 0 0 20px rgba(255, 46, 147, 0.6); }
-      100% { box-shadow: 0 0 10px var(--magenta-shadow); }
-    }
-
-    .stop-name {
-      margin-top: 0.65rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      max-width: 100px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      transition: color 0.3s;
-    }
-
-    .stop-node.completed .stop-name {
-      color: var(--cyan);
-    }
-
-    .stop-node.current .stop-name {
-      color: var(--magenta);
-      font-weight: 700;
-    }
-
-    .stop-status-tag {
-      font-size: 0.55rem;
-      text-transform: uppercase;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      margin-top: 0.15rem;
-      padding: 0.08rem 0.3rem;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-muted);
-    }
-
-    .stop-gigs-needed-badge {
-      font-size: 0.58rem;
-      font-weight: 700;
-      margin-top: 0.2rem;
-      padding: 0.1rem 0.4rem;
-      border-radius: 100px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      display: inline-block;
-    }
-
-    .stop-node.current .stop-status-tag {
-      background: rgba(255, 46, 147, 0.15);
-      color: var(--magenta);
-    }
-
-    .stop-node.completed .stop-status-tag {
-      background: rgba(0, 210, 255, 0.1);
-      color: var(--cyan);
-    }
-
-    /* Stop Inspector & Stop Management panel */
-    .stop-editor-bar {
-      background: rgba(255, 255, 255, 0.01);
-      border-top: 1px solid var(--border);
-      padding-top: 1rem;
-      margin-top: 0.5rem;
-      display: grid;
-      grid-template-columns: 1fr 1.5fr;
-      gap: 1rem;
-    }
-
-    @media (max-width: 768px) {
-      .stop-editor-bar {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* TWO-TIER TODO LIST STYLES */
-    .todo-columns {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-    }
-
-    @media (max-width: 768px) {
-      .todo-columns {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-    }
-
-    .list-tier-container {
-      background: rgba(255, 255, 255, 0.01);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      max-height: 380px;
-      overflow-y: auto;
-    }
-
-    .todo-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--border);
-      padding: 0.65rem 0.85rem;
-      border-radius: 10px;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.2s ease;
-    }
-
-    .todo-item:hover {
-      background: rgba(255, 255, 255, 0.04);
-      border-color: rgba(255, 255, 255, 0.12);
-    }
-
-    .todo-item.completed {
-      opacity: 0.5;
-    }
-
-    .todo-item-check {
-      width: 18px;
-      height: 18px;
-      border-radius: 4px;
-      border: 1.5px solid var(--text-muted);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      flex-shrink: 0;
-    }
-
-    .todo-item.completed .todo-item-check {
-      background: var(--cyan);
-      border-color: var(--cyan);
-    }
-
-    .todo-item-check svg {
-      width: 10px;
-      height: 10px;
-      stroke: #04040a;
-      stroke-width: 3.5;
-      fill: none;
-      display: none;
-    }
-
-    .todo-item.completed .todo-item-check svg {
-      display: block;
-    }
-
-    .todo-item-text {
-      font-size: 0.82rem;
-      font-weight: 500;
-      flex-grow: 1;
-      word-break: break-word;
-      overflow-wrap: break-word;
-    }
-
-    .todo-item.completed .todo-item-text {
-      text-decoration: line-through;
-      color: var(--text-muted);
-    }
-
-    /* Todo priority badges */
-    .todo-badge {
-      font-size: 0.6rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 0.15rem 0.4rem;
-      border-radius: 4px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .badge-daily_shit {
-      background: rgba(0, 210, 255, 0.15);
-      color: var(--cyan);
-    }
-
-    .badge-tour_booking {
-      background: rgba(255, 46, 147, 0.15);
-      color: var(--magenta);
-    }
-
-    .badge-road_cargo {
-      background: rgba(255, 145, 0, 0.15);
-      color: var(--amber);
-    }
-
-    .todo-delete-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.25rem;
-      border-radius: 4px;
-      transition: all 0.2s;
-      flex-shrink: 0;
-    }
-
-    .todo-delete-btn:hover {
-      color: var(--red);
-      background: rgba(255, 23, 68, 0.1);
-    }
-
-    /* Ledger section design */
-    .ledger-summary-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .ledger-bucket-subcard {
-      background: rgba(255, 255, 255, 0.01);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 0.85rem;
-      text-align: center;
-    }
-
-    .ledger-table-container {
-      width: 100%;
-      overflow-x: auto;
-      max-height: 280px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      margin-bottom: 1.25rem;
-    }
-
-    .ledger-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.82rem;
-      text-align: left;
-    }
-
-    .ledger-table th {
-      padding: 0.65rem 0.85rem;
-      background: rgba(255, 255, 255, 0.02);
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .ledger-table td {
-      padding: 0.6rem 0.85rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .ledger-table tr:hover td {
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    .tx-amt {
-      font-family: monospace;
-      font-weight: 700;
-      text-align: right;
-    }
-
-    .tx-revenue {
-      color: var(--green);
-    }
-
-    .tx-expense {
-      color: var(--red);
-    }
-
-    /* Ledger input radio segmented styling */
-    .segmented-control {
-      display: flex;
-      background: rgba(255, 255, 255, 0.03);
-      padding: 0.25rem;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-    }
-
-    .segmented-control label {
-      flex: 1;
-      text-align: center;
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 0.45rem;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-
-    .segmented-control input[type="radio"] {
-      display: none;
-    }
-
-    .segmented-control input[type="radio"]:checked + label {
-      background: var(--cyan);
-      color: #04040a;
-    }
-
-    /* Dynamic Sandbox calculations table */
-    .sandbox-sliders-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-    }
-
-    @media (max-width: 900px) {
-      .sandbox-sliders-row {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .slider-container {
-      display: flex;
-      flex-direction: column;
-      gap: 0.45rem;
-      margin-bottom: 0.85rem;
-    }
-
-    .slider-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.8rem;
-    }
-
-    .slider-val {
-      font-family: monospace;
-      font-weight: 700;
-      color: var(--cyan);
-    }
-
-    .range-input {
-      -webkit-appearance: none;
-      width: 100%;
-      height: 6px;
-      border-radius: 100px;
-      background: rgba(255, 255, 255, 0.08);
-      outline: none;
-    }
-
-    .range-input::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: var(--cyan);
-      cursor: pointer;
-      box-shadow: 0 0 10px var(--cyan-muted);
-      transition: transform 0.15s;
-    }
-
-    .range-input::-webkit-slider-thumb:hover {
-      transform: scale(1.25);
-    }
-
-    /* Telemetry grid metrics */
-    .telemetry-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.85rem;
-    }
-
-    .telemetry-item {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 0.75rem 0.85rem;
-      background: rgba(255, 255, 255, 0.01);
-    }
-
-    .tel-metric-title {
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      font-weight: 600;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .tel-metric-value {
-      font-size: 1.15rem;
-      font-weight: 700;
-      font-family: monospace;
-      color: var(--text);
-      margin-top: 0.25rem;
-    }
-
-    .progressbar-track {
-      width: 100%;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
-      overflow: hidden;
-      margin-top: 0.35rem;
-    }
-
-    .progressbar-fill {
-      height: 100%;
-      border-radius: 10px;
-      transition: width 0.4s ease;
-    }
-
-    /* Developer Sync actions block */
-    .dev-sync-card {
-      background: rgba(0, 210, 255, 0.02);
-      border: 1px solid var(--cyan-muted);
-    }
-
-    .dev-clipboard-json {
-      font-family: monospace;
-      font-size: 0.72rem;
-      max-height: 100px;
-      background: rgba(0, 0, 0, 0.4);
-      color: #9cdcfe;
-    }
-
-    /* Helpers and styles */
-    .alert-banner {
-      background: rgba(255, 145, 0, 0.08);
-      border: 1px solid rgba(255, 145, 0, 0.2);
-      color: var(--amber);
-      border-radius: 8px;
-      font-size: 0.75rem;
-      padding: 0.45rem 0.75rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .progress-bar-linear {
-      height: 6px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 100px;
-      overflow: hidden;
-      margin-top: 0.45rem;
-    }
-
-    .progress-bar-linear-inner {
-      height: 100%;
-      border-radius: 100px;
-      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    /* Utility labels */
-    .color-cyan { color: var(--cyan); }
-    .color-magenta { color: var(--magenta); }
-    .color-amber { color: var(--amber); }
-    .color-green { color: var(--green); }
-    .color-red { color: var(--red); }
-  </style>
-
-  <!-- Load server injected telemetry database configuration -->
-  <script src="data.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Dylan Crowe — Tour OS</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   DYLAN CROWE — MUSICIAN BUSINESS OS v2.0
+   One Guitar. One Dog. Every Town in Australia.
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --bg: #090912;
+  --bg-grad: radial-gradient(ellipse at 50% -10%, #1a1a3e 0%, #090912 55%, #06060c 100%);
+  --card: rgba(255,255,255,0.03);
+  --card-h: rgba(255,255,255,0.06);
+  --card-brd: rgba(255,255,255,0.08);
+  --glass: rgba(10,10,20,0.88);
+
+  /* Stream colors */
+  --busking: #166534;
+  --busking-l: #22c55e;
+  --gig: #00B4D8;
+  --gig-l: #00d2ff;
+  --house: #D97706;
+  --house-l: #f59e0b;
+  --merch: #a855f7;
+  --expense: #ef4444;
+
+  /* Brand */
+  --cyan: #00d2ff;
+  --magenta: #D946EF;
+  --amber: #D97706;
+  --green: #166534;
+  --blue-bg: #1A1A3E;
+  --off-white: #F5F0E8;
+  --text-dim: rgba(245,240,232,0.55);
+  --text-faint: rgba(245,240,232,0.35);
+
+  /* Pipeline stage colors */
+  --st-not_contacted: #6b7280;
+  --st-called: #3b82f6;
+  --st-emailed: #8b5cf6;
+  --st-follow_up_1: #f59e0b;
+  --st-follow_up_2: #f97316;
+  --st-booked: #22c55e;
+  --st-declined: #ef4444;
+  --st-played: #14b8a6;
+
+  /* Status colors */
+  --st-Planned: #6b7280;
+  --st-Current: #22c55e;
+  --st-Completed: #14b8a6;
+  --st-Skipped: #ef4444;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html, body {
+  margin:0; padding:0; width:100%; overflow-x:hidden;
+  background: var(--bg);
+  color: var(--off-white);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+  -webkit-text-size-adjust:100%; -webkit-font-smoothing:antialiased;
+  font-size:15px; line-height:1.5;
+}
+
+body { background: var(--bg-grad); min-height:100vh; }
+
+/* ── HEADER ─────────────────────────────────────────────────────── */
+.hdr {
+  position: sticky; top:0; z-index:100;
+  background: var(--glass);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--card-brd);
+  padding: 0.65rem 1rem; display:flex; align-items:center; justify-content:space-between;
+}
+.hdr-logo { display:flex; align-items:center; gap:0.5rem; }
+.hdr-logo img { width:28px; height:28px; border-radius:6px; }
+.hdr-title { font-size:0.8rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+.hdr-sub { font-size:0.65rem; color:var(--text-dim); }
+.hdr-eta { font-size:0.7rem; color:var(--cyan); font-weight:600; }
+
+/* ── VIEWS ──────────────────────────────────────────────────────── */
+.view { display:none; padding:1rem; padding-bottom:6rem; }
+.view.active { display:block; }
+
+/* ── STAT CARDS ──────────────────────────────────────────────────── */
+.stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-bottom:1rem; }
+.stat-card {
+  background: var(--card); border:1px solid var(--card-brd);
+  border-radius:14px; padding:0.85rem;
+}
+.stat-label { font-size:0.6rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-dim); }
+.stat-val { font-size:1.5rem; font-weight:800; margin:0.2rem 0; }
+.stat-sub { font-size:0.7rem; color:var(--text-dim); }
+.stat-bar { height:4px; border-radius:2px; background:rgba(255,255,255,0.08); margin-top:0.5rem; overflow:hidden; }
+.stat-bar-fill { height:100%; border-radius:2px; transition:width 0.4s ease; }
+
+/* ── SECTION ────────────────────────────────────────────────────── */
+.section { margin-bottom:1.2rem; }
+.section-title {
+  font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em;
+  color:var(--text-dim); margin-bottom:0.6rem; font-weight:600;
+}
+
+/* ── STREAM SUMMARY ─────────────────────────────────────────────── */
+.stream-card {
+  background: var(--card); border:1px solid var(--card-brd);
+  border-radius:12px; padding:0.8rem; margin-bottom:0.6rem;
+  display:flex; align-items:center; gap:0.8rem;
+}
+.stream-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+.stream-icon.busking { background:rgba(22,101,52,0.2); color:var(--busking-l); }
+.stream-icon.gig { background:rgba(0,180,216,0.15); color:var(--gig-l); }
+.stream-icon.house { background:rgba(217,119,6,0.2); color:var(--house-l); }
+.stream-body { flex:1; min-width:0; }
+.stream-name { font-size:0.8rem; font-weight:700; }
+.stream-amt { font-size:0.75rem; color:var(--text-dim); }
+.stream-bar { height:4px; border-radius:2px; background:rgba(255,255,255,0.06); margin-top:0.4rem; overflow:hidden; }
+.stream-bar-fill { height:100%; border-radius:2px; }
+.stream-bar-fill.busking { background:var(--busking-l); }
+.stream-bar-fill.gig { background:var(--gig-l); }
+.stream-bar-fill.house { background:var(--house-l); }
+
+/* ── TOUR ROUTE TIMELINE ────────────────────────────────────────── */
+.timeline { position:relative; padding-left:2rem; }
+.timeline::before { content:''; position:absolute; left:0.75rem; top:0; bottom:0; width:2px; background:rgba(255,255,255,0.06); }
+.stop-node { position:relative; margin-bottom:0.5rem; }
+.stop-dot {
+  position:absolute; left:-1.75rem; top:0.8rem; width:14px; height:14px;
+  border-radius:50%; border:2px solid var(--card-brd); background:var(--bg); z-index:1;
+}
+.stop-dot.current { background:var(--st-Current); border-color:var(--st-Current); box-shadow:0 0 12px rgba(34,197,94,0.5); }
+.stop-dot.completed { background:var(--st-Completed); border-color:var(--st-Completed); }
+.stop-dot.planned { background:var(--bg); border-color:rgba(255,255,255,0.15); }
+.stop-dot.target { background:var(--magenta); border-color:var(--magenta); }
+
+.stop-card {
+  background: var(--card); border:1px solid var(--card-brd);
+  border-radius:12px; padding:0.8rem; cursor:pointer;
+  transition: background 0.2s;
+}
+.stop-card:active { background: var(--card-h); }
+.stop-card.active { border-color: var(--cyan); box-shadow:0 0 0 1px rgba(0,210,255,0.2); }
+.stop-hdr { display:flex; justify-content:space-between; align-items:center; }
+.stop-name { font-size:0.9rem; font-weight:700; }
+.stop-num { font-size:0.65rem; color:var(--text-faint); }
+.stop-meta { font-size:0.65rem; color:var(--text-dim); margin-top:0.15rem; }
+.stop-bars { display:flex; gap:0.3rem; margin-top:0.5rem; }
+.stop-bar { flex:1; height:3px; border-radius:1.5px; overflow:hidden; background:rgba(255,255,255,0.06); }
+.stop-bar-fill { height:100%; border-radius:1.5px; }
+.stop-bar-fill.busking { background:var(--busking-l); }
+.stop-bar-fill.gig { background:var(--gig-l); }
+.stop-bar-fill.house { background:var(--house-l); }
+.stop-expand { margin-top:0.6rem; display:none; }
+.stop-expand.show { display:block; }
+.stop-expand .stream-mini { font-size:0.7rem; margin-bottom:0.3rem; display:flex; justify-content:space-between; }
+.stop-badge {
+  font-size:0.55rem; padding:2px 6px; border-radius:4px;
+  text-transform:uppercase; letter-spacing:0.05em; font-weight:700;
+}
+.stop-badge.current { background:rgba(34,197,94,0.15); color:var(--st-Current); }
+.stop-badge.planned { background:rgba(255,255,255,0.05); color:var(--text-dim); }
+.stop-badge.completed { background:rgba(20,184,166,0.15); color:var(--st-Completed); }
+.stop-badge.target { background:rgba(217,70,239,0.15); color:var(--magenta); }
+
+/* ── TABS (Stop Detail) ─────────────────────────────────────────── */
+.tab-bar {
+  display:flex; gap:0.25rem; margin-bottom:0.8rem;
+  background:var(--card); border-radius:10px; padding:3px;
+  overflow-x:auto; -webkit-overflow-scrolling:touch;
+}
+.tab-btn {
+  flex:1; min-width:max-content; padding:0.5rem 0.65rem; border:none;
+  background:transparent; color:var(--text-dim); font-size:0.7rem; font-weight:600;
+  border-radius:8px; cursor:pointer; white-space:nowrap; transition:all 0.2s;
+  font-family:inherit;
+}
+.tab-btn.active { background:rgba(255,255,255,0.06); color:var(--off-white); }
+.tab-btn.active.busking { color:var(--busking-l); background:rgba(22,101,52,0.15); }
+.tab-btn.active.gig { color:var(--gig-l); background:rgba(0,180,216,0.12); }
+.tab-btn.active.house { color:var(--house-l); background:rgba(217,119,6,0.12); }
+.tab-content { display:none; }
+.tab-content.active { display:block; }
+
+/* ── ENTITY CARDS ───────────────────────────────────────────────── */
+.entity-card {
+  background:var(--card); border:1px solid var(--card-brd);
+  border-radius:10px; padding:0.75rem; margin-bottom:0.5rem;
+}
+.entity-hdr { display:flex; justify-content:space-between; align-items:flex-start; }
+.entity-name { font-size:0.85rem; font-weight:700; }
+.entity-sub { font-size:0.7rem; color:var(--text-dim); margin-top:0.15rem; }
+.entity-row { display:flex; justify-content:space-between; font-size:0.72rem; margin-top:0.3rem; }
+.entity-row .lbl { color:var(--text-dim); }
+
+/* ── PIPELINE ───────────────────────────────────────────────────── */
+.pipe-group { margin-bottom:1rem; }
+.pipe-group-title {
+  font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;
+  margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;
+}
+.pipe-count { font-size:0.6rem; background:rgba(255,255,255,0.06); padding:1px 6px; border-radius:4px; }
+.venue-card {
+  background:var(--card); border:1px solid var(--card-brd);
+  border-left:3px solid var(--st-not_contacted);
+  border-radius:8px; padding:0.7rem; margin-bottom:0.4rem; cursor:pointer;
+  transition:background 0.2s;
+}
+.venue-card:active { background:var(--card-h); }
+.venue-card.stage-booked { border-left-color:var(--st-booked); }
+.venue-card.stage-called { border-left-color:var(--st-called); }
+.venue-card.stage-emailed { border-left-color:var(--st-emailed); }
+.venue-card.stage-follow_up_1 { border-left-color:var(--st-follow_up_1); }
+.venue-card.stage-follow_up_2 { border-left-color:var(--st-follow_up_2); }
+.venue-card.stage-not_contacted { border-left-color:var(--st-not_contacted); }
+.venue-card.stage-played { border-left-color:var(--st-played); }
+.venue-card.stage-declined { border-left-color:var(--st-declined); }
+.venue-name { font-size:0.82rem; font-weight:700; }
+.venue-meta { font-size:0.68rem; color:var(--text-dim); margin-top:0.15rem; }
+.venue-stage-badge {
+  font-size:0.55rem; padding:2px 6px; border-radius:4px;
+  text-transform:uppercase; letter-spacing:0.04em; font-weight:700;
+  display:inline-block; margin-top:0.3rem;
+}
+.venue-actions { display:flex; gap:0.4rem; margin-top:0.5rem; }
+.venue-btn {
+  font-size:0.65rem; padding:0.35rem 0.6rem; border-radius:6px;
+  border:1px solid var(--card-brd); background:transparent;
+  color:var(--off-white); cursor:pointer; font-family:inherit;
+}
+.venue-btn:active { background:var(--card-h); }
+.venue-btn.call { color:var(--cyan); border-color:rgba(0,210,255,0.3); }
+.venue-btn.advance { color:var(--st-booked); border-color:rgba(34,197,94,0.3); }
+
+/* ── FINANCIALS ─────────────────────────────────────────────────── */
+.fin-card {
+  background:var(--card); border:1px solid var(--card-brd);
+  border-radius:12px; padding:0.85rem; margin-bottom:0.6rem;
+}
+.fin-row { display:flex; justify-content:space-between; font-size:0.75rem; margin:0.3rem 0; }
+.fin-row .lbl { color:var(--text-dim); }
+.fin-row .val { font-weight:600; }
+.fin-row.income .val { color:var(--st-booked); }
+.fin-row.expense .val { color:var(--expense); }
+.fin-total {
+  border-top:1px solid var(--card-brd); margin-top:0.5rem; padding-top:0.5rem;
+  font-size:0.85rem; font-weight:800;
+}
+
+.fin-stop-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:0.5rem 0; border-bottom:1px solid rgba(255,255,255,0.04);
+  font-size:0.72rem;
+}
+.fin-stop-row:last-child { border-bottom:none; }
+
+/* ── TODOS ──────────────────────────────────────────────────────── */
+.todo-item {
+  display:flex; align-items:center; gap:0.6rem;
+  background:var(--card); border:1px solid var(--card-brd);
+  border-radius:8px; padding:0.6rem 0.75rem; margin-bottom:0.35rem;
+}
+.todo-check {
+  width:22px; height:22px; border-radius:6px; border:2px solid var(--card-brd);
+  flex-shrink:0; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s;
+}
+.todo-check.done { background:var(--st-Current); border-color:var(--st-Current); }
+.todo-check.done::after { content:'✓'; color:white; font-size:0.7rem; font-weight:700; }
+.todo-text { font-size:0.78rem; flex:1; }
+.todo-text.done { text-decoration:line-through; color:var(--text-faint); }
+.todo-badge {
+  font-size:0.5rem; padding:2px 5px; border-radius:3px;
+  text-transform:uppercase; letter-spacing:0.03em; flex-shrink:0; font-weight:700;
+}
+.todo-badge.busking { background:rgba(22,101,52,0.2); color:var(--busking-l); }
+.todo-badge.venue { background:rgba(0,180,216,0.12); color:var(--gig-l); }
+.todo-badge.house_concert { background:rgba(217,119,6,0.15); color:var(--house-l); }
+.todo-badge.marketing { background:rgba(168,85,247,0.12); color:var(--merch); }
+.todo-badge.vehicle { background:rgba(239,68,68,0.1); color:var(--expense); }
+.todo-badge.ops { background:rgba(255,255,255,0.06); color:var(--text-dim); }
+
+/* ── QUICK-LOG FAB ──────────────────────────────────────────────── */
+.fab {
+  position:fixed; bottom:5rem; right:1rem; z-index:200;
+  width:52px; height:52px; border-radius:50%;
+  background:linear-gradient(135deg, var(--magenta), #b030d0);
+  border:none; color:white; font-size:1.5rem;
+  box-shadow:0 4px 16px rgba(217,70,239,0.4);
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:transform 0.2s;
+}
+.fab:active { transform:scale(0.9); }
+
+/* ── BOTTOM TAB BAR ─────────────────────────────────────────────── */
+.bottom-tabs {
+  position:fixed; bottom:0; left:0; right:0; z-index:150;
+  background:var(--glass); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--card-brd);
+  display:flex; padding:0.35rem 0.25rem; padding-bottom:env(safe-area-inset-bottom,0.35rem);
+}
+.bt-tab {
+  flex:1; background:none; border:none; color:var(--text-faint);
+  font-family:inherit; font-size:0.58rem; font-weight:600;
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  padding:0.4rem 0.15rem; cursor:pointer; transition:color 0.2s;
+  min-height:44px; justify-content:center;
+}
+.bt-tab .bt-icon { font-size:1.15rem; }
+.bt-tab.active { color:var(--cyan); }
+.bt-tab.active::before {
+  content:''; position:absolute; top:0; width:24px; height:2px;
+  background:var(--cyan); border-radius:0 0 2px 2px;
+}
+
+/* ── MODAL ──────────────────────────────────────────────────────── */
+.modal-overlay {
+  position:fixed; inset:0; z-index:300;
+  background:rgba(0,0,0,0.6); backdrop-filter:blur(4px);
+  display:none; align-items:flex-end; justify-content:center;
+}
+.modal-overlay.show { display:flex; }
+.modal-sheet {
+  background:var(--glass); border:1px solid var(--card-brd);
+  border-radius:16px 16px 0 0; width:100%; max-width:500px;
+  padding:1rem; max-height:85vh; overflow-y:auto;
+  animation:slideUp 0.3s ease;
+}
+@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.modal-hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; }
+.modal-title { font-size:0.9rem; font-weight:700; }
+.modal-close {
+  width:28px; height:28px; border-radius:50%; border:none;
+  background:rgba(255,255,255,0.06); color:var(--off-white);
+  font-size:1rem; cursor:pointer; font-family:inherit;
+}
+.modal-type-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:0.5rem; margin-bottom:0.8rem; }
+.modal-type-btn {
+  padding:0.6rem; border-radius:10px; border:1px solid var(--card-brd);
+  background:var(--card); color:var(--off-white); font-family:inherit;
+  font-size:0.75rem; font-weight:600; cursor:pointer; text-align:center;
+  transition:all 0.2s;
+}
+.modal-type-btn:active { background:var(--card-h); }
+.modal-type-btn.active { border-color:var(--cyan); background:rgba(0,210,255,0.08); }
+.modal-field { margin-bottom:0.6rem; }
+.modal-field label { display:block; font-size:0.65rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-dim); margin-bottom:0.25rem; }
+.modal-field input, .modal-field select, .modal-field textarea {
+  width:100%; padding:0.6rem; border-radius:8px;
+  border:1px solid var(--card-brd); background:rgba(0,0,0,0.3);
+  color:var(--off-white); font-family:inherit; font-size:0.85rem;
+  min-height:44px;
+}
+.modal-field input:focus, .modal-field select:focus, .modal-field textarea:focus {
+  outline:none; border-color:var(--cyan);
+}
+.modal-submit {
+  width:100%; padding:0.7rem; border-radius:10px; border:none;
+  background:linear-gradient(135deg, var(--cyan), #0090b0);
+  color:white; font-family:inherit; font-size:0.85rem; font-weight:700;
+  cursor:pointer; margin-top:0.4rem;
+}
+.modal-submit:active { opacity:0.8; }
+
+/* ── STOP DETAIL HEADER ─────────────────────────────────────────── */
+.stop-detail-hdr {
+  background:var(--card); border:1px solid var(--card-brd);
+  border-radius:12px; padding:0.85rem; margin-bottom:0.8rem;
+}
+.stop-detail-name { font-size:1.1rem; font-weight:800; }
+.stop-detail-meta { font-size:0.7rem; color:var(--text-dim); margin-top:0.15rem; }
+
+/* ── PRIORITIES ────────────────────────────────────────────────── */
+.priority-item {
+  display:flex; align-items:center; gap:0.6rem;
+  padding:0.6rem 0.75rem; background:var(--card);
+  border:1px solid var(--card-brd); border-radius:8px;
+  margin-bottom:0.35rem;
+}
+.priority-icon { font-size:1rem; flex-shrink:0; }
+.priority-text { font-size:0.75rem; }
+.priority-tag {
+  font-size:0.55rem; padding:2px 5px; border-radius:3px;
+  text-transform:uppercase; font-weight:700; flex-shrink:0; margin-left:auto;
+}
+
+/* ── MISC ───────────────────────────────────────────────────────── */
+.empty-state { text-align:center; padding:2rem; color:var(--text-faint); font-size:0.8rem; }
+.clickable { cursor:pointer; }
+.text-cyan { color:var(--cyan); }
+.text-green { color:var(--busking-l); }
+.text-amber { color:var(--house-l); }
+.text-dim { color:var(--text-dim); }
+.fmt-money { font-variant-numeric:tabular-nums; }
+.pct-badge { font-size:0.6rem; font-weight:700; padding:1px 5px; border-radius:3px; }
+
+/* Responsive */
+@media(min-width:768px) {
+  .stat-grid { grid-template-columns:repeat(4,1fr); }
+  .modal-sheet { border-radius:16px; max-width:450px; margin-bottom:1rem; }
+}
+@media(max-width:360px) {
+  body { font-size:14px; }
+  .stat-val { font-size:1.2rem; }
+}
+</style>
 </head>
 <body>
 
-  <!-- Dynamic OS Workspace Header -->
-  <header>
-    <div class="header-logo-group">
-      <img src="../00-raven-logo.jpg" alt="Dylan Crowe" class="header-logo" onerror="this.src='https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=100&auto=format&fit=crop&q=60'">
-      <div class="header-title-group">
-        <h1>MUSICIAN OS</h1>
-        <p>Telemetry & Tour Command</p>
-      </div>
+<!-- ═══ HEADER ═══ -->
+<header class="hdr">
+  <div class="hdr-logo">
+    <img src="../00-raven-logo.jpg" alt="Raven Logo" onerror="this.style.display='none'">
+    <div>
+      <div class="hdr-title">Tour OS</div>
+      <div class="hdr-sub" id="hdr-sub">—</div>
     </div>
-    <div class="header-actions">
-      <div class="header-status-badge">
-        <div class="status-pulse"></div>
-        <span>WORKSPACE ACTIVE</span>
-      </div>
+  </div>
+  <div class="hdr-eta" id="hdr-eta">—</div>
+</header>
+
+<!-- ═══ VIEW 1: COMMAND CENTER ═══ -->
+<section class="view active" id="view-command">
+  <div class="stat-grid" id="cmd-stats"></div>
+  <div class="section">
+    <div class="section-title">Current Stop</div>
+    <div id="cmd-current-stop"></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Today's Priorities</div>
+    <div id="cmd-priorities"></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Quick Tasks</div>
+    <div id="cmd-todos"></div>
+  </div>
+</section>
+
+<!-- ═══ VIEW 2: TOUR ROUTE ═══ -->
+<section class="view" id="view-route">
+  <div class="section">
+    <div class="section-title">Tour Route — 21 Stops</div>
+    <div class="timeline" id="route-timeline"></div>
+  </div>
+</section>
+
+<!-- ═══ VIEW 3: STOP DETAIL ═══ -->
+<section class="view" id="view-stop">
+  <div id="stop-detail-container"></div>
+</section>
+
+<!-- ═══ VIEW 4: PIPELINE ═══ -->
+<section class="view" id="view-pipeline">
+  <div class="section">
+    <div class="section-title">Venue Booking Pipeline</div>
+    <div id="pipeline-container"></div>
+  </div>
+</section>
+
+<!-- ═══ VIEW 5: FINANCIALS ═══ -->
+<section class="view" id="view-fin">
+  <div class="section">
+    <div class="section-title">Tour Financials</div>
+    <div id="fin-overview"></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Per-Stop Breakdown</div>
+    <div id="fin-stops"></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Recent Transactions</div>
+    <div id="fin-transactions"></div>
+  </div>
+</section>
+
+<!-- ═══ QUICK-LOG FAB ═══ -->
+<button class="fab" id="fab-btn" onclick="openQuickLog()">+</button>
+
+<!-- ═══ QUICK-LOG MODAL ═══ -->
+<div class="modal-overlay" id="ql-modal">
+  <div class="modal-sheet">
+    <div class="modal-hdr">
+      <div class="modal-title">Quick Log</div>
+      <button class="modal-close" onclick="closeQuickLog()">✕</button>
     </div>
-  </header>
+    <div class="modal-type-grid">
+      <button class="modal-type-btn active" data-ql-type="busking" onclick="selectQLType('busking')">🟢 Busking</button>
+      <button class="modal-type-btn" data-ql-type="gig" onclick="selectQLType('gig')">🔵 Gig Income</button>
+      <button class="modal-type-btn" data-ql-type="expense" onclick="selectQLType('expense')">🔴 Expense</button>
+      <button class="modal-type-btn" data-ql-type="spot" onclick="selectQLType('spot')">📍 Add Busking Spot</button>
+    </div>
+    <div id="ql-fields"></div>
+    <button class="modal-submit" onclick="submitQuickLog()">Log It</button>
+  </div>
+</div>
 
-  <!-- Interactive Dashboard Workspace -->
-  <main>
+<!-- ═══ BOTTOM TAB BAR ═══ -->
+<nav class="bottom-tabs">
+  <button class="bt-tab active" data-view="command" onclick="switchView('command')">
+    <span class="bt-icon">⌂</span>Command
+  </button>
+  <button class="bt-tab" data-view="route" onclick="switchView('route')">
+    <span class="bt-icon">🗺</span>Route
+  </button>
+  <button class="bt-tab" data-view="stop" onclick="switchView('stop')">
+    <span class="bt-icon">📌</span><span id="bt-stop-label">Stop</span>
+  </button>
+  <button class="bt-tab" data-view="pipeline" onclick="switchView('pipeline')">
+    <span class="bt-icon">⚙</span>Pipeline
+  </button>
+  <button class="bt-tab" data-view="fin" onclick="switchView('fin')">
+    <span class="bt-icon">$</span>Finance
+  </button>
+</nav>
 
-    <!-- Top Core High-Fidelity Stats Cards (Refined Visual Dual-Bucket trackers) -->
-    <section class="stats-container">
-      
-      <!-- Card 1: All time aggregate Tour Savings progress target tracker -->
-      <article class="card">
-        <div class="stat-card-title">
-          <span>Global Tour savings</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-        </div>
-        <div class="stat-card-main" id="stat-global-savings">
-          $0 <span>/ $15k</span>
-        </div>
-        <div class="progress-bar-linear">
-          <div class="progress-bar-linear-inner" id="progress-global-savings" style="width: 0%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan);"></div>
-        </div>
-        <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-muted); margin-top: 0.25rem;">
-          <span>Savings Progress</span>
-          <span class="color-cyan" id="pct-global-savings">0%</span>
-        </div>
-      </article>
+<script src="data.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════════════
+// MUSICIAN OS v2.0 — Dashboard Controller
+// ═══════════════════════════════════════════════════════════════
+const BRAND = {
+  busking: '#22c55e', gig: '#00d2ff', house: '#f59e0b', merch: '#a855f7', expense: '#ef4444'
+};
+const STAGE_COLORS = {
+  not_contacted:'#6b7280', called:'#3b82f6', emailed:'#8b5cf6',
+  follow_up_1:'#f59e0b', follow_up_2:'#f97316',
+  booked:'#22c55e', declined:'#ef4444', played:'#14b8a6'
+};
+const STAGE_LABELS = {
+  not_contacted:'Not Contacted', called:'Called', emailed:'Emailed',
+  follow_up_1:'Follow Up 1', follow_up_2:'Follow Up 2',
+  booked:'Booked', declined:'Declined', played:'Played'
+};
+const HC_STAGES = ['posted','interested','confirmed','completed','cancelled'];
+const VENUE_STAGES = ['not_contacted','called','emailed','follow_up_1','follow_up_2','booked','declined','played'];
 
-      <!-- Card 2: Current Net Income Overall ledger vs target -->
-      <article class="card">
-        <div class="stat-card-title">
-          <span>Net income performance</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--magenta)" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-        </div>
-        <div class="stat-card-main" id="stat-net-earnings">
-          $0 <span>/ $37k</span>
-        </div>
-        <div class="progress-bar-linear">
-          <div class="progress-bar-linear-inner" id="progress-net-earnings" style="width: 0%; background: var(--magenta); box-shadow: 0 0 8px var(--magenta);"></div>
-        </div>
-        <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-muted); margin-top: 0.25rem;">
-          <span>Target Progress</span>
-          <span class="color-magenta" id="pct-net-earnings">0%</span>
-        </div>
-      </article>
+// Load data
+let D = null;
+let selectedStopId = null;
+let activeTab = 'busking';
+let qlType = 'busking';
 
-      <!-- Card 3: Adelaide ground ops cash float bucket -->
-      <article class="card">
-        <div class="stat-card-title">
-          <span>Local Adelaide cash float</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-        </div>
-        <div class="stat-card-main color-green" id="stat-local-float">
-          $0 <span>Float</span>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border); margin-top: 0.45rem; padding-top: 0.35rem; font-size: 0.7rem; color: var(--text-muted);">
-          <div>Busked: <span class="color-green" id="stat-float-earned">$0</span></div>
-          <div style="text-align: right;">Spent: <span class="color-red" id="stat-float-spent">$0</span></div>
-        </div>
-      </article>
+function loadData() {
+  if (typeof window.DASHBOARD_DATA !== 'undefined') {
+    D = JSON.parse(JSON.stringify(window.DASHBOARD_DATA));
+  }
+  // Overlay localStorage changes
+  try {
+    const saved = localStorage.getItem('tourOS_edits');
+    if (saved) {
+      const edits = JSON.parse(saved);
+      // For now, simple merge — full implementation would patch individual entities
+    }
+  } catch(e) {}
+  if (!D) {
+    D = { meta:{}, config:{}, tour_stops:[], busking_spots:[], venues:[], house_concerts:[], financials:{}, ground_ops:{}, todos:[], income_history:[], expense_history:[], booking_summary:{}, marketing:[] };
+  }
+}
 
-      <!-- Card 4: Tour Stop progress and current target index tracker -->
-      <article class="card">
-        <div class="stat-card-title">
-          <span>Routing coverage</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-        </div>
-        <div class="stat-card-main" id="stat-stops-covered">
-          0 <span>/ 0 Stops</span>
-        </div>
-        <div class="progress-bar-linear">
-          <div class="progress-bar-linear-inner" id="progress-stops-covered" style="width: 0%; background: var(--amber); box-shadow: 0 0 8px var(--amber);"></div>
-        </div>
-        <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-muted); margin-top: 0.25rem;">
-          <span id="current-location-text">Adelaide</span>
-          <span class="color-amber" id="pct-stops-covered">0%</span>
-        </div>
-      </article>
+function saveEdits() {
+  // Save to localStorage for offline persistence
+  try { localStorage.setItem('tourOS_data', JSON.stringify(D)); } catch(e) {}
+}
 
-    </section>
+function fmt$(n) {
+  if (n === null || n === undefined) return '$0';
+  return '$' + Number(n).toLocaleString('en-AU', {maximumFractionDigits:0});
+}
+function fmtPct(n) {
+  return Math.round((n||0)) + '%';
+}
+function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
 
-    <!-- INTERACTIVE TOUR ROADMAP & PIPELINE (Dynamic creation panel block) -->
-    <section class="card timeline-card">
-      <div class="section-title">
-        <span>Tour Routing Control & Pipeline</span>
-        <span class="color-cyan" style="font-size: 0.7rem;" id="active-stop-marquee">CURRENT LOCATION: NONE</span>
-      </div>
-      <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.35rem;">
-        Click / tap any node in the roadmap sequence to active the inspector and update status, progress, or eliminate it.
-      </p>
+function getCurrentStop() {
+  if (!D.tour_stops) return null;
+  return D.tour_stops.find(s => s.status === 'Current') || D.tour_stops[0];
+}
 
-      <!-- Timeline Rail flow path -->
-      <div class="timeline-rail" id="roadflow-rail">
-        <div class="timeline-connecting-line"></div>
-        <div class="timeline-progress-line" id="timeline-progress-fill"></div>
-        <!-- Loaded via javascript renderer dynamic stops array -->
-      </div>
+function getStopVenues(stopId) {
+  return (D.venues||[]).filter(v => v.tour_stop_id === stopId);
+}
+function getStopBuskingSpots(stopId) {
+  return (D.busking_spots||[]).filter(b => b.tour_stop_id === stopId);
+}
+function getStopHouseConcerts(stopId) {
+  return (D.house_concerts||[]).filter(h => h.tour_stop_id === stopId);
+}
 
-      <!-- Collapsible Sub-Category Pipeline Drawer -->
-      <div class="sub-pipeline-drawer" id="sub-pipeline-drawer" style="display: none;">
-        <div class="sub-pipeline-header">
-          <span>🎯 Sub-Category Pipelines: <span id="sub-pipeline-stop-name" class="color-cyan">PERTH</span></span>
-          <span style="font-size: 0.65rem; text-transform: none; font-weight: normal; color: var(--text-muted);">Tap circles to toggle booking status</span>
-        </div>
-        
-        <!-- Track 1: Venues & Gigs -->
-        <div class="sub-track-row">
-          <div class="sub-track-label">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2.5"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
-            <span>🎫 Gigs & Venues</span>
-          </div>
-          <div class="sub-circles-container" id="sub-circles-venues">
-            <!-- Rendered dynamically -->
-          </div>
-        </div>
+// ═══ VIEW SWITCHING ═══
+function switchView(view) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  document.querySelectorAll('.bt-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.bt-tab[data-view="${view}"]`).classList.add('active');
 
-        <!-- Track 2: Busking pitches -->
-        <div class="sub-track-row">
-          <div class="sub-track-label">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--magenta)" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-            <span>⚡ Busking Pitches</span>
-          </div>
-          <div class="sub-circles-container" id="sub-circles-busking">
-            <!-- Rendered dynamically -->
-          </div>
-        </div>
+  if (view === 'command') renderCommand();
+  if (view === 'route') renderRoute();
+  if (view === 'stop') renderStopDetail();
+  if (view === 'pipeline') renderPipeline();
+  if (view === 'fin') renderFinancials();
+  window.scrollTo(0, 0);
+}
 
-        <!-- Track 3: House concerts -->
-        <div class="sub-track-row">
-          <div class="sub-track-label">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-            <span>🏠 House Concerts</span>
-          </div>
-          <div class="sub-circles-container" id="sub-circles-house">
-            <!-- Rendered dynamically -->
-          </div>
-        </div>
-      </div>
+// ═══ COMMAND CENTER ═══
+function renderCommand() {
+  const stop = getCurrentStop();
+  const fin = D.financials?.tour || D.financials || {};
+  const earnings = fin.current_earnings || 0;
+  const expenses = fin.total_expenses || 0;
+  const net = fin.net_earnings || (earnings - expenses);
+  const target = fin.target || 37000;
+  const progress = target > 0 ? (net / target * 100) : 0;
+  const groundOps = D.ground_ops || {};
+  const opBank = groundOps.operational_bank || 0;
 
-      <!-- Timeline Operations Node Editor & Stop adding tool Form -->
-      <div class="stop-editor-bar">
-        
-        <!-- Part A: Stop creation form -->
-        <div style="border-right: 1px solid var(--border); padding-right: 1rem;">
-          <h4 style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.5rem;">Create New Tour Stop</h4>
-          <form id="new-stop-form" style="display: flex; flex-direction: column; gap: 0.5rem;" onsubmit="return false;">
-            <input type="text" id="add-stop-name" placeholder="Stop Location (e.g., Byron Bay)" required autocomplete="off">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
-              <select id="add-stop-status" style="font-size: 0.8rem; padding: 0.45rem;">
-                <option value="Planned">Planned</option>
-                <option value="Current">Current</option>
-                <option value="Target">Target</option>
-                <option value="Completed">Completed</option>
-              </select>
-              <select id="add-stop-transit" style="font-size: 0.8rem; padding: 0.45rem;">
-                <option value="Scheduled">Scheduled</option>
-                <option value="Arrived">Arrived</option>
-                <option value="Departed">Departed</option>
-                <option value="Dreaming">Dreaming</option>
-              </select>
-            </div>
-            <button type="button" class="btn btn-primary" id="btn-add-stop" style="min-height: 38px; width: 100%;">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-              Add Timeline Stop
-            </button>
-          </form>
-        </div>
+  // Stat cards
+  const stopsDone = (D.tour_stops||[]).filter(s => s.status === 'Completed').length;
+  const totalStops = (D.tour_stops||[]).length;
+  document.getElementById('cmd-stats').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">Tour Net</div>
+      <div class="stat-val fmt-money" style="color:${net>=0?'var(--st-booked)':'var(--expense)'}">${fmt$(net)}</div>
+      <div class="stat-sub">of ${fmt$(target)} target</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="width:${clamp(progress,0,100)}%;background:var(--cyan)"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Gross Earned</div>
+      <div class="stat-val fmt-money">${fmt$(earnings)}</div>
+      <div class="stat-sub">${fmtPct(progress)} to goal</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Ground Float</div>
+      <div class="stat-val fmt-money" style="color:var(--amber)">${fmt$(opBank)}</div>
+      <div class="stat-sub">Adelaide ops</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Route</div>
+      <div class="stat-val">${stopsDone}/${totalStops}</div>
+      <div class="stat-sub">stops done</div>
+    </div>
+  `;
 
-        <!-- Part B: Interactive stop status selector inspector -->
-        <div id="timeline-inspector-pane">
-          <h4 style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.5rem;">Stop Inspector</h4>
-          <div id="inspector-placeholder" style="font-style: italic; font-size: 0.8rem; color: var(--text-muted); padding: 1rem 0;">
-            Select any stop node on the timeline above to edit metrics or remove it.
-          </div>
-          <div id="inspector-editor" style="display: none; flex-direction: column; gap: 0.75rem; width: 100%;">
-            <!-- Status & Transit Controls Row -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; align-items: center; width: 100%;">
-              <div>
-                <label id="inspector-stop-label" style="font-size: 0.75rem; font-weight: 700; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--cyan);"></label>
-              </div>
-              <div>
-                <select id="inspect-status" style="font-size: 0.8rem; padding: 0.45rem;">
-                  <option value="Planned">Planned</option>
-                  <option value="Current">Current</option>
-                  <option value="Target">Target</option>
-                  <option value="Completed">Completed</option>
-                </select>
-              </div>
-              <div>
-                <select id="inspect-transit" style="font-size: 0.8rem; padding: 0.45rem;">
-                  <option value="Scheduled">Scheduled</option>
-                  <option value="Arrived">Arrived</option>
-                  <option value="Departed">Departed</option>
-                  <option value="Dreaming">Dreaming</option>
-                </select>
-              </div>
-            </div>
+  // Current stop summary
+  if (stop) {
+    const bT = stop.targets?.busking || {};
+    const bA = stop.actuals?.busking || {};
+    const gT = stop.targets?.venue_gig || {};
+    const gA = stop.actuals?.venue_gig || {};
+    const hT = stop.targets?.house_concert || {};
+    const hA = stop.actuals?.house_concert || {};
 
-            <!-- Gigs Edit Control Row -->
-            <div style="display: flex; gap: 1rem; align-items: center; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: 10px; padding: 0.5rem 0.75rem; width: 100%;">
-              <div style="flex-grow: 1; display: flex; align-items: center; gap: 0.5rem;">
-                <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); white-space: nowrap;">Gigs Target:</span>
-                <button type="button" class="btn" id="inspect-btn-target-minus" style="min-height: 28px; height: 28px; width: 28px; padding: 0; font-size: 0.85rem; border-radius: 6px;">-</button>
-                <input type="number" id="inspect-gigs-target" style="width: 45px; text-align: center; padding: 0.25rem; font-size: 0.85rem; height: 28px; border-radius: 6px;" min="0">
-                <button type="button" class="btn" id="inspect-btn-target-plus" style="min-height: 28px; height: 28px; width: 28px; padding: 0; font-size: 0.85rem; border-radius: 6px;">+</button>
-              </div>
-
-              <div style="flex-grow: 1; display: flex; align-items: center; gap: 0.5rem;">
-                <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); white-space: nowrap;">Gigs Booked:</span>
-                <button type="button" class="btn" id="inspect-btn-booked-minus" style="min-height: 28px; height: 28px; width: 28px; padding: 0; font-size: 0.85rem; border-radius: 6px;">-</button>
-                <input type="number" id="inspect-gigs-booked" style="width: 45px; text-align: center; padding: 0.25rem; font-size: 0.85rem; height: 28px; border-radius: 6px;" min="0">
-                <button type="button" class="btn" id="inspect-btn-booked-plus" style="min-height: 28px; height: 28px; width: 28px; padding: 0; font-size: 0.85rem; border-radius: 6px;">+</button>
-              </div>
-
-              <div id="inspector-badge-container" style="min-width: 130px; text-align: right;">
-                <!-- Dynamically Rendered Booking Status Badge -->
-              </div>
-            </div>
-
-            <!-- Operations / Actions Row -->
-            <div style="display: flex; justify-content: flex-end; gap: 0.5rem; width: 100%;">
-              <button type="button" class="btn btn-primary" id="inspect-btn-active" style="min-height: 34px; padding: 0.45rem 1rem; font-size: 0.75rem;">Set Active</button>
-              <button type="button" class="btn btn-danger" id="inspect-btn-delete" style="min-height: 34px; padding: 0.45rem 1rem; font-size: 0.75rem;" title="Delete stop">Delete Stop</button>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- COLUMN GRID MAIN WORKSPACE -->
-    <div class="layout-columns">
-
-      <!-- COLUMN 1: TWO-TIERED TODO LIST CARD -->
-      <section class="card" style="display: flex; flex-direction: column; gap: 0.85rem;">
-        <div class="section-title">
-          <span>Tour Checklist Control</span>
-          <span style="font-size: 0.7rem; color: var(--cyan); font-weight: 700;" id="tally-todos">0 Remaining</span>
-        </div>
-
-        <!-- Add Custom Task Form -->
-        <form id="todo-add-form" style="display: grid; grid-template-columns: 2fr 1.2fr 1fr 0.5fr; gap: 0.45rem;" onsubmit="return false;">
-          <input type="text" id="add-todo-task" placeholder="Create checklist item..." required autocomplete="off">
-          <select id="add-todo-tier" style="font-size: 0.8rem;">
-            <option value="daily">Today's Grind</option>
-            <option value="weekly">Weekly Milestones</option>
-          </select>
-          <select id="add-todo-cat" style="font-size: 0.8rem;">
-            <option value="daily_shit">⚡ Daily Shit</option>
-            <option value="tour_booking">🎫 Booking</option>
-            <option value="road_cargo">📦 Road Cargo</option>
-          </select>
-          <button type="button" class="btn btn-primary" id="btn-add-todo" style="padding: 0;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-          </button>
-        </form>
-
-        <div class="todo-columns">
-          
-          <!-- Tier 1: Today's Grind (High priority, cleanable state) -->
+    document.getElementById('cmd-current-stop').innerHTML = `
+      <div class="stop-detail-hdr">
+        <div style="display:flex;justify-content:space-between;align-items:center">
           <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; padding: 0 0.25rem;">
-              <h4 style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--magenta);">⚡ Today's Grind</h4>
-              <button type="button" class="btn" id="btn-wipe-daily" style="min-height:24px; padding: 0.15rem 0.45rem; font-size: 0.65rem; border-color: rgba(255,46,147,0.2); color: var(--magenta); background: rgba(255,46,147,0.02);" title="Wipe complete daily lists">Wipe clean</button>
-            </div>
-            <div class="list-tier-container" id="container-daily-todos">
-              <!-- JS rendered lists -->
-            </div>
+            <div class="stop-detail-name">${stop.name}, ${stop.state}</div>
+            <div class="stop-detail-meta">${stop.segment_type} · ${stop.est_duration_days} days · ${stop.transit_status}</div>
           </div>
-
-          <!-- Tier 2: Weekly Milestones (Long-term targets) -->
-          <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; padding: 0 0.25rem;">
-              <h4 style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cyan);">📅 Weekly Milestones</h4>
-              <button type="button" class="btn" id="btn-reset-todos-default" style="min-height:24px; padding: 0.15rem 0.45rem; font-size: 0.65rem; border-color: rgba(0,210,255,0.2); color: var(--cyan); background: rgba(0,210,255,0.02)">Reset default</button>
-            </div>
-            <div class="list-tier-container" id="container-weekly-todos">
-              <!-- JS rendered lists -->
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- COLUMN 2: DUAL-BUCKET LEDGER SECTION (Revenue & expense stream ledger) -->
-      <section class="card" style="display: flex; flex-direction: column; gap: 0.85rem;">
-        <div class="section-title">
-          <span>Dual-Bucket Expensing Ledger</span>
-          <span style="font-size: 0.7rem; color: var(--magenta); font-weight: 700;">TRANSACTION LEDGER</span>
-        </div>
-
-        <!-- Ledger filter tools and summaries -->
-        <div class="ledger-summary-row">
-          <div class="ledger-bucket-subcard" style="border-color: rgba(0,230,118,0.15);">
-            <div style="font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Local Adelaide Float Balance</div>
-            <div style="font-size: 1.15rem; font-weight: 700; margin-top: 0.1rem;" id="ledger-val-float">$0.00</div>
-          </div>
-          <div class="ledger-bucket-subcard" style="border-color: rgba(0,210,255,0.15);">
-            <div style="font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Global Savings Balance</div>
-            <div style="font-size: 1.15rem; font-weight: 700; margin-top: 0.1rem;" id="ledger-val-savings">$0.00</div>
-          </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 0.5rem;">
-          <input type="text" id="ledger-search" placeholder="Search logs (e.g. Fuel, Rundle)..." style="padding: 0.45rem 0.75rem; font-size: 0.8rem;">
-          <select id="ledger-filter-bucket" style="font-size: 0.8rem; padding: 0.45rem 0.75rem;">
-            <option value="all">All Buckets</option>
-            <option value="Local Adelaide Float">Local Adelaide Float</option>
-            <option value="Global Tour Savings">Global Tour Savings</option>
-          </select>
-        </div>
-
-        <!-- Scrollable Transaction Ledger Table -->
-        <div class="ledger-table-container">
-          <table class="ledger-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Description</th>
-                <th>Category</th>
-                <th>Bucket</th>
-                <th style="text-align: right;">Amount</th>
-                <th style="width: 30px;"></th>
-              </tr>
-            </thead>
-            <tbody id="ledger-tbody">
-              <!-- Loaded dynamically -->
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Transaction Logging Form -->
-        <form id="ledger-add-form" style="display: flex; flex-direction: column; gap: 0.55rem; background: rgba(255,255,255,0.01); border: 1px solid var(--border); padding: 0.85rem; border-radius: 12px;" onsubmit="return false;">
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem;">
-            <div>
-              <span style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Transaction Type</span>
-              <div class="segmented-control">
-                <input type="radio" id="tx-type-rev" name="tx-type" value="revenue" checked>
-                <label for="tx-type-rev">Revenue (+)</label>
-                <input type="radio" id="tx-type-exp" name="tx-type" value="expense">
-                <label for="tx-type-exp">Expense (-)</label>
-              </div>
-            </div>
-            <div>
-              <span style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Linked Bucket Target</span>
-              <select id="tx-bucket" style="font-size: 0.8rem; padding: 0.52rem 0.65rem;">
-                <option value="Local Adelaide Float">Local Adelaide Float</option>
-                <option value="Global Tour Savings">Global Tour Savings</option>
-              </select>
-            </div>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem;">
-            <div>
-              <span style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Log Category</span>
-              <select id="tx-category" style="font-size: 0.8rem; padding: 0.55rem 0.65rem;">
-                <option value="Busking">Busking</option>
-                <option value="Gig Pay">Venue Gig Pay</option>
-                <option value="House Concert">House Concert</option>
-                <option value="Merch">Merch Sales</option>
-                <option value="Fuel">Fuel Cost</option>
-                <option value="Gear Replacement">Gear replacement</option>
-                <option value="Food & Drink">Food & Drink</option>
-                <option value="Accommodation">Accommodation</option>
-                <option value="Transit Tolls">Transit Tolls</option>
-                <option value="Other">Other Miscellaneous</option>
-              </select>
-            </div>
-            <div>
-              <span style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Amount ($ AUD)</span>
-              <input type="number" id="tx-amount" placeholder="e.g. 150" required min="0.01" step="any">
-            </div>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 0.55rem;">
-            <div>
-              <span style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Description</span>
-              <input type="text" id="tx-desc" placeholder="e.g. Friday Rundle Mall session" required autocomplete="off">
-            </div>
-            <div>
-              <span style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Date</span>
-              <input type="date" id="tx-date">
-            </div>
-          </div>
-
-          <button type="button" class="btn btn-magenta" id="btn-log-tx" style="font-weight: 700; width: 100%; margin-top: 0.25rem;">
-            Log Transaction Record
-          </button>
-        </form>
-      </section>
-
-    </div>
-
-    <!-- LOWER CARD SPLIT GRID: EARNINGS PROJECTOR SANDBOX & ASSET TELEMETRY -->
-    <div class="layout-columns">
-
-      <!-- COLUMN A: INTERACTIVE BUDGET PROJECTION SANDBOX -->
-      <section class="card">
-        <div class="section-title">
-          <span>Earnings Projection Sandbox</span>
-          <span class="color-cyan" style="font-size: 0.7rem;">CALCULATOR</span>
-        </div>
-        <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.85rem;">
-          Estimate cumulative outcome by dragging inputs across Dylan's 16-week itinerary matrix variables!
-        </p>
-
-        <div class="sandbox-sliders-row">
-          
-          <!-- Sliders adjust variables -->
-          <div>
-            <div class="slider-container">
-              <div class="slider-header">
-                <span>Avg Venue Gig Fee</span>
-                <span class="slider-val" id="val-gig-fee">$400</span>
-              </div>
-              <input type="range" class="range-input" id="slide-gig-fee" min="200" max="1000" step="25" value="400">
-            </div>
-
-            <div class="slider-container">
-              <div class="slider-header">
-                <span>Avg House Concert Profit</span>
-                <span class="slider-val" id="val-house-fee">$650</span>
-              </div>
-              <input type="range" class="range-input" id="slide-house-fee" min="300" max="1500" step="50" value="650">
-            </div>
-
-            <div class="slider-container">
-              <div class="slider-header">
-                <span>Avg Busking Profit</span>
-                <span class="slider-val" id="val-busk-fee">$250</span>
-              </div>
-              <input type="range" class="range-input" id="slide-busk-fee" min="100" max="600" step="10" value="250">
-            </div>
-          </div>
-
-          <!-- Dynamic Output panel representation -->
-          <div style="background: rgba(255,255,255,0.01); border: 1px solid var(--border); border-radius: 12px; padding: 0.85rem; display: flex; flex-direction: column; justify-content: space-between;">
-            <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.35rem;">
-              <div style="display: flex; justify-content: space-between;">
-                <span>58 Venue Gigs Total:</span>
-                <span id="label-sub-gigs" style="font-family: monospace;">$23,200</span>
-              </div>
-              <div style="display: flex; justify-content: space-between;">
-                <span>16 House Concerts:</span>
-                <span id="label-sub-house" style="font-family: monospace;">$10,400</span>
-              </div>
-              <div style="display: flex; justify-content: space-between;">
-                <span>60 Busking Pitches:</span>
-                <span id="label-sub-busk" style="font-family: monospace;">$15,000</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; color: var(--red); border-bottom: 1px solid var(--border); padding-bottom: 0.35rem;">
-                <span>Estimated Tour Expenses:</span>
-                <span style="font-family: monospace;">-$5,520</span>
-              </div>
-            </div>
-            <div style="text-align: center; margin-top: 0.65rem;">
-              <div style="font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted);">Estimated Net Profit</div>
-              <div style="font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em;" id="label-net-proj" class="color-green">$43,080</div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- COLUMN B: VAN INSTRUMENT & ASSET TELEMETRY -->
-      <section class="card">
-        <div class="section-title">
-          <span>Campervan Telemetry and Vital Indicators</span>
-          <span style="font-size: 0.7rem; color: var(--amber);">RIG SYSTEM</span>
-        </div>
-        <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.85rem;">
-          Simulates live rig monitoring checks. Fresh water level recalculates relative to the distance between route nodes!
-        </p>
-
-        <div class="telemetry-grid">
-          
-          <div class="telemetry-item">
-            <div class="tel-metric-title">
-              <span>House Battery Bank</span>
-              <span class="color-green" id="tel-val-battery-pct">92%</span>
-            </div>
-            <div class="tel-metric-value" id="tel-val-battery">13.2 V</div>
-            <div class="progressbar-track">
-              <div class="progressbar-fill" style="width: 92%; background: var(--green);"></div>
-            </div>
-          </div>
-
-          <div class="telemetry-item">
-            <div class="tel-metric-title">
-              <span>Fresh Water reserves</span>
-              <span class="color-cyan" id="tel-val-water-pct">82%</span>
-            </div>
-            <div class="tel-metric-value" id="tel-val-water">115 L</div>
-            <div class="progressbar-track">
-              <div class="progressbar-fill" id="tel-fill-water" style="width: 82%; background: var(--cyan);"></div>
-            </div>
-          </div>
-
-          <div class="telemetry-item">
-            <div class="tel-metric-title">
-              <span>Solar Charge input</span>
-              <span class="color-amber">ACTIVE</span>
-            </div>
-            <div class="tel-metric-value" id="tel-val-solar">245 W</div>
-            <div class="progressbar-track">
-              <div class="progressbar-fill" style="width: 65%; background: var(--amber);"></div>
-            </div>
-          </div>
-
-          <div class="telemetry-item">
-            <div class="tel-metric-title">
-              <span>Van Diesel range</span>
-              <span style="color: #eab308;" id="tel-val-fuel-pct">68%</span>
-            </div>
-            <div class="tel-metric-value" id="tel-val-fuel">480 km</div>
-            <div class="progressbar-track">
-              <div class="progressbar-fill" style="width: 68%; background: #eab308;"></div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-    </div>
-
-    <!-- DEVELOPMENT RAW METRICS SYNC & JSON BACKUP DEVTOOLS -->
-    <section class="card dev-sync-card">
-      <div class="section-title">
-        <span style="color: var(--cyan);">Developer Sandbox & Database Sync Controls</span>
-        <span style="font-size: 0.65rem; color: var(--cyan); font-weight: 700;">RAW LOCAL STORAGE BACKUPS</span>
-      </div>
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">
-        This workspace persists dynamically inside your local computer browser. You can export the raw state JSON representation to manually align `data.json` offline, clear overrides to revert, or import backups directly!
-      </p>
-
-      <div style="display: grid; grid-template-columns: 1.2fr 2fr; gap: 1rem;">
-        <div style="display: flex; flex-direction: column; gap: 0.45rem;">
-          <button type="button" class="btn btn-primary" id="btn-copy-json" style="width: 100%;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
-            Copy Workspace State JSON
-          </button>
-          <button type="button" class="btn btn-danger" id="btn-clear-workspace" style="width: 100%;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-            Clear overriding database
-          </button>
-        </div>
-        <div style="display: flex; gap: 0.45rem; align-items: flex-start;">
-          <textarea id="import-json-area" placeholder="Paste overriding state JSON payload matches here..." style="font-family: monospace; font-size: 0.75rem; height: 92px; flex-grow: 1; resize: none;"></textarea>
-          <button type="button" class="btn" id="btn-import-json" style="height: 92px; width: 85px;">Import</button>
+          <span class="stop-badge current">Current</span>
         </div>
       </div>
-    </section>
+      ${renderStreamMini('busking','🟢 Busking', bA.earnings_actual, bT.earnings_target, bA.sessions_completed, bT.sessions_target, 'sessions')}
+      ${renderStreamMini('gig','🔵 Venue Gigs', gA.earnings_actual, gT.earnings_target, gA.gigs_played, gT.gigs_target, 'gigs')}
+      ${renderStreamMini('house','🏠 House Concerts', hA.earnings_actual, hT.earnings_target, hA.shows_completed, hT.shows_target, 'shows')}
+    `;
+  } else {
+    document.getElementById('cmd-current-stop').innerHTML = '<div class="empty-state">No active stop</div>';
+  }
 
-  </main>
+  // Priorities (computed from pipeline state)
+  const priorities = computePriorities(stop);
+  document.getElementById('cmd-priorities').innerHTML = priorities.length
+    ? priorities.map(p => `
+      <div class="priority-item">
+        <span class="priority-icon">${p.icon}</span>
+        <span class="priority-text">${p.text}</span>
+        <span class="priority-tag" style="background:${p.color}22;color:${p.color}">${p.tag}</span>
+      </div>`).join('')
+    : '<div class="empty-state">All caught up 🎉</div>';
 
-  <!-- Footer link items -->
-  <footer style="margin-top: 3rem; text-align: center; font-size: 0.74rem; color: var(--text-muted);">
-    <p>Dylan Crowe Musician OS Dashboard &copy; 2026. Made with ❤️ for road-trips. Back to <a href="../index.html" style="color: var(--cyan); text-decoration: none;">Main EPK</a> or <a href="../financials/index.html" style="color: var(--cyan); text-decoration: none;">Projections Detail</a>.</p>
-  </footer>
+  // Quick todos
+  const todos = (D.todos||[]).filter(t => !t.completed).slice(0,5);
+  document.getElementById('cmd-todos').innerHTML = todos.length
+    ? todos.map(t => renderTodoItem(t)).join('')
+    : '<div class="empty-state">No pending tasks</div>';
 
-  <!-- OS APPLICATION ENGINE CONTROLLER CODE -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      
-      const LOCAL_STORAGE_KEY = "musician_os_workspace_state";
-      
-      // Default base records loaded if no LocalStorage override exists
-      const DEFAULT_APP_STATE = {
-        tour_stops: [
-          { id: 1, name: "Perth", status: "Current", transit_status: "Arrived", gigs_target: 4, gigs_booked: 0 },
-          { id: 2, name: "Fremantle", status: "Planned", transit_status: "Scheduled", gigs_target: 3, gigs_booked: 0 },
-          { id: 3, name: "Bunbury", status: "Planned", transit_status: "Scheduled", gigs_target: 2, gigs_booked: 0 },
-          { id: 4, name: "Margaret River", status: "Planned", transit_status: "Scheduled", gigs_target: 4, gigs_booked: 0 },
-          { id: 5, name: "Albany", status: "Planned", transit_status: "Scheduled", gigs_target: 2, gigs_booked: 0 },
-          { id: 6, name: "Esperance", status: "Planned", transit_status: "Scheduled", gigs_target: 1, gigs_booked: 0 },
-          { id: 7, name: "Kalgoorlie", status: "Planned", transit_status: "Scheduled", gigs_target: 2, gigs_booked: 0 },
-          { id: 8, name: "Adelaide", status: "Planned", transit_status: "Scheduled", gigs_target: 4, gigs_booked: 0 },
-          { id: 9, name: "Mount Gambier", status: "Planned", transit_status: "Scheduled", gigs_target: 1, gigs_booked: 0 },
-          { id: 10, name: "Warrnambool", "status": "Planned", transit_status: "Scheduled", gigs_target: 1, gigs_booked: 0 },
-          { id: 11, name: "Geelong/Torquay", "status": "Planned", transit_status: "Scheduled", gigs_target: 3, gigs_booked: 0 },
-          { id: 12, name: "Melbourne", "status": "Planned", transit_status: "Scheduled", gigs_target: 5, gigs_booked: 0 },
-          { id: 13, name: "Sydney", "status": "Planned", transit_status: "Scheduled", gigs_target: 5, gigs_booked: 0 },
-          { id: 14, name: "Newcastle", "status": "Planned", transit_status: "Scheduled", gigs_target: 3, gigs_booked: 0 },
-          { id: 15, name: "Port Macquarie", "status": "Planned", transit_status: "Scheduled", gigs_target: 2, gigs_booked: 0 },
-          { id: 16, name: "Coffs Harbour", "status": "Planned", transit_status: "Scheduled", gigs_target: 2, gigs_booked: 0 },
-          { id: 17, name: "Byron Bay", "status": "Planned", transit_status: "Scheduled", gigs_target: 4, gigs_booked: 0 },
-          { id: 18, name: "Brunswick Heads", "status": "Planned", transit_status: "Scheduled", gigs_target: 1, gigs_booked: 0 },
-          { id: 19, name: "Gold Coast", "status": "Planned", transit_status: "Scheduled", gigs_target: 3, gigs_booked: 0 },
-          { id: 20, name: "Brisbane", "status": "Planned", transit_status: "Scheduled", gigs_target: 4, gigs_booked: 0 },
-          { id: 21, name: "Sunshine Coast", "status": "Target", transit_status: "Dreaming", gigs_target: 4, gigs_booked: 0 }
-        ],
-        todos: [
-          { id: 1, task: "Service oil", completed: false, is_weekly: true, category: "road_cargo" },
-          { id: 2, task: "Fuel to parks", completed: false, is_weekly: false, category: "road_cargo" },
-          { id: 3, task: "Organize busking cash float", completed: false, is_weekly: false, category: "daily_shit" },
-          { id: 4, task: "Verify council permits", completed: false, is_weekly: true, category: "tour_booking" }
-        ],
-        ledger: [
-          { id: "tx_1", type: "expense", category: "Fuel", amount: 350.0, bucket: "Local Adelaide Float", date: "2026-06-20", description: "Nullarbor crossing fuel purchase" },
-          { id: "tx_2", type: "expense", category: "Gear Replacement", amount: 120.0, bucket: "Global Tour Savings", date: "2026-06-22", description: "Spare XLR leads and guitar strings" },
-          { id: "tx_3", type: "revenue", category: "Gig Pay", amount: 1200.0, bucket: "Global Tour Savings", date: "2026-06-25", description: "Adelaide Grace Emily Hotel guarantee pay" },
-          { id: "tx_4", type: "revenue", category: "Busking", amount: 350.0, bucket: "Local Adelaide Float", date: "2026-06-26", description: "Rundle Mall late afternoon pitch" },
-          { id: "tx_5", type: "revenue", category: "Busking", amount: 450.0, bucket: "Local Adelaide Float", date: "2026-06-26", description: "Adelaide central market morning set" },
-          { id: "tx_6", type: "expense", category: "Food & Drink", amount: 180.0, bucket: "Local Adelaide Float", date: "2026-06-26", description: "Van groceries and dog supplies" }
-        ],
-        sandbox: {
-          gig_fee: 400,
-          house_fee: 650,
-          busk_fee: 250
-        }
-      };
+  // Header
+  document.getElementById('hdr-sub').textContent = stop ? `${stop.name} · ${stop.transit_status}` : 'Tour OS';
+  document.getElementById('hdr-eta').textContent = `${fmtPct(progress)} to $37K`;
+}
 
-      // Active operational state variable
-      let state = {};
-      let inspectingStopId = null;
+function renderStreamMini(streamType, label, actual, target, done, total, unit) {
+  const pct = target > 0 ? (actual/target*100) : 0;
+  const unitPct = total > 0 ? (done/total*100) : 0;
+  return `
+    <div class="stream-card" onclick="switchView('stop')" style="cursor:pointer">
+      <div class="stream-icon ${streamType}">${streamType==='busking'?'🟢':streamType==='gig'?'🔵':'🏠'}</div>
+      <div class="stream-body">
+        <div style="display:flex;justify-content:space-between">
+          <span class="stream-name">${label}</span>
+          <span class="stream-amt">${fmt$(actual)} / ${fmt$(target)}</span>
+        </div>
+        <div class="stream-bar"><div class="stream-bar-fill ${streamType}" style="width:${clamp(pct,0,100)}%"></div></div>
+        <div class="stream-amt" style="margin-top:0.25rem">${done}/${total} ${unit} · ${fmtPct(unitPct)}</div>
+      </div>
+    </div>`;
+}
 
-      // Initialize the state model completely
-      async function initializeWorkspaceState() {
-        const rawLocal = localStorage.getItem(LOCAL_STORAGE_KEY);
-        if (rawLocal) {
-          try {
-            state = JSON.parse(rawLocal);
-            // Verify structural completeness
-            if (!state.tour_stops || !state.todos || !state.ledger || !state.sandbox) {
-              throw new Error("Local state properties incomplete");
-            }
-            // Ensure gigs_target and gigs_booked are populated for existing saved stops
-            state.tour_stops.forEach(s => {
-              if (s.gigs_target === undefined) s.gigs_target = 3;
-              if (s.gigs_booked === undefined) s.gigs_booked = 0;
-            });
-          } catch (e) {
-            console.error("Local override parsing failed, reverting to seeds:", e);
-            loadBaseDefaults();
-          }
-        } else {
-          loadBaseDefaults();
-        }
+function computePriorities(stop) {
+  const p = [];
+  if (!stop) return p;
+  const venues = getStopVenues(stop.id);
+  const spots = getStopBuskingSpots(stop.id);
+  const hcs = getStopHouseConcerts(stop.id);
 
-        // Apply fallback dynamic CORS loader checks
-        await fetchRemoteDataJsonFallback();
+  // Venues needing follow-up
+  const needFollow = venues.filter(v => ['emailed','follow_up_1'].includes(v.pipeline_stage));
+  needFollow.forEach(v => {
+    p.push({icon:'📞', text:`Follow up with ${v.name} — ${STAGE_LABELS[v.pipeline_stage]||v.pipeline_stage}`, color:'#f59e0b', tag:'Gig'});
+  });
 
-        saveStateToLocal();
-        renderEverything();
-      }
+  // Venues not contacted
+  const notContacted = venues.filter(v => v.pipeline_stage === 'not_contacted');
+  if (notContacted.length) {
+    p.push({icon:'☎️', text:`Call ${notContacted[0].name} — ${notContacted[0].phone||'no phone'}`, color:'#3b82f6', tag:'Call'});
+  }
 
-      function loadBaseDefaults() {
-        state = JSON.parse(JSON.stringify(DEFAULT_APP_STATE));
-        inspectingStopId = null;
-      }
+  // House concerts needing seeding
+  const hcPosted = hcs.filter(h => h.pipeline_stage === 'posted' || h.pipeline_stage === 'interested');
+  if (hcPosted.length) {
+    p.push({icon:'🏠', text:`Nudge ${hcPosted[0].host_name} — house concert ${hcPosted[0].pipeline_stage}`, color:'#f59e0b', tag:'House'});
+  }
 
-      // Merge defaults with static window injections or live JSON matches
-      async function fetchRemoteDataJsonFallback() {
-        // Preference 1: Window object injection loaded via data.js in head
-        if (window.DASHBOARD_DATA) {
-          console.log("Found dashboard_data injection, aligning stats", window.DASHBOARD_DATA);
-          mergeServerProperties(window.DASHBOARD_DATA);
-          return;
-        }
+  // Busking spots spotted but not played
+  const spotted = spots.filter(s => s.status === 'spotted' || s.status === 'confirmed');
+  if (spotted.length) {
+    p.push({icon:'🟢', text:`Play ${spotted[0].name} — scouted, ready to busk`, color:'#22c55e', tag:'Busk'});
+  }
 
-        // Preference 2: data.json fetch fallback
-        try {
-          const resp = await fetch("data.json");
-          if (resp.ok) {
-            const externalData = await resp.json();
-            console.log("Parsed remote data.json payload matches:", externalData);
-            mergeServerProperties(externalData);
-          }
-        } catch (e) {
-          console.log("CORS/Offline blocking data.json fetch. Relying on baseline templates.");
-        }
-      }
+  // Marketing — reels to capture
+  const bookedGigs = venues.filter(v => v.pipeline_stage === 'booked');
+  if (bookedGigs.length) {
+    const v = bookedGigs[0];
+    if (!v.marketing?.reels_captured) {
+      p.push({icon:'🎬', text:`Capture reels at ${v.name}`, color:'#a855f7', tag:'Content'});
+    }
+  }
 
-      function mergeServerProperties(ext) {
-        if (!ext) return;
-        
-        // Merge server stops if present
-        if (ext.tour_stops && Array.isArray(ext.tour_stops) && ext.tour_stops.length > 0) {
-          // Check if user has unmodified state or if we should align stops index
-          state.tour_stops = ext.tour_stops.map(s => {
-            return {
-              id: s.id,
-              name: s.name,
-              status: s.status,
-              transit_status: s.transit_status,
-              gigs_target: s.gigs_target !== undefined ? s.gigs_target : 3,
-              gigs_booked: s.gigs_booked !== undefined ? s.gigs_booked : 0
-            };
-          });
-        }
+  return p.slice(0, 5);
+}
 
-        // Merge server todos if present and matches seed count
-        if (ext.todos && Array.isArray(ext.todos) && ext.todos.length > 0) {
-          // If we haven't overridden todos, map them
-          const matchedTodosCount = state.todos.filter(t => typeof t.id === 'number').length;
-          if (matchedTodosCount <= 4) {
-            state.todos = ext.todos.map((t, index) => {
-              let cat = "daily_shit";
-              const taskLower = t.task.toLowerCase();
-              if (taskLower.includes("oil") || taskLower.includes("fuel") || taskLower.includes("van")) {
-                cat = "road_cargo";
-              } else if (taskLower.includes("permit") || taskLower.includes("council") || taskLower.includes("booking") || taskLower.includes("venue")) {
-                cat = "tour_booking";
-              }
-              return {
-                id: t.id || index + 1,
-                task: t.task,
-                completed: t.completed || false,
-                is_weekly: t.is_weekly !== undefined ? t.is_weekly : (index % 2 === 0),
-                category: cat
-              };
-            });
-          }
-        }
-      }
+function renderTodoItem(t) {
+  const cat = t.category || 'ops';
+  return `
+    <div class="todo-item" onclick="toggleTodo(${t.id})">
+      <div class="todo-check ${t.completed?'done':''}"></div>
+      <span class="todo-text ${t.completed?'done':''}">${t.task}</span>
+      <span class="todo-badge ${cat}">${cat}</span>
+    </div>`;
+}
 
-      function saveStateToLocal() {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
-      }
+function toggleTodo(id) {
+  const t = D.todos.find(t => t.id === id);
+  if (t) { t.completed = !t.completed; saveEdits(); renderCommand(); }
+}
 
-      // -----------------------------------------------------------------
-      // RENDER ENGINE DISPATCHERS
-      // -----------------------------------------------------------------
+// ═══ TOUR ROUTE ═══
+function renderRoute() {
+  const stops = D.tour_stops || [];
+  document.getElementById('route-timeline').innerHTML = stops.map(s => {
+    const bT = s.targets?.busking || {};
+    const bA = s.actuals?.busking || {};
+    const gT = s.targets?.venue_gig || {};
+    const gA = s.actuals?.venue_gig || {};
+    const hT = s.targets?.house_concert || {};
+    const hA = s.actuals?.house_concert || {};
 
-      function renderEverything() {
-        recalculateAndRenderStats();
-        renderRoadmapTimeline();
-        renderTodoListChecklists();
-        renderLedgerLogEntries();
-        syncSandboxCalculations();
-        renderCampervanTelemetry();
-      }
+    const bPct = bT.earnings_target > 0 ? clamp(bA.earnings_actual/bT.earnings_target*100,0,100) : 0;
+    const gPct = gT.earnings_target > 0 ? clamp(gA.earnings_actual/gT.earnings_target*100,0,100) : 0;
+    const hPct = hT.earnings_target > 0 ? clamp(hA.earnings_actual/hT.earnings_target*100,0,100) : 0;
 
-      // Dynamic metrics total ledger aggregator
-      function recalculateAndRenderStats() {
-        const baseAdelaideFloatInitial = 0.0;
-        
-        let localFloatEarned = 0.0;
-        let localFloatSpent = 0.0;
-        let globalSavingsEarned = 0.0;
-        let globalSavingsSpent = 0.0;
+    const dotClass = s.status === 'Current' ? 'current' : s.status === 'Completed' ? 'completed' : s.status === 'Target' ? 'target' : 'planned';
+    const badgeClass = s.status.toLowerCase();
 
-        state.ledger.forEach(tx => {
-          const val = parseFloat(tx.amount) || 0.0;
-          if (tx.bucket === "Local Adelaide Float") {
-            if (tx.type === "revenue") localFloatEarned += val;
-            else localFloatSpent += val;
-          } else if (tx.bucket === "Global Tour Savings") {
-            if (tx.type === "revenue") globalSavingsEarned += val;
-            else globalSavingsSpent += val;
-          }
-        });
-
-        const activeLocalFloat = roundCurrency(baseAdelaideFloatInitial + localFloatEarned - localFloatSpent);
-        const activeGlobalSavings = roundCurrency(globalSavingsEarned - globalSavingsSpent);
-        const totalNetProfit = roundCurrency(activeLocalFloat + activeGlobalSavings - baseAdelaideFloatInitial);
-
-        // Render card metrics
-        document.getElementById("stat-global-savings").innerHTML = `$${activeGlobalSavings.toLocaleString()} <span>/ $15k</span>`;
-        const globalSavingsPercent = Math.min(100, Math.max(0, Math.round((activeGlobalSavings / 15000.0) * 100)));
-        document.getElementById("progress-global-savings").style.width = `${globalSavingsPercent}%`;
-        document.getElementById("pct-global-savings").textContent = `${globalSavingsPercent}%`;
-
-        document.getElementById("stat-net-earnings").innerHTML = `$${totalNetProfit.toLocaleString()} <span>/ $37k</span>`;
-        const netEarningsPercent = Math.min(100, Math.max(0, Math.round((totalNetProfit / 37000.0) * 100)));
-        document.getElementById("progress-net-earnings").style.width = `${netEarningsPercent}%`;
-        document.getElementById("pct-net-earnings").textContent = `${netEarningsPercent}%`;
-
-        document.getElementById("stat-local-float").innerHTML = `$${activeLocalFloat.toLocaleString()} <span>Float</span>`;
-        document.getElementById("stat-float-earned").textContent = `$${localFloatEarned.toLocaleString()}`;
-        document.getElementById("stat-float-spent").textContent = `$${localFloatSpent.toLocaleString()}`;
-
-        // Render Bucket ledger totals
-        document.getElementById("ledger-val-float").textContent = `$${activeLocalFloat.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-        document.getElementById("ledger-val-savings").textContent = `$${activeGlobalSavings.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-
-        // Render routing progress stop details
-        const totalStopsCount = state.tour_stops.length;
-        const currentActiveIndex = state.tour_stops.findIndex(s => s.status === "Current");
-        
-        let displayLocation = "Unknown";
-        let stopsCoveredCount = 0;
-        let routeCoveragePercent = 0;
-
-        if (currentActiveIndex !== -1) {
-          displayLocation = state.tour_stops[currentActiveIndex].name;
-          stopsCoveredCount = currentActiveIndex + 1;
-          routeCoveragePercent = Math.min(100, Math.round(((currentActiveIndex) / Math.max(1, totalStopsCount - 1)) * 100));
-        } else if (state.tour_stops.length > 0) {
-          // If no active current stop, check if any completed/planned sequencing exists
-          const allCompleted = state.tour_stops.every(s => s.status === "Completed");
-          if (allCompleted) {
-            displayLocation = state.tour_stops[totalStopsCount - 1].name;
-            stopsCoveredCount = totalStopsCount;
-            routeCoveragePercent = 100;
-          }
-        }
-
-        document.getElementById("stat-stops-covered").innerHTML = `${stopsCoveredCount} <span>/ ${totalStopsCount} Stops</span>`;
-        document.getElementById("progress-stops-covered").style.width = `${routeCoveragePercent}%`;
-        document.getElementById("pct-stops-covered").textContent = `${routeCoveragePercent}%`;
-        document.getElementById("current-location-text").textContent = displayLocation;
-        document.getElementById("active-stop-marquee").textContent = `CURRENT LOCATION: ${displayLocation.toUpperCase()}`;
-      }
-
-      // -----------------------------------------------------------------
-      // TIMELINE COMPONENT CONTROLLER
-      // -----------------------------------------------------------------
-
-      function renderRoadmapTimeline() {
-        const rail = document.getElementById("roadflow-rail");
-        // Remove existing stops nodes except the connection background paths
-        const currentStopElements = rail.querySelectorAll(".stop-node");
-        currentStopElements.forEach(el => el.remove());
-
-        const stops = state.tour_stops;
-        const activeIndex = stops.findIndex(s => s.status === "Current");
-
-        // Set connecting line horizontal fill ratio
-        const progressFill = document.getElementById("timeline-progress-fill");
-        let fillPct = 0;
-        if (activeIndex !== -1 && stops.length > 1) {
-          fillPct = (activeIndex / (stops.length - 1)) * 100;
-        } else if (stops.every(s => s.status === "Completed")) {
-          fillPct = 100;
-        }
-        progressFill.style.width = `${fillPct}%`;
-
-        // Draw node elements sequentially
-        stops.forEach((stop, index) => {
-          const stopNode = document.createElement("div");
-          let stopClass = "stop-node";
-          if (stop.status === "Current") stopClass += " current";
-          else if (stop.status === "Completed" || (activeIndex !== -1 && index < activeIndex)) stopClass += " completed";
-          
-          const target = stop.gigs_target !== undefined ? stop.gigs_target : 3;
-          const booked = stop.gigs_booked !== undefined ? stop.gigs_booked : 0;
-          const needed = Math.max(0, target - booked);
-          
-          let badgeHtml = "";
-          if (needed > 0) {
-            badgeHtml = `<div class="stop-gigs-needed-badge color-amber">⚠️ ${needed} needed</div>`;
-          } else {
-            badgeHtml = `<div class="stop-gigs-needed-badge color-green">✅ Target reached</div>`;
-          }
-
-          stopNode.className = stopClass;
-          stopNode.innerHTML = `
-            <div class="stop-dot">${index + 1}</div>
-            <div class="stop-name" title="${stop.name}">${stop.name}</div>
-            <div style="font-size: 0.62rem; color: var(--text-muted); margin-top: 0.1rem;">
-              <span>Gigs: ${booked}/${target}</span>
+    return `
+      <div class="stop-node">
+        <div class="stop-dot ${dotClass}"></div>
+        <div class="stop-card" onclick="toggleStopExpand(${s.id})">
+          <div class="stop-hdr">
+            <div>
+              <span class="stop-name">${s.name}</span>
+              <span class="stop-num">#${s.id}</span>
             </div>
-            ${badgeHtml}
-            <div class="stop-status-tag" style="margin-top: 0.25rem;">${stop.transit_status || stop.status}</div>
-          `;
+            <span class="stop-badge ${badgeClass}">${s.status}</span>
+          </div>
+          <div class="stop-meta">${s.state} · ${s.segment_type} · ${s.est_duration_days}d · ${s.transit_status}</div>
+          <div class="stop-bars">
+            <div class="stop-bar"><div class="stop-bar-fill busking" style="width:${bPct}%"></div></div>
+            <div class="stop-bar"><div class="stop-bar-fill gig" style="width:${gPct}%"></div></div>
+            <div class="stop-bar"><div class="stop-bar-fill house" style="width:${hPct}%"></div></div>
+          </div>
+          <div class="stop-expand" id="stop-expand-${s.id}">
+            <div class="stream-mini"><span style="color:var(--busking-l)">🟢 Busking</span><span>${bA.sessions_completed||0}/${bT.sessions_target||0} · ${fmt$(bA.earnings_actual||0)}/${fmt$(bT.earnings_target||0)}</span></div>
+            <div class="stream-mini"><span style="color:var(--gig-l)">🔵 Gigs</span><span>${gA.gigs_played||0}/${gT.gigs_target||0} · ${fmt$(gA.earnings_actual||0)}/${fmt$(gT.earnings_target||0)}</span></div>
+            <div class="stream-mini"><span style="color:var(--house-l)">🏠 House</span><span>${hA.shows_completed||0}/${hT.shows_target||0} · ${fmt$(hA.earnings_actual||0)}/${fmt$(hT.earnings_target||0)}</span></div>
+            <div class="stream-mini" style="margin-top:0.5rem;border-top:1px solid var(--card-brd);padding-top:0.3rem"><span class="text-dim">Projected</span><span>${fmt$(s.financials?.projected_income||0)}</span></div>
+            <div class="stream-mini"><span class="text-dim">Actual</span><span>${fmt$(s.financials?.actual_income||0)}</span></div>
+            <div class="stream-mini"><span class="text-dim">Net</span><span style="font-weight:700">${fmt$(s.financials?.net||0)}</span></div>
+            <button class="venue-btn" style="width:100%;margin-top:0.4rem" onclick="event.stopPropagation();openStopDetail(${s.id})">View Details →</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
 
-          stopNode.addEventListener("click", () => {
-            triggerStopInspection(stop.id);
-          });
+function toggleStopExpand(id) {
+  const el = document.getElementById(`stop-expand-${id}`);
+  if (el) el.classList.toggle('show');
+}
 
-          rail.appendChild(stopNode);
-        });
+function openStopDetail(id) {
+  selectedStopId = id;
+  switchView('stop');
+}
 
-        // Keep active node scrolled into perfect view
-        if (activeIndex !== -1 && currentStopElements.length > 0) {
-          const targetNode = rail.querySelectorAll(".stop-node")[activeIndex];
-          if (targetNode) {
-            rail.scrollLeft = targetNode.offsetLeft - rail.offsetWidth / 2 + targetNode.offsetWidth / 2;
-          }
-        }
-      }
+// ═══ STOP DETAIL ═══
+function renderStopDetail() {
+  const stop = D.tour_stops?.find(s => s.id === selectedStopId) || getCurrentStop();
+  if (!stop) {
+    document.getElementById('stop-detail-container').innerHTML = '<div class="empty-state">No stop selected</div>';
+    return;
+  }
+  selectedStopId = stop.id;
 
-      function triggerStopInspection(id) {
-        inspectingStopId = id;
-        const stop = state.tour_stops.find(s => s.id === id);
-        if (!stop) {
-          document.getElementById("inspector-placeholder").style.display = "block";
-          document.getElementById("inspector-editor").style.display = "none";
-          document.getElementById("sub-pipeline-drawer").style.display = "none";
-          return;
-        }
+  // Update bottom tab label
+  document.getElementById('bt-stop-label').textContent = stop.name.length > 8 ? stop.name.substring(0,7)+'…' : stop.name;
 
-        document.getElementById("inspector-placeholder").style.display = "none";
-        const editor = document.getElementById("inspector-editor");
-        editor.style.display = "flex";
+  const venues = getStopVenues(stop.id);
+  const spots = getStopBuskingSpots(stop.id);
+  const hcs = getStopHouseConcerts(stop.id);
 
-        document.getElementById("inspector-stop-label").textContent = `${stop.name.toUpperCase()}`;
-        document.getElementById("inspect-status").value = stop.status;
-        document.getElementById("inspect-transit").value = stop.transit_status || "Scheduled";
-        
-        // Gigs Target and Booked Fields
-        const targetInput = document.getElementById("inspect-gigs-target");
-        const bookedInput = document.getElementById("inspect-gigs-booked");
-        const targetVal = stop.gigs_target !== undefined ? stop.gigs_target : 3;
-        const bookedVal = stop.gigs_booked !== undefined ? stop.gigs_booked : 0;
-        
-        targetInput.value = targetVal;
-        bookedInput.value = bookedVal;
-        
-        // Update booking status indicator badge
-        const badgeContainer = document.getElementById("inspector-badge-container");
-        const needed = Math.max(0, targetVal - bookedVal);
-        if (needed > 0) {
-          badgeContainer.innerHTML = `<span class="header-status-badge" style="background: rgba(255, 145, 0, 0.08); border-color: rgba(255, 145, 0, 0.2); color: var(--amber); display: inline-flex; justify-content: center;">⚠️ Need ${needed} More Gigs</span>`;
-        } else {
-          badgeContainer.innerHTML = `<span class="header-status-badge" style="background: rgba(0, 230, 118, 0.08); border-color: rgba(0, 230, 118, 0.2); color: var(--green); display: inline-flex; justify-content: center;">✅ Gig Target Reached</span>`;
-        }
+  document.getElementById('stop-detail-container').innerHTML = `
+    <div class="stop-detail-hdr">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div class="stop-detail-name">${stop.name}, ${stop.state}</div>
+          <div class="stop-detail-meta">${stop.segment_type} · ${stop.est_duration_days} days · ${stop.arrival_date||''} → ${stop.departure_date||''}</div>
+        </div>
+        <span class="stop-badge ${stop.status.toLowerCase()}">${stop.status}</span>
+      </div>
+      ${stop.notes ? `<div style="font-size:0.7rem;color:var(--text-dim);margin-top:0.5rem">${stop.notes}</div>` : ''}
+    </div>
+    <div class="tab-bar">
+      <button class="tab-btn active busking" data-tab="busking" onclick="switchTab('busking')">🟢 Busking</button>
+      <button class="tab-btn gig" data-tab="gig" onclick="switchTab('gig')">🔵 Gigs</button>
+      <button class="tab-btn house" data-tab="house" onclick="switchTab('house')">🏠 House</button>
+      <button class="tab-btn" data-tab="fin" onclick="switchTab('fin')">📊 Financials</button>
+    </div>
+    <div id="tab-busking" class="tab-content active">
+      ${renderBuskingTab(spots, stop)}
+    </div>
+    <div id="tab-gig" class="tab-content">
+      ${renderGigsTab(venues, stop)}
+    </div>
+    <div id="tab-house" class="tab-content">
+      ${renderHouseTab(hcs, stop)}
+    </div>
+    <div id="tab-fin" class="tab-content">
+      ${renderStopFinancials(stop)}
+    </div>
+  `;
+}
 
-        // Render Collapsible Sub-Category Pipelines
-        renderSubCategoryDrawer(stop);
-      }
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.tab-btn[data-tab="${tab}"]`)?.classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById(`tab-${tab}`)?.classList.add('active');
+}
 
-      // Hardcoded high-yield sub-category database seed arrays mapped to specific key locations
-      const LOCATION_SUB_SEEDS = {
-        "perth": {
-          venues: [
-            { name: "Clancy's Fish Pub", checked: false },
-            { name: "Freo.Social", checked: false },
-            { name: "Mojos Bar", checked: false },
-            { name: "Lyric's Underground", checked: false }
-          ],
-          busking: [
-            { name: "Fremantle Markets", checked: false },
-            { name: "Raine Square", checked: false },
-            { name: "Murray St Mall", checked: false }
-          ],
-          house: [
-            { name: "Dave & Sarah (Subiaco)", checked: false },
-            { name: "Mike & Jane (Freo)", checked: false }
-          ]
-        },
-        "adelaide": {
-          venues: [
-            { name: "Grace Emily Hotel", checked: false },
-            { name: "The Exeter Hotel", checked: false },
-            { name: "Crown & Anchor", checked: false },
-            { name: "The Wheatsheaf Hotel", checked: false }
-          ],
-          busking: [
-            { name: "Rundle Mall", checked: false },
-            { name: "Adelaide Central Market", checked: false }
-          ],
-          house: [
-            { name: "George & Lily (Thebarton)", checked: false },
-            { name: "Sam & Sarah (Adelaide Hills)", checked: false }
-          ]
-        },
-        "esperance": {
-          venues: [
-            { name: "Taylor St Quarters", checked: true },
-            { name: "Esperance Yacht Club", checked: false }
-          ],
-          busking: [
-            { name: "Esperance Foreshore", checked: false }
-          ],
-          house: [
-            { name: "Lucky Bay Campers", checked: false }
-          ]
-        },
-        "margaret river": {
-          venues: [
-            { name: "Settlers Tavern", checked: false },
-            { name: "The River", checked: false },
-            { name: "Brewhouse Margaret River", checked: false }
-          ],
-          busking: [
-            { name: "Margaret River Main Street", checked: false }
-          ],
-          house: [
-            { name: "Ella's Vineyard", checked: false }
-          ]
-        }
-      };
+function renderBuskingTab(spots, stop) {
+  if (!spots.length) return '<div class="empty-state">No busking spots logged yet. Tap + to add one.</div>';
+  return spots.map(s => `
+    <div class="entity-card">
+      <div class="entity-hdr">
+        <div>
+          <div class="entity-name">📍 ${s.name}</div>
+          <div class="entity-sub">${s.address || s.city || ''}</div>
+        </div>
+        <span class="stop-badge ${s.status==='confirmed'?'current':'planned'}">${s.status}</span>
+      </div>
+      <div class="entity-row"><span class="lbl">Foot Traffic</span><span>${'★'.repeat(s.foot_traffic_rating||0)}${'☆'.repeat(5-(s.foot_traffic_rating||0))}</span></div>
+      <div class="entity-row"><span class="lbl">Best Time</span><span>${s.best_time_of_day||'—'}</span></div>
+      <div class="entity-row"><span class="lbl">Permit</span><span>${s.permit_required ? (s.permit_obtained ? '✅ Obtained' : '⚠️ Required') : 'Not required'}</span></div>
+      <div class="entity-row"><span class="lbl">Sessions</span><span>${s.total_sessions||0}</span></div>
+      <div class="entity-row"><span class="lbl">Total Earned</span><span class="text-green" style="font-weight:700">${fmt$(s.total_earnings_logged||0)}</span></div>
+      ${s.avg_earnings_per_session ? `<div class="entity-row"><span class="lbl">Avg/Session</span><span>${fmt$(s.avg_earnings_per_session)}</span></div>` : ''}
+      ${s.best_time_notes ? `<div style="font-size:0.68rem;color:var(--text-dim);margin-top:0.4rem;padding:0.4rem;background:rgba(0,0,0,0.2);border-radius:6px">${s.best_time_notes}</div>` : ''}
+      ${(s.earnings_history||[]).map(e => `<div class="entity-row"><span class="lbl">${e.date}</span><span style="color:var(--busking-l)">${fmt$(e.earnings)}${e.merch_sales?` + ${fmt$(e.merch_sales)} merch`:''}</span></div>`).join('')}
+    </div>
+  `).join('');
+}
 
-      function renderSubCategoryDrawer(stop) {
-        const drawer = document.getElementById("sub-pipeline-drawer");
-        const stopNameDisplay = document.getElementById("sub-pipeline-stop-name");
-        
-        stopNameDisplay.textContent = stop.name.toUpperCase();
-        drawer.style.display = "flex";
+function renderGigsTab(venues, stop) {
+  if (!venues.length) return '<div class="empty-state">No venues in pipeline yet. Use the Pipeline tab to manage bookings.</div>';
+  return venues.map(v => `
+    <div class="entity-card venue-card stage-${v.pipeline_stage}">
+      <div class="entity-hdr">
+        <div>
+          <div class="entity-name">${v.name}</div>
+          <div class="entity-sub">${v.venue_type} · ${v.city}</div>
+        </div>
+        <span class="venue-stage-badge" style="background:${STAGE_COLORS[v.pipeline_stage]||'#6b7280'}22;color:${STAGE_COLORS[v.pipeline_stage]||'#6b7280'}">${STAGE_LABELS[v.pipeline_stage]||v.pipeline_stage}</span>
+      </div>
+      ${v.contact_name ? `<div class="entity-row"><span class="lbl">Contact</span><span>${v.contact_name}</span></div>` : ''}
+      ${v.phone ? `<div class="entity-row"><span class="lbl">Phone</span><span><a href="tel:${v.phone}" style="color:var(--cyan)">${v.phone}</a></span></div>` : ''}
+      ${v.email ? `<div class="entity-row"><span class="lbl">Email</span><span style="font-size:0.65rem">${v.email}</span></div>` : ''}
+      ${v.gig ? `
+        <div style="margin-top:0.5rem;padding:0.5rem;background:rgba(34,197,94,0.06);border-radius:6px">
+          <div class="entity-row"><span class="lbl">Gig Date</span><span>${v.gig.date||'TBD'}</span></div>
+          <div class="entity-row"><span class="lbl">Fee</span><span style="color:var(--st-booked);font-weight:700">${fmt$(v.gig.fee||0)}</span></div>
+          ${v.gig.set_times?.length ? `<div class="entity-row"><span class="lbl">Sets</span><span>${v.gig.set_times.join(', ')}</span></div>` : ''}
+          ${v.gig.sound_check_time ? `<div class="entity-row"><span class="lbl">Sound Check</span><span>${v.gig.sound_check_time}</span></div>` : ''}
+        </div>
+      ` : ''}
+      ${v.marketing ? `
+        <div style="margin-top:0.4rem;display:flex;gap:0.3rem;flex-wrap:wrap">
+          ${v.marketing.epk_sent ? '<span class="todo-badge marketing">EPK ✓</span>' : '<span class="todo-badge ops">EPK ✗</span>'}
+          ${v.marketing.reels_captured ? '<span class="todo-badge marketing">Reels ✓</span>' : ''}
+          ${v.marketing.venue_posted_content ? '<span class="todo-badge marketing">Venue Posted ✓</span>' : ''}
+          ${v.marketing.venue_tagged_dylan ? '<span class="todo-badge marketing">Tagged ✓</span>' : ''}
+        </div>
+      ` : ''}
+      <div class="venue-actions">
+        ${v.phone ? `<a href="tel:${v.phone}" class="venue-btn call">📞 Call</a>` : ''}
+        <button class="venue-btn advance" onclick="advanceVenue('${v.id}')">→ ${nextStageLabel(v.pipeline_stage)}</button>
+      </div>
+    </div>
+  `).join('');
+}
 
-        // Fetch sub-items for this location. If none exist in state or seed, auto-generate fallback items
-        const locKey = stop.name.toLowerCase().trim();
-        
-        // Initialize sub arrays on stop state if missing
-        if (!stop.sub_venues) {
-          const seeds = LOCATION_SUB_SEEDS[locKey];
-          stop.sub_venues = seeds ? JSON.parse(JSON.stringify(seeds.venues)) : [
-            { name: `${stop.name} Venue A`, checked: false },
-            { name: `${stop.name} Venue B`, checked: false }
-          ];
-        }
-        if (!stop.sub_busking) {
-          const seeds = LOCATION_SUB_SEEDS[locKey];
-          stop.sub_busking = seeds ? JSON.parse(JSON.stringify(seeds.busking)) : [
-            { name: `${stop.name} Pitch A`, checked: false }
-          ];
-        }
-        if (!stop.sub_house) {
-          const seeds = LOCATION_SUB_SEEDS[locKey];
-          stop.sub_house = seeds ? JSON.parse(JSON.stringify(seeds.house)) : [
-            { name: `Host in ${stop.name}`, checked: false }
-          ];
-        }
+function nextStageLabel(stage) {
+  const idx = VENUE_STAGES.indexOf(stage);
+  if (idx < 0 || idx >= VENUE_STAGES.length - 1) return '—';
+  return STAGE_LABELS[VENUE_STAGES[idx+1]] || 'Done';
+}
 
-        // Render Venues
-        const venuesContainer = document.getElementById("sub-circles-venues");
-        venuesContainer.innerHTML = "";
-        stop.sub_venues.forEach((v, idx) => {
-          venuesContainer.appendChild(createSubCircleNode(v, "venue", () => {
-            v.checked = !v.checked;
-            updateBookedStateFromSubCircles(stop);
-          }));
-        });
-        venuesContainer.appendChild(createAddSubCircleButton(() => {
-          const name = prompt("Enter custom Venue Name:");
-          if (name) {
-            stop.sub_venues.push({ name: name, checked: false });
-            renderSubCategoryDrawer(stop);
-          }
-        }));
+function advanceVenue(venueId) {
+  const v = D.venues.find(x => x.id === venueId);
+  if (!v) return;
+  const idx = VENUE_STAGES.indexOf(v.pipeline_stage);
+  if (idx < 0 || idx >= VENUE_STAGES.length - 1) return;
+  const next = VENUE_STAGES[idx+1];
+  if (next === 'declined') return; // skip declined as auto-advance
+  v.pipeline_stage = next;
+  v.stage_history = v.stage_history || [];
+  v.stage_history.push({stage: next, date: new Date().toISOString().slice(0,10), notes: 'Advanced via dashboard'});
+  if (next === 'booked') v.status = 'booked';
+  if (next === 'played') {
+    v.status = 'played';
+    // Auto-increment gig played count
+    const stop = D.tour_stops.find(s => s.id === v.tour_stop_id);
+    if (stop) stop.actuals.venue_gig.gigs_played = (stop.actuals.venue_gig.gigs_played||0) + 1;
+  }
+  saveEdits();
+  renderStopDetail();
+}
 
-        // Render Busking
-        const buskingContainer = document.getElementById("sub-circles-busking");
-        buskingContainer.innerHTML = "";
-        stop.sub_busking.forEach((b, idx) => {
-          buskingContainer.appendChild(createSubCircleNode(b, "busking", () => {
-            b.checked = !b.checked;
-            updateBookedStateFromSubCircles(stop);
-          }));
-        });
-        buskingContainer.appendChild(createAddSubCircleButton(() => {
-          const name = prompt("Enter custom Busking Pitch Location:");
-          if (name) {
-            stop.sub_busking.push({ name: name, checked: false });
-            renderSubCategoryDrawer(stop);
-          }
-        }));
+function renderHouseTab(hcs, stop) {
+  if (!hcs.length) return '<div class="empty-state">No house concerts in pipeline. Seed Facebook groups 3-4 weeks before arrival.</div>';
+  const hcStageLabels = {posted:'Posted',interested:'Interested',confirmed:'Confirmed',completed:'Completed',cancelled:'Cancelled'};
+  const hcStageColors = {posted:'#6b7280',interested:'#f59e0b',confirmed:'#22c55e',completed:'#14b8a6',cancelled:'#ef4444'};
+  return hcs.map(h => `
+    <div class="entity-card" style="border-left:3px solid ${hcStageColors[h.pipeline_stage]||'#6b7280'}">
+      <div class="entity-hdr">
+        <div>
+          <div class="entity-name">🏠 ${h.host_name}</div>
+          <div class="entity-sub">Source: ${h.source||'—'}</div>
+        </div>
+        <span class="venue-stage-badge" style="background:${hcStageColors[h.pipeline_stage]||'#6b7280'}22;color:${hcStageColors[h.pipeline_stage]||'#6b7280'}">${hcStageLabels[h.pipeline_stage]||h.pipeline_stage}</span>
+      </div>
+      ${h.facebook_group ? `<div class="entity-row"><span class="lbl">FB Group</span><span>${h.facebook_group}</span></div>` : ''}
+      ${h.event ? `
+        <div style="margin-top:0.5rem;padding:0.5rem;background:rgba(217,119,6,0.06);border-radius:6px">
+          ${h.event.date ? `<div class="entity-row"><span class="lbl">Date</span><span>${h.event.date}</span></div>` : ''}
+          ${h.event.tier_label ? `<div class="entity-row"><span class="lbl">Tier</span><span>${h.event.tier_label}</span></div>` : ''}
+          ${h.event.ticket_count ? `<div class="entity-row"><span class="lbl">Tickets</span><span>${h.event.ticket_count}</span></div>` : ''}
+          ${h.event.revenue ? `<div class="entity-row"><span class="lbl">Revenue</span><span style="color:var(--house-l);font-weight:700">${fmt$(h.event.revenue)}</span></div>` : ''}
+        </div>
+      ` : ''}
+      ${(h.stage_history||[]).map(sh => `<div class="entity-row"><span class="lbl">${sh.stage}</span><span>${sh.date}${sh.notes?' — '+sh.notes:''}</span></div>`).join('')}
+    </div>
+  `).join('');
+}
 
-        // Render House Concerts
-        const houseContainer = document.getElementById("sub-circles-house");
-        houseContainer.innerHTML = "";
-        stop.sub_house.forEach((h, idx) => {
-          houseContainer.appendChild(createSubCircleNode(h, "house", () => {
-            h.checked = !h.checked;
-            updateBookedStateFromSubCircles(stop);
-          }));
-        });
-        houseContainer.appendChild(createAddSubCircleButton(() => {
-          const name = prompt("Enter custom House Concert Host Group:");
-          if (name) {
-            stop.sub_house.push({ name: name, checked: false });
-            renderSubCategoryDrawer(stop);
-          }
-        }));
-      }
+function renderStopFinancials(stop) {
+  const proj = stop.financials?.projected_income || 0;
+  const actual = stop.financials?.actual_income || 0;
+  const exp = stop.financials?.actual_expenses || 0;
+  const net = stop.financials?.net || (actual - exp);
+  const bA = stop.actuals?.busking?.earnings_actual || 0;
+  const gA = stop.actuals?.venue_gig?.earnings_actual || 0;
+  const hA = stop.actuals?.house_concert?.earnings_actual || 0;
+  return `
+    <div class="fin-card">
+      <div class="fin-row"><span class="lbl">🟢 Busking Earned</span><span class="val" style="color:var(--busking-l)">${fmt$(bA)}</span></div>
+      <div class="fin-row"><span class="lbl">🔵 Gig Earned</span><span class="val" style="color:var(--gig-l)">${fmt$(gA)}</span></div>
+      <div class="fin-row"><span class="lbl">🏠 House Concert</span><span class="val" style="color:var(--house-l)">${fmt$(hA)}</span></div>
+      <div class="fin-row income"><span class="lbl">Total Actual Income</span><span class="val">${fmt$(actual)}</span></div>
+      <div class="fin-row expense"><span class="lbl">Expenses</span><span class="val">${fmt$(exp)}</span></div>
+      <div class="fin-total" style="display:flex;justify-content:space-between">
+        <span>Net</span><span style="color:${net>=0?'var(--st-booked)':'var(--expense)'}">${fmt$(net)}</span>
+      </div>
+    </div>
+    <div class="fin-card">
+      <div class="fin-row"><span class="lbl">Projected Income</span><span class="val">${fmt$(proj)}</span></div>
+      <div class="fin-row"><span class="lbl">Actual Income</span><span class="val">${fmt$(actual)}</span></div>
+      <div class="fin-row"><span class="lbl">Variance</span><span class="val" style="color:${actual>=proj?'var(--st-booked)':'var(--amber)'}">${actual>=proj?'+':''}${fmt$(actual-proj)}</span></div>
+    </div>
+  `;
+}
 
-      function createSubCircleNode(item, type, clickCallback) {
-        const node = document.createElement("div");
-        node.className = `sub-circle-node ${type} ${item.checked ? 'active' : ''}`;
-        node.innerHTML = `
-          <div class="sub-circle-bullet"></div>
-          <span>${item.name}</span>
-        `;
-        node.addEventListener("click", () => {
-          clickCallback();
-          node.classList.toggle("active");
-        });
-        return node;
-      }
+// ═══ PIPELINE VIEW ═══
+function renderPipeline() {
+  const stop = getCurrentStop();
+  if (!stop) {
+    document.getElementById('pipeline-container').innerHTML = '<div class="empty-state">No active stop</div>';
+    return;
+  }
+  const venues = getStopVenues(stop.id);
+  // Also show venues from next stop if current has few
+  let allVenues = venues;
+  if (venues.length < 3) {
+    const nextStop = D.tour_stops?.find(s => s.id === stop.id + 1);
+    if (nextStop) allVenues = [...venues, ...getStopVenues(nextStop.id)];
+  }
 
-      function createAddSubCircleButton(clickCallback) {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "btn";
-        btn.style.cssText = "min-height: 24px; height: 24px; padding: 0 0.5rem; font-size: 0.65rem; border-radius: 4px; display: inline-flex; align-items: center; gap: 0.25rem; font-weight: bold; background: rgba(255,255,255,0.02); border-color: var(--border);";
-        btn.innerHTML = `
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-          Add
-        `;
-        btn.addEventListener("click", clickCallback);
-        return btn;
-      }
+  const stages = ['not_contacted','called','emailed','follow_up_1','follow_up_2','booked','played','declined'];
+  let html = `<div style="font-size:0.8rem;color:var(--text-dim);margin-bottom:0.8rem">Showing venues for ${stop.name}${allVenues.length>venues.length?' + next stop':''} — ${allVenues.length} total</div>`;
 
-      function updateBookedStateFromSubCircles(stop) {
-        // Count number of checked items across venues, busking, and house concerts
-        const checkedVenues = stop.sub_venues.filter(v => v.checked).length;
-        const checkedBusking = stop.sub_busking.filter(b => b.checked).length;
-        const checkedHouse = stop.sub_house.filter(h => h.checked).length;
-        
-        stop.gigs_booked = checkedVenues + checkedBusking + checkedHouse;
-        
-        saveStateToLocal();
-        renderEverything();
-        triggerStopInspection(stop.id);
-      }
-
-      // Hook up direct numeric inputs and increment/decrement buttons
-      document.getElementById("inspect-gigs-target").addEventListener("change", (e) => {
-        if (!inspectingStopId) return;
-        const stop = state.tour_stops.find(s => s.id === inspectingStopId);
-        if (!stop) return;
-        stop.gigs_target = Math.max(0, parseInt(e.target.value) || 0);
-        saveStateToLocal();
-        renderEverything();
-        triggerStopInspection(inspectingStopId);
-      });
-
-      document.getElementById("inspect-gigs-booked").addEventListener("change", (e) => {
-        if (!inspectingStopId) return;
-        const stop = state.tour_stops.find(s => s.id === inspectingStopId);
-        if (!stop) return;
-        stop.gigs_booked = Math.max(0, parseInt(e.target.value) || 0);
-        saveStateToLocal();
-        renderEverything();
-        triggerStopInspection(inspectingStopId);
-      });
-
-      document.getElementById("inspect-btn-target-minus").addEventListener("click", () => {
-        if (!inspectingStopId) return;
-        const stop = state.tour_stops.find(s => s.id === inspectingStopId);
-        if (!stop) return;
-        stop.gigs_target = Math.max(0, (stop.gigs_target || 0) - 1);
-        saveStateToLocal();
-        renderEverything();
-        triggerStopInspection(inspectingStopId);
-      });
-
-      document.getElementById("inspect-btn-target-plus").addEventListener("click", () => {
-        if (!inspectingStopId) return;
-        const stop = state.tour_stops.find(s => s.id === inspectingStopId);
-        if (!stop) return;
-        stop.gigs_target = (stop.gigs_target || 0) + 1;
-        saveStateToLocal();
-        renderEverything();
-        triggerStopInspection(inspectingStopId);
-      });
-
-      document.getElementById("inspect-btn-booked-minus").addEventListener("click", () => {
-        if (!inspectingStopId) return;
-        const stop = state.tour_stops.find(s => s.id === inspectingStopId);
-        if (!stop) return;
-        stop.gigs_booked = Math.max(0, (stop.gigs_booked || 0) - 1);
-        saveStateToLocal();
-        renderEverything();
-        triggerStopInspection(inspectingStopId);
-      });
-
-      document.getElementById("inspect-btn-booked-plus").addEventListener("click", () => {
-        if (!inspectingStopId) return;
-        const stop = state.tour_stops.find(s => s.id === inspectingStopId);
-        if (!stop) return;
-        stop.gigs_booked = (stop.gigs_booked || 0) + 1;
-        saveStateToLocal();
-        renderEverything();
-        triggerStopInspection(inspectingStopId);
-      });
-
-      // Timeline editor operations
-      document.getElementById("inspect-status").addEventListener("change", (e) => {
-        if (!inspectingStopId) return;
-        const stop = state.tour_stops.find(s => s.id === inspectingStopId);
-        if (!stop) return;
-
-        const oldStatus = stop.status;
-        const newStatus = e.target.value;
-        stop.status = newStatus;
-
-        // If making this current, adjust other stops status automatically on the fly
-        if (newStatus === "Current") {
-          applyRouteStopCompulsiveRules(inspectingStopId);
-        }
-
-        saveStateToLocal();
-        renderEverything();
-      });
-
-      document.getElementById("inspect-transit").addEventListener("change", (e) => {
-        if (!inspectingStopId) return;
-        const stop = state.tour_stops.find(s => s.id === inspectingStopId);
-        if (!stop) return;
-
-        stop.transit_status = e.target.value;
-        saveStateToLocal();
-        renderEverything();
-      });
-
-      document.getElementById("inspect-btn-active").addEventListener("click", () => {
-        if (!inspectingStopId) return;
-        const stopIndex = state.tour_stops.findIndex(s => s.id === inspectingStopId);
-        if (stopIndex === -1) return;
-
-        applyRouteStopCompulsiveRules(inspectingStopId);
-        saveStateToLocal();
-        renderEverything();
-        triggerStopInspection(inspectingStopId);
-      });
-
-      document.getElementById("inspect-btn-delete").addEventListener("click", () => {
-        if (!inspectingStopId) return;
-        
-        state.tour_stops = state.tour_stops.filter(s => s.id !== inspectingStopId);
-        inspectingStopId = null;
-
-        document.getElementById("inspector-placeholder").style.display = "block";
-        document.getElementById("inspector-editor").style.display = "none";
-
-        saveStateToLocal();
-        renderEverything();
-      });
-
-      // Automatically cascade completed vs scheduled status forward and back relative to active target node
-      function applyRouteStopCompulsiveRules(activeId) {
-        let activeIdx = state.tour_stops.findIndex(s => s.id === activeId);
-        if (activeIdx === -1) return;
-
-        state.tour_stops.forEach((s, idx) => {
-          if (idx < activeIdx) {
-            s.status = "Completed";
-            s.transit_status = "Departed";
-          } else if (idx === activeIdx) {
-            s.status = "Current";
-            s.transit_status = "Arrived";
-          } else {
-            s.status = "Planned";
-            s.transit_status = "Scheduled";
-          }
-        });
-      }
-
-      // Timeline stop creation
-      document.getElementById("btn-add-stop").addEventListener("click", () => {
-        const nameField = document.getElementById("add-stop-name");
-        const name = nameField.value.trim();
-        if (!name) {
-          alert("Please specify a valid name for the stop.");
-          return;
-        }
-
-        const status = document.getElementById("add-stop-status").value;
-        const transit = document.getElementById("add-stop-transit").value;
-
-        const newStop = {
-          id: Date.now(),
-          name: name,
-          status: status,
-          transit_status: transit,
-          gigs_target: 3,
-          gigs_booked: 0
-        };
-
-        state.tour_stops.push(newStop);
-        nameField.value = "";
-
-        // If made current, balance stops sequence
-        if (status === "Current") {
-          applyRouteStopCompulsiveRules(newStop.id);
-        }
-
-        saveStateToLocal();
-        renderEverything();
-      });
-
-      // -----------------------------------------------------------------
-      // TWO-TIER checklist CONTROLLER
-      // -----------------------------------------------------------------
-
-      function renderTodoListChecklists() {
-        const dailyContainer = document.getElementById("container-daily-todos");
-        const weeklyContainer = document.getElementById("container-weekly-todos");
-
-        dailyContainer.innerHTML = "";
-        weeklyContainer.innerHTML = "";
-
-        let remainingTally = 0;
-
-        state.todos.forEach(todo => {
-          if (!todo.completed) remainingTally++;
-
-          const itemNode = document.createElement("div");
-          itemNode.className = `todo-item ${todo.completed ? 'completed' : ''}`;
-          
-          itemNode.innerHTML = `
-            <div class="todo-item-check">
-              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+  stages.forEach(stage => {
+    const stageVenues = allVenues.filter(v => v.pipeline_stage === stage);
+    if (!stageVenues.length) return;
+    const color = STAGE_COLORS[stage];
+    html += `
+      <div class="pipe-group">
+        <div class="pipe-group-title" style="color:${color}">
+          <span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block"></span>
+          ${STAGE_LABELS[stage]}
+          <span class="pipe-count">${stageVenues.length}</span>
+        </div>
+        ${stageVenues.map(v => `
+          <div class="entity-card venue-card stage-${stage}" onclick="openStopDetail(${v.tour_stop_id})">
+            <div class="entity-hdr">
+              <div>
+                <div class="entity-name">${v.name}</div>
+                <div class="entity-sub">${v.venue_type} · ${v.city}</div>
+              </div>
             </div>
-            <div class="todo-item-text">${todo.task}</div>
-            <span class="todo-badge badge-${todo.category || 'daily_shit'}">${cleanCategoryLabel(todo.category)}</span>
-            <button class="todo-delete-btn" title="Delete task">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path></svg>
-            </button>
-          `;
+            ${v.phone ? `<div class="entity-row"><span class="lbl">📞</span><span><a href="tel:${v.phone}" style="color:var(--cyan)" onclick="event.stopPropagation()">${v.phone}</a></span></div>` : ''}
+            ${v.contact_name ? `<div class="entity-row"><span class="lbl">Contact</span><span>${v.contact_name}</span></div>` : ''}
+            ${v.gig?.date ? `<div class="entity-row"><span class="lbl">Gig Date</span><span style="color:var(--st-booked)">${v.gig.date}</span></div>` : ''}
+            <div class="venue-actions" onclick="event.stopPropagation()">
+              ${v.phone ? `<a href="tel:${v.phone}" class="venue-btn call">📞 Call</a>` : ''}
+              <button class="venue-btn advance" onclick="advanceVenue('${v.id}')">→ ${nextStageLabel(stage)}</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>`;
+  });
 
-          // Handle double task checking status change
-          itemNode.addEventListener("click", (e) => {
-            if (e.target.closest(".todo-delete-btn")) return;
-            todo.completed = !todo.completed;
-            saveStateToLocal();
-            renderEverything();
-          });
+  if (!allVenues.length) {
+    html = '<div class="empty-state">No venues in pipeline. Add venues via the CLI or start calling!</div>';
+  }
 
-          // Handle delete button
-          itemNode.querySelector(".todo-delete-btn").addEventListener("click", () => {
-            state.todos = state.todos.filter(t => t.id !== todo.id);
-            saveStateToLocal();
-            renderEverything();
-          });
+  document.getElementById('pipeline-container').innerHTML = html;
+}
 
-          if (todo.is_weekly) {
-            weeklyContainer.appendChild(itemNode);
-          } else {
-            dailyContainer.appendChild(itemNode);
-          }
-        });
+// ═══ FINANCIALS VIEW ═══
+function renderFinancials() {
+  const fin = D.financials?.tour || D.financials || {};
+  const earnings = fin.current_earnings || 0;
+  const expenses = fin.total_expenses || 0;
+  const net = fin.net_earnings || (earnings - expenses);
+  const target = fin.target || 37000;
+  const progress = target > 0 ? (net / target * 100) : 0;
+  const groundOps = D.ground_ops || {};
+  const incomeByStream = fin.income_by_stream || {};
 
-        document.getElementById("tally-todos").textContent = `${remainingTally} Task${remainingTally !== 1 ? 's' : ''} Remaining`;
+  // Overview
+  document.getElementById('fin-overview').innerHTML = `
+    <div class="fin-card">
+      <div class="fin-row income"><span class="lbl">Gross Earnings</span><span class="val">${fmt$(earnings)}</span></div>
+      <div class="fin-row"><span class="lbl">🟢 Busking</span><span style="color:var(--busking-l)">${fmt$(incomeByStream.busking||0)}</span></div>
+      <div class="fin-row"><span class="lbl">🔵 Venue Gigs</span><span style="color:var(--gig-l)">${fmt$(incomeByStream.venue_gig||0)}</span></div>
+      <div class="fin-row"><span class="lbl">🏠 House Concerts</span><span style="color:var(--house-l)">${fmt$(incomeByStream.house_concert||0)}</span></div>
+      <div class="fin-row"><span class="lbl">🎟️ Merch</span><span style="color:var(--merch)">${fmt$(incomeByStream.merch||0)}</span></div>
+      <div class="fin-row expense"><span class="lbl">Total Expenses</span><span class="val">${fmt$(expenses)}</span></div>
+      <div class="fin-total" style="display:flex;justify-content:space-between">
+        <span>Net Earnings</span><span style="color:${net>=0?'var(--st-booked)':'var(--expense)'}">${fmt$(net)}</span>
+      </div>
+      <div style="margin-top:0.5rem">
+        <div style="display:flex;justify-content:space-between;font-size:0.7rem;margin-bottom:0.25rem">
+          <span class="text-dim">Progress to ${fmt$(target)}</span>
+          <span style="font-weight:700;color:var(--cyan)">${fmtPct(progress)}</span>
+        </div>
+        <div class="stat-bar" style="height:8px"><div class="stat-bar-fill" style="width:${clamp(progress,0,100)}%;background:linear-gradient(90deg,var(--cyan),var(--magenta))"></div></div>
+      </div>
+    </div>
+    <div class="fin-card">
+      <div class="section-title">Ground Ops (Adelaide)</div>
+      <div class="fin-row"><span class="lbl">Local Busking</span><span>${fmt$(groundOps.local_busking_earnings||0)}</span></div>
+      <div class="fin-row expense"><span class="lbl">Local Expenses</span><span>${fmt$(groundOps.expenses||0)}</span></div>
+      <div class="fin-row"><span class="lbl">Cash Float</span><span>${fmt$(groundOps.cash_float||0)}</span></div>
+      <div class="fin-total" style="display:flex;justify-content:space-between">
+        <span>Operational Bank</span><span style="color:var(--amber)">${fmt$(groundOps.operational_bank||0)}</span>
+      </div>
+    </div>
+    <div class="fin-card">
+      <div class="section-title">Expense Breakdown</div>
+      ${(Object.entries(fin.expenses_by_category||{})).map(([cat, amt]) => `
+        <div class="fin-row"><span class="lbl">${cat}</span><span>${fmt$(amt)}</span></div>
+      `).join('')}
+    </div>
+  `;
 
-        if (dailyContainer.children.length === 0) {
-          dailyContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 1.5rem; font-size: 0.75rem; font-style: italic;">Today's task list is clear!</div>`;
-        }
-        if (weeklyContainer.children.length === 0) {
-          weeklyContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 1.5rem; font-size: 0.75rem; font-style: italic;">No milestones planned!</div>`;
-        }
+  // Per-stop breakdown
+  document.getElementById('fin-stops').innerHTML = (D.tour_stops||[]).map(s => {
+    const proj = s.financials?.projected_income || 0;
+    const actual = s.financials?.actual_income || 0;
+    const net = s.financials?.net || 0;
+    const pct = proj > 0 ? (actual/proj*100) : 0;
+    return `
+      <div class="fin-stop-row" onclick="openStopDetail(${s.id})" style="cursor:pointer">
+        <div>
+          <div style="font-weight:600">${s.name}</div>
+          <div style="font-size:0.6rem;color:var(--text-faint)">${s.status}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="color:var(--off-white)">${fmt$(actual)} <span style="color:var(--text-faint);font-size:0.65rem">/ ${fmt$(proj)}</span></div>
+          <div style="font-size:0.6rem;color:${net>=0?'var(--st-booked)':'var(--expense)'}">Net ${fmt$(net)}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Recent transactions
+  const incTransactions = (D.income_history||[]).slice(-8).reverse();
+  const expTransactions = (D.expense_history||[]).slice(-8).reverse();
+  let txns = [
+    ...incTransactions.map(i => ({date:i.date, desc:`${i.type} — ${i.location||''}`, amount:i.amount, type:'income'})),
+    ...expTransactions.map(e => ({date:e.date, desc:`${e.category} — ${e.description||''}`, amount:e.amount, type:'expense'}))
+  ].sort((a,b) => (b.date||'').localeCompare(a.date||'')).slice(0,12);
+
+  document.getElementById('fin-transactions').innerHTML = txns.length
+    ? txns.map(t => `
+      <div class="fin-stop-row">
+        <div>
+          <div style="font-weight:600">${t.desc}</div>
+          <div style="font-size:0.6rem;color:var(--text-faint)">${t.date||''}</div>
+        </div>
+        <div style="font-weight:700;color:${t.type==='income'?'var(--st-booked)':'var(--expense)'}">${t.type==='income'?'+':'-'}${fmt$(t.amount)}</div>
+      </div>`).join('')
+    : '<div class="empty-state">No transactions logged yet</div>';
+}
+
+// ═══ QUICK-LOG MODAL ═══
+function openQuickLog() {
+  document.getElementById('ql-modal').classList.add('show');
+  selectQLType('busking');
+}
+function closeQuickLog() {
+  document.getElementById('ql-modal').classList.remove('show');
+}
+function selectQLType(type) {
+  qlType = type;
+  document.querySelectorAll('.modal-type-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.modal-type-btn[data-ql-type="${type}"]`).classList.add('active');
+  renderQLFields(type);
+}
+
+function renderQLFields(type) {
+  const stop = getCurrentStop();
+  const stopName = stop ? stop.name : '';
+  const stopOptions = (D.tour_stops||[]).map(s => `<option value="${s.name}" ${s.name===stopName?'selected':''}>${s.name}</option>`).join('');
+
+  let html = '';
+  if (type === 'busking') {
+    html = `
+      <div class="modal-field"><label>Location</label><select id="ql-location"><option value="">Select…</option>${stopOptions}</select></div>
+      <div class="modal-field"><label>Amount ($)</label><input type="number" id="ql-amount" placeholder="300" inputmode="numeric"></div>
+      <div class="modal-field"><label>Duration (min)</label><input type="number" id="ql-duration" placeholder="180" inputmode="numeric"></div>
+      <div class="modal-field"><label>Merch Sales ($)</label><input type="number" id="ql-merch" placeholder="0" inputmode="numeric"></div>
+      <div class="modal-field"><label>Notes</label><textarea id="ql-notes" placeholder="Saturday lunch rush, good crowd…" rows="2"></textarea></div>
+    `;
+  } else if (type === 'gig') {
+    html = `
+      <div class="modal-field"><label>Venue</label><input type="text" id="ql-venue" placeholder="Venue name"></div>
+      <div class="modal-field"><label>Location</label><select id="ql-location"><option value="">Select…</option>${stopOptions}</select></div>
+      <div class="modal-field"><label>Fee ($)</label><input type="number" id="ql-amount" placeholder="400" inputmode="numeric"></div>
+      <div class="modal-field"><label>Date</label><input type="date" id="ql-date"></div>
+      <div class="modal-field"><label>Content Captured?</label><select id="ql-content"><option value="false">No</option><option value="true">Yes — Reels</option></select></div>
+    `;
+  } else if (type === 'expense') {
+    const cats = (D.config?.expense_categories || ['fuel','food','gear','accommodation','maverick','marketing','misc']);
+    html = `
+      <div class="modal-field"><label>Category</label><select id="ql-category">${cats.map(c=>`<option value="${c}">${c}</option>`).join('')}</select></div>
+      <div class="modal-field"><label>Amount ($)</label><input type="number" id="ql-amount" placeholder="50" inputmode="numeric"></div>
+      <div class="modal-field"><label>Source</label><select id="ql-source"><option value="tour">Tour</option><option value="local">Local (Adelaide)</option></select></div>
+      <div class="modal-field"><label>Description</label><input type="text" id="ql-desc" placeholder="Fuel, strings, dog food…"></div>
+    `;
+  } else if (type === 'spot') {
+    html = `
+      <div class="modal-field"><label>Spot Name</label><input type="text" id="ql-spot-name" placeholder="Raine Square"></div>
+      <div class="modal-field"><label>City</label><select id="ql-location"><option value="">Select…</option>${stopOptions}</select></div>
+      <div class="modal-field"><label>Address</label><input type="text" id="ql-address" placeholder="Street address or landmark"></div>
+      <div class="modal-field"><label>Foot Traffic (1-5)</label><select id="ql-traffic"><option value="3">3 — Moderate</option><option value="5">5 — Very High</option><option value="4">4 — High</option><option value="2">2 — Low</option><option value="1">1 — Very Low</option></select></div>
+      <div class="modal-field"><label>Permit Required?</label><select id="ql-permit"><option value="false">No</option><option value="true">Yes</option></select></div>
+      <div class="modal-field"><label>Best Time</label><input type="text" id="ql-besttime" placeholder="11am-2pm lunch rush"></div>
+      <div class="modal-field"><label>Notes</label><textarea id="ql-notes" placeholder="Covered area, good acoustics…" rows="2"></textarea></div>
+    `;
+  }
+  document.getElementById('ql-fields').innerHTML = html;
+}
+
+function submitQuickLog() {
+  const stop = getCurrentStop();
+  const today = new Date().toISOString().slice(0,10);
+
+  if (qlType === 'busking') {
+    const location = val('ql-location');
+    const amount = parseFloat(val('ql-amount') || '0');
+    const merch = parseFloat(val('ql-merch') || '0');
+    const duration = parseInt(val('ql-duration') || '0');
+    const notes = val('ql-notes');
+    if (!location || !amount) { alert('Enter location and amount'); return; }
+
+    // Route to ground_ops if Adelaide local busking
+    const isLocal = location === 'Adelaide';
+    D.income_history.push({id:`inc-${Date.now()}`,type:'busking',amount:amount+merch,location,date:today,notes});
+
+    if (isLocal) {
+      D.ground_ops.local_busking_earnings = (D.ground_ops.local_busking_earnings||0) + amount;
+      D.ground_ops.operational_bank = (D.ground_ops.cash_float||0) + (D.ground_ops.local_busking_earnings||0) - (D.ground_ops.expenses||0);
+    } else {
+      // Update stop actuals
+      const s = D.tour_stops.find(s => s.name === location);
+      if (s) {
+        s.actuals.busking.earnings_actual = (s.actuals.busking.earnings_actual||0) + amount;
+        s.actuals.busking.sessions_completed = (s.actuals.busking.sessions_completed||0) + 1;
       }
+    }
+    saveEdits();
 
-      function cleanCategoryLabel(cat) {
-        if (cat === "daily_shit") return "⚡ grind";
-        if (cat === "tour_booking") return "🎫 booking";
-        if (cat === "road_cargo") return "📦 cargo";
-        return cat || "other";
-      }
+  } else if (qlType === 'gig') {
+    const venue = val('ql-venue');
+    const location = val('ql-location');
+    const amount = parseFloat(val('ql-amount') || '0');
+    const date = val('ql-date') || today;
+    if (!venue || !amount) { alert('Enter venue and fee'); return; }
+    D.income_history.push({id:`inc-${Date.now()}`,type:'venue_gig',amount,location:location||venue,date,venue_name:venue,notes:`Gig at ${venue}`});
+    const s = D.tour_stops.find(s => s.name === location);
+    if (s) {
+      s.actuals.venue_gig.earnings_actual = (s.actuals.venue_gig.earnings_actual||0) + amount;
+      s.actuals.venue_gig.gigs_played = (s.actuals.venue_gig.gigs_played||0) + 1;
+    }
+    saveEdits();
 
-      // Add new task handler
-      document.getElementById("btn-add-todo").addEventListener("click", () => {
-        const textInput = document.getElementById("add-todo-task");
-        const task = textInput.value.trim();
-        if (!task) {
-          alert("Please type a valid task details.");
-          return;
-        }
+  } else if (qlType === 'expense') {
+    const category = val('ql-category');
+    const amount = parseFloat(val('ql-amount') || '0');
+    const source = val('ql-source');
+    const desc = val('ql-desc');
+    if (!amount) { alert('Enter amount'); return; }
+    D.expense_history.push({id:`exp-${Date.now()}`,category,amount,source,description:desc,date:today});
+    if (source === 'local') {
+      D.ground_ops.expenses = (D.ground_ops.expenses||0) + amount;
+      D.ground_ops.operational_bank = (D.ground_ops.cash_float||0) + (D.ground_ops.local_busking_earnings||0) - (D.ground_ops.expenses||0);
+    }
+    saveEdits();
 
-        const tier = document.getElementById("add-todo-tier").value;
-        const category = document.getElementById("add-todo-cat").value;
+  } else if (qlType === 'spot') {
+    const name = val('ql-spot-name');
+    const location = val('ql-location');
+    if (!name || !location) { alert('Enter spot name and city'); return; }
+    const stopObj = D.tour_stops.find(s => s.name === location);
+    const stopId = stopObj ? stopObj.id : 0;
+    const spotId = `bsk-${location.toLowerCase().replace(/[^a-z]/g,'-')}-${name.toLowerCase().replace(/[^a-z]/g,'-')}`;
+    const newSpot = {
+      id: spotId, tour_stop_id: stopId,
+      name, city: location,
+      address: val('ql-address'),
+      foot_traffic_rating: parseInt(val('ql-traffic')||'3'),
+      permit_required: val('ql-permit') === 'true',
+      permit_obtained: false,
+      best_time_of_day: val('ql-besttime'),
+      notes: val('ql-notes'),
+      earnings_history: [],
+      total_earnings_logged: 0,
+      total_sessions: 0,
+      avg_earnings_per_session: 0,
+      status: 'spotted',
+      discovered_date: today,
+      tags: []
+    };
+    D.busking_spots = D.busking_spots || [];
+    D.busking_spots.push(newSpot);
+    if (stopObj) {
+      stopObj.busking_spot_ids = stopObj.busking_spot_ids || [];
+      stopObj.busking_spot_ids.push(spotId);
+      stopObj.actuals.busking.spots_scouted = (stopObj.actuals.busking.spots_scouted||0) + 1;
+    }
+    saveEdits();
+  }
 
-        const newTodo = {
-          id: Date.now(),
-          task: task,
-          completed: false,
-          is_weekly: (tier === "weekly"),
-          category: category
-        };
+  closeQuickLog();
+  // Re-render current view
+  const activeView = document.querySelector('.view.active')?.id?.replace('view-','');
+  if (activeView) switchView(activeView);
+}
 
-        state.todos.push(newTodo);
-        textInput.value = "";
-        saveStateToLocal();
-        renderEverything();
-      });
+function val(id) {
+  const el = document.getElementById(id);
+  return el ? el.value : '';
+}
 
-      // Clear today's checklist tier
-      document.getElementById("btn-wipe-daily").addEventListener("click", () => {
-        if (confirm("Reset Today's Grind tasks? All checks and custom daily grind list items will be wiped clean.")) {
-          state.todos = state.todos.filter(t => t.is_weekly);
-          saveStateToLocal();
-          renderEverything();
-        }
-      });
-
-      // Reset default checklist templates
-      document.getElementById("btn-reset-todos-default").addEventListener("click", () => {
-        if (confirm("Restore original task checklist presets? Your custom actions will be preserved where unique.")) {
-          // Reset default seeds list
-          const defaults = DEFAULT_APP_STATE.todos;
-          defaults.forEach(def => {
-            const exists = state.todos.some(t => t.task.toLowerCase() === def.task.toLowerCase());
-            if (!exists) {
-              state.todos.push(JSON.parse(JSON.stringify(def)));
-            }
-          });
-          saveStateToLocal();
-          renderEverything();
-        }
-      });
-
-
-      // -----------------------------------------------------------------
-      // EXPENSES & REVENUE COMPREHENSIVE LEDGER
-      // -----------------------------------------------------------------
-
-      function renderLedgerLogEntries() {
-        const tbody = document.getElementById("ledger-tbody");
-        tbody.innerHTML = "";
-
-        const searchQuery = document.getElementById("ledger-search").value.toLowerCase();
-        const selectedBucket = document.getElementById("ledger-filter-bucket").value;
-
-        // Sort transaction chronologically backwards
-        const sortedTx = [...state.ledger].sort((a, b) => new Date(b.date) - new Date(a.date));
-
-        let displayedCount = 0;
-
-        sortedTx.forEach(tx => {
-          // Apply matching filters queries
-          if (selectedBucket !== "all" && tx.bucket !== selectedBucket) return;
-          
-          const textMatch = tx.description.toLowerCase().includes(searchQuery) || 
-                            tx.category.toLowerCase().includes(searchQuery);
-          if (searchQuery && !textMatch) return;
-
-          displayedCount++;
-          const tr = document.createElement("tr");
-          
-          const cleanDate = tx.date ? tx.date.split("-").slice(1).join("/") : "road"; // MM/DD
-          const valClass = tx.type === "revenue" ? "tx-revenue" : "tx-expense";
-          const valSymbol = tx.type === "revenue" ? "+" : "-";
-
-          tr.innerHTML = `
-            <td style="color: var(--text-muted); font-family: monospace;">${cleanDate}</td>
-            <td style="font-weight: 500;">${tx.description}</td>
-            <td><span class="todo-badge badge-${getTodoCatFromLedger(tx.category)}">${tx.category}</span></td>
-            <td style="font-size: 0.75rem; color: var(--text-muted);">${tx.bucket === 'Local Adelaide Float' ? 'Adelaide Float' : 'Tour Savings'}</td>
-            <td class="tx-amt ${valClass}">${valSymbol}$${parseFloat(tx.amount).toFixed(2)}</td>
-            <td>
-              <button class="todo-delete-btn" style="padding: 0.15rem;" title="Delete transaction">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path></svg>
-              </button>
-            </td>
-          `;
-
-          tr.querySelector(".todo-delete-btn").addEventListener("click", () => {
-            state.ledger = state.ledger.filter(item => item.id !== tx.id);
-            saveStateToLocal();
-            renderEverything();
-          });
-
-          tbody.appendChild(tr);
-        });
-
-        if (displayedCount === 0) {
-          tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem; font-style: italic;">No ledger records matching filters found.</td></tr>`;
-        }
-      }
-
-      function getTodoCatFromLedger(ledgerCat) {
-        const cat = ledgerCat.toLowerCase();
-        if (cat.includes("fuel") || cat.includes("toll") || cat.includes("gear") || cat.includes("accommodation")) return "road_cargo";
-        if (cat.includes("gig") || cat.includes("concert")) return "tour_booking";
-        return "daily_shit";
-      }
-
-      // Log entry submission handler
-      document.getElementById("btn-log-tx").addEventListener("click", () => {
-        const amountField = document.getElementById("tx-amount");
-        const decsField = document.getElementById("tx-desc");
-        
-        const amount = parseFloat(amountField.value);
-        const description = decsField.value.trim();
-
-        if (isNaN(amount) || amount <= 0) {
-          alert("Please type a valid currency amount.");
-          return;
-        }
-        if (!description) {
-          alert("Please specify a description summary.");
-          return;
-        }
-
-        const type = document.querySelector('input[name="tx-type"]:checked').value;
-        const bucket = document.getElementById("tx-bucket").value;
-        const category = document.getElementById("tx-category").value;
-        
-        const rawDate = document.getElementById("tx-date").value;
-        const date = rawDate || new Date().toISOString().split("T")[0];
-
-        const newTx = {
-          id: `tx_${Date.now()}`,
-          type: type,
-          category: category,
-          amount: amount,
-          bucket: bucket,
-          date: date,
-          description: description
-        };
-
-        state.ledger.push(newTx);
-        
-        // Reset Inputs fields
-        amountField.value = "";
-        decsField.value = "";
-        
-        saveStateToLocal();
-        renderEverything();
-      });
-
-      // Filter ledger inputs listener hooks
-      document.getElementById("ledger-search").addEventListener("input", renderLedgerLogEntries);
-      document.getElementById("ledger-filter-bucket").addEventListener("change", renderLedgerLogEntries);
-
-      // Default the transaction logging form date to current day
-      document.getElementById("tx-date").value = new Date().toISOString().split("T")[0];
-
-
-      // -----------------------------------------------------------------
-      // EARNINGS PROJECTOR SANDBOX CONTROLLER
-      // -----------------------------------------------------------------
-
-      const sizeMatrix_weeks = 16;
-      const sizeMatrix_gigsCount = 58;
-      const sizeMatrix_houseCount = 16;
-      const sizeMatrix_buskCount = 60;
-      const sizeMatrix_expensesWeekly = 345;
-
-      function syncSandboxCalculations() {
-        // Range inputs element loaders
-        const slideGig = document.getElementById("slide-gig-fee");
-        const slideHouse = document.getElementById("slide-house-fee");
-        const slideBusk = document.getElementById("slide-busk-fee");
-
-        // Set UI values output matching state metrics parameters
-        slideGig.value = state.sandbox?.gig_fee || 400;
-        slideHouse.value = state.sandbox?.house_fee || 650;
-        slideBusk.value = state.sandbox?.busk_fee || 250;
-
-        const executeProjectionOutput = () => {
-          const gigFee = parseInt(slideGig.value, 10);
-          const houseFee = parseInt(slideHouse.value, 10);
-          const buskFee = parseInt(slideBusk.value, 10);
-
-          state.sandbox = {
-            gig_fee: gigFee,
-            house_fee: houseFee,
-            busk_fee: buskFee
-          };
-          saveStateToLocal();
-
-          // Render sandbox labels indicators
-          document.getElementById("val-gig-fee").textContent = `$${gigFee}`;
-          document.getElementById("val-house-fee").textContent = `$${houseFee}`;
-          document.getElementById("val-busk-fee").textContent = `$${buskFee}`;
-
-          const gigsTotal = sizeMatrix_gigsCount * gigFee;
-          const houseTotal = sizeMatrix_houseCount * houseFee;
-          const buskingTotal = sizeMatrix_buskCount * buskFee;
-          const expensesTotal = sizeMatrix_expensesWeekly * sizeMatrix_weeks;
-
-          document.getElementById("label-sub-gigs").textContent = `$${gigsTotal.toLocaleString()}`;
-          document.getElementById("label-sub-house").textContent = `$${houseTotal.toLocaleString()}`;
-          document.getElementById("label-sub-busk").textContent = `$${buskingTotal.toLocaleString()}`;
-
-          const estimatedTotalNet = gigsTotal + houseTotal + buskingTotal - expensesTotal;
-          const projLabel = document.getElementById("label-net-proj");
-          projLabel.textContent = `$${estimatedTotalNet.toLocaleString()}`;
-
-          if (estimatedTotalNet >= 37000) {
-            projLabel.className = "color-green";
-          } else if (estimatedTotalNet >= 25000) {
-            projLabel.className = "color-cyan";
-          } else {
-            projLabel.className = "color-amber";
-          }
-        };
-
-        slideGig.addEventListener("input", executeProjectionOutput);
-        slideHouse.addEventListener("input", executeProjectionOutput);
-        slideBusk.addEventListener("input", executeProjectionOutput);
-
-        executeProjectionOutput();
-      }
-
-
-      // -----------------------------------------------------------------
-      // Campervan Asset Telemetry Indicators
-      // -----------------------------------------------------------------
-
-      function renderCampervanTelemetry() {
-        // Fallbacks metrics telemetry definitions
-        const tel = {
-          batteryVolts: "13.2 V",
-          batteryPct: 92,
-          solarWatts: "245 W",
-          solarPct: 65,
-          fuelRange: "480 km",
-          fuelPct: 68
-        };
-
-        // Fresh water calculates directly from active index (each stop siphons tank levels!)
-        const activeIdx = state.tour_stops.findIndex(s => s.status === "Current");
-        const defaultWaterPct = 85;
-        // As index advances, drop down water usage to simulate campervan realities
-        const computedWaterPct = Math.max(8, defaultWaterPct - (activeIdx !== -1 ? activeIdx * 7 : 0));
-        const computedLitres = Math.round((computedWaterPct / 100) * 140);
-
-        document.getElementById("tel-val-battery").textContent = tel.batteryVolts;
-        document.getElementById("tel-val-solar").textContent = tel.solarWatts;
-        document.getElementById("tel-val-fuel").textContent = tel.fuelRange;
-        document.getElementById("tel-val-fuel-pct").textContent = `${tel.fuelPct}%`;
-
-        document.getElementById("tel-val-water").textContent = `${computedLitres} L`;
-        document.getElementById("tel-val-water-pct").textContent = `${computedWaterPct}%`;
-
-        const waterBar = document.getElementById("tel-fill-water");
-        waterBar.style.width = `${computedWaterPct}%`;
-
-        if (computedWaterPct < 25) {
-          waterBar.style.backgroundColor = "var(--red)";
-          document.getElementById("tel-val-water-pct").className = "color-red";
-        } else {
-          waterBar.style.backgroundColor = "var(--cyan)";
-          document.getElementById("tel-val-water-pct").className = "color-cyan";
-        }
-      }
-
-
-      // -----------------------------------------------------------------
-      // DEVELOPMENT DEVTOOLS PORTAL SYSTEM
-      // -----------------------------------------------------------------
-
-      document.getElementById("btn-copy-json").addEventListener("click", () => {
-        const payload = JSON.stringify(state, null, 2);
-        navigator.clipboard.writeText(payload).then(() => {
-          alert("Workspace database JSON representation copied to clipboard! You can paste this directly to data.json inside the repository scripts to preserve progress.");
-        }).catch(err => {
-          console.error("Failed to copy JSON backup:", err);
-          // Fallback view in textbox
-          document.getElementById("import-json-area").value = payload;
-          alert("Clipboard blocked. Raw database state exported into the pastebin textbox below.");
-        });
-      });
-
-      document.getElementById("btn-clear-workspace").addEventListener("click", () => {
-        if (confirm("Reset completely? All transactions logs, routing adjustments, and checklists overrides will revert back to general server seed defaults.")) {
-          localStorage.removeItem(LOCAL_STORAGE_KEY);
-          loadBaseDefaults();
-          saveStateToLocal();
-          renderEverything();
-          triggerStopInspection(null);
-          document.getElementById("inspector-placeholder").style.display = "block";
-          document.getElementById("inspector-editor").style.display = "none";
-        }
-      });
-
-      document.getElementById("btn-import-json").addEventListener("click", () => {
-        const pastebox = document.getElementById("import-json-area");
-        const text = pastebox.value.trim();
-        if (!text) {
-          alert("Please paste a valid JSON database configuration beforehand.");
-          return;
-        }
-
-        try {
-          const parsed = JSON.parse(text);
-          if (!parsed.tour_stops || !parsed.todos || !parsed.ledger) {
-            alert("Structural alignment invalid. Missing one of the required tracking arrays (tour_stops, todos, ledger).");
-            return;
-          }
-          state = parsed;
-          saveStateToLocal();
-          renderEverything();
-          pastebox.value = "";
-          alert("SUCCESS: Workspace overwriting variables cleanly restored!");
-        } catch (e) {
-          alert(`Configuration parser abort. Error: ${e.message}`);
-        }
-      });
-
-      // Currency precision rounding helper
-      function roundCurrency(val) {
-        return Math.round(val * 100) / 100;
-      }
-
-      // Ignite Application Controller
-      initializeWorkspaceState();
-
-    });
-  </script>
+// ═══ INIT ═══
+loadData();
+renderCommand();
+</script>
 </body>
 </html>
