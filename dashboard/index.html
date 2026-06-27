@@ -3670,6 +3670,18 @@ if (typeof window !== 'undefined') {
   // a 'tour-os:data-changed' event.
   document.addEventListener('tour-os:data-changed', renderCommandCenter);
 
+  // Re-render the active tab view when data changes (e.g. stage advancement
+  // via the venue detail modal) so the board refreshes without a tab switch.
+  document.addEventListener('tour-os:data-changed', function() {
+    var activeTab = document.querySelector('.nav-item.active');
+    if (!activeTab) return;
+    var tab = activeTab.getAttribute('data-tab');
+    if (tab === 'pipeline' && typeof renderPipeline === 'function') renderPipeline();
+    if (tab === 'people' && typeof renderPeople === 'function') renderPeople();
+    if (tab === 'money' && typeof renderMoney === 'function') renderMoney();
+    if (tab === 'tour' && typeof renderTour === 'function') renderTour();
+  });
+
 })();
 
 </script>
