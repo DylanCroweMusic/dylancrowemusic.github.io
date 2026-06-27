@@ -1163,11 +1163,11 @@
         <span class="nav-icon">📊</span>
         <span>Pipeline</span>
       </button>
-      <button class="nav-item" data-tab="tour" aria-label="Tour — Stops and Timeline">
+      <button class="nav-item" data-tab="tour" aria-label="Tour — Stops, Timeline, and Todos">
         <span class="nav-icon">🗺️</span>
         <span>Tour</span>
       </button>
-      <button class="nav-item" data-tab="people" aria-label="People — Contacts and Todos">
+      <button class="nav-item" data-tab="people" aria-label="People — Contacts">
         <span class="nav-icon">👥</span>
         <span>People</span>
       </button>
@@ -5843,6 +5843,34 @@ if (document.readyState !== 'loading') {
         '<button id="v3-tour-seg-calendar" class="tab-btn ' + (tourState.subview === 'calendar' ? 'active' : '') + '" style="flex:1;text-align:center;">📅 Calendar</button>' +
       '</div>';
 
+    // Todos section
+    var todos = TourOS.getAllEntities('todos') || [];
+    html += '<div class="section-title">📋 Todos (' + todos.filter(function(t){return !t.completed;}).length + ' open)</div>';
+    if (todos.length === 0) {
+      html += '<div class="empty-state" style="padding:1rem;font-size:0.75rem;">No todos yet. Tap + to add one.</div>';
+    } else {
+      todos.forEach(function(todo) {
+        var prioColor = todo.priority === 'high' ? 'var(--red)' : (todo.priority === 'medium' ? 'var(--amber)' : 'var(--text-muted)');
+        var overdue = todo.due_date && todo.due_date < new Date().toISOString().slice(0,10) && !todo.completed;
+        html += '<div class="entity-card" style="opacity:' + (todo.completed ? '0.5' : '1') + ';">' +
+          '<div class="entity-hdr">' +
+            '<div>' +
+              '<div class="entity-name" style="' + (todo.completed ? 'text-decoration:line-through;' : '') + '">' + esc(todo.text) + '</div>' +
+              '<div class="entity-sub">' + esc(todo.category || 'ops') +
+              (todo.due_date ? ' · due ' + fmtDate(todo.due_date) : '') +
+              (overdue ? ' ⚠️ overdue' : '') + '</div>' +
+            '</div>' +
+            '<button class="venue-btn" style="font-size:0.6rem;min-height:44px;padding:4px 8px;" data-toggle-todo="' + esc(todo.id) + '">' +
+              (todo.completed ? '↩' : '✓') + '</button>' +
+          '</div>' +
+          (todo.priority ? '<div style="margin-top:0.2rem;"><span class="badge" style="background:' + prioColor + '22;color:' + prioColor + ';">' + esc(todo.priority) + '</span></div>' : '') +
+        '</div>';
+      });
+    }
+
+    // Spacer between todos and route
+    html += '<div style="height:0.5rem;"></div>';
+
     if (tourState.subview === 'calendar') {
       html += '<div class="empty-state">' +
         '<div style="font-size:2rem;margin-bottom:0.5rem">📅</div>' +
@@ -5873,6 +5901,23 @@ if (document.readyState !== 'loading') {
       el.addEventListener('click', function () {
         tourState.selectedStopId = el.getAttribute('data-stop-id');
         renderTour();
+      });
+    });
+
+    // Bind todo toggle
+    container.querySelectorAll('[data-toggle-todo]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var todoId = btn.getAttribute('data-toggle-todo');
+        var todo = TourOS.getEntity('todos', todoId);
+        if (todo) {
+          todo.completed = !todo.completed;
+          todo.completed_at = todo.completed ? new Date().toISOString() : null;
+          todo.updated_at = new Date().toISOString();
+          TourOS.updateEntity('todos', todoId, todo);
+          TourOS.saveData();
+          showToast(todo.completed ? '✓ Todo completed' : '↩ Todo reopened');
+          renderTour();
+        }
       });
     });
   }
@@ -7628,33 +7673,8 @@ if (document.readyState !== 'loading') {
     if (!container) return;
 
     var contacts = TourOS.getAllEntities('contacts') || [];
-    var todos = TourOS.getAllEntities('todos') || [];
 
     var html = '';
-
-    // Todos section
-    html += '<div class="section-title">📋 Todos (' + todos.filter(function(t){return !t.completed;}).length + ' open)</div>';
-    if (todos.length === 0) {
-      html += '<div class="empty-state" style="padding:1rem;font-size:0.75rem;">No todos yet.</div>';
-    } else {
-      todos.forEach(function(todo) {
-        var prioColor = todo.priority === 'high' ? 'var(--red)' : (todo.priority === 'medium' ? 'var(--amber)' : 'var(--text-muted)');
-        var overdue = todo.due_date && todo.due_date < new Date().toISOString().slice(0,10) && !todo.completed;
-        html += '<div class="entity-card" style="opacity:' + (todo.completed ? '0.5' : '1') + ';">' +
-          '<div class="entity-hdr">' +
-            '<div>' +
-              '<div class="entity-name" style="' + (todo.completed ? 'text-decoration:line-through;' : '') + '">' + esc(todo.text) + '</div>' +
-              '<div class="entity-sub">' + esc(todo.category || 'ops') +
-              (todo.due_date ? ' · due ' + fmtDate(todo.due_date) : '') +
-              (overdue ? ' ⚠️ overdue' : '') + '</div>' +
-            '</div>' +
-            '<button class="venue-btn" style="font-size:0.6rem;min-height:44px;padding:4px 8px;" data-toggle-todo="' + esc(todo.id) + '">' +
-              (todo.completed ? '↩' : '✓') + '</button>' +
-          '</div>' +
-          (todo.priority ? '<div style="margin-top:0.2rem;"><span class="badge" style="background:' + prioColor + '22;color:' + prioColor + ';">' + esc(todo.priority) + '</span></div>' : '') +
-        '</div>';
-      });
-    }
 
     // Contacts section
     html += '<div class="section-title">👥 Contacts (' + contacts.length + ')</div>';
@@ -7682,23 +7702,6 @@ if (document.readyState !== 'loading') {
     }
 
     container.innerHTML = html;
-
-    // Bind todo toggle
-    container.querySelectorAll('[data-toggle-todo]').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        var todoId = btn.getAttribute('data-toggle-todo');
-        var todo = TourOS.getEntity('todos', todoId);
-        if (todo) {
-          todo.completed = !todo.completed;
-          todo.completed_at = todo.completed ? new Date().toISOString() : null;
-          todo.updated_at = new Date().toISOString();
-          TourOS.updateEntity('todos', todoId, todo);
-          TourOS.saveData();
-          showToast(todo.completed ? '✓ Todo completed' : '↩ Todo reopened');
-          renderPeople();
-        }
-      });
-    });
   };
 
   // ═══════════════════════════════════════════════════════════════
@@ -7729,7 +7732,7 @@ if (document.readyState !== 'loading') {
     if (activeView) {
       var id = activeView.id;
       if (id === 'view-pipeline') createSheetType = 'venue';
-      else if (id === 'view-tour') createSheetType = 'venue';
+      else if (id === 'view-tour') createSheetType = 'todo';
       else if (id === 'view-people') createSheetType = 'contact';
       else if (id === 'view-money') createSheetType = 'expense';
       else createSheetType = subtype || 'contact';
@@ -7933,7 +7936,7 @@ if (document.readyState !== 'loading') {
       TourOS.saveData();
       showToast('✓ Todo added');
       closeModal();
-      renderPeople();
+      renderTour();
 
     } else if (createSheetType === 'venue') {
       var vname = val('cs-venue-name');
