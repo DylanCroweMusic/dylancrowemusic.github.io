@@ -2644,6 +2644,7 @@ const TourOS = (function () {
           category: todo.category || 'ops',
           priority: todo.priority || 'medium',
           due_date: todo.due_date || null,
+          tour_stop_id: todo.tour_stop_id || null,
           completed: todo.completed || false,
           completed_at: todo.completed_at || null,
           auto_generated: false,
@@ -5819,9 +5820,10 @@ if (document.readyState !== 'loading') {
 
   /** Current state for Tour tab */
   var tourState = {
-    subview: 'route',      // 'route' | 'calendar'
+    subview: 'route',      // 'route' | 'todos' | 'calendar'
     selectedStopId: null,  // when in stop detail
-    stopDetailTab: 'busking' // 'busking' | 'gigs' | 'financials'
+    stopDetailTab: 'busking', // 'busking' | 'gigs' | 'todos' | 'financials'
+    todoFilter: 'open'    // 'all' | 'open' | 'completed' | 'overdue'
   };
 
   // ── Main render entry point for Tour tab ───────────────────────────────
@@ -5836,40 +5838,13 @@ if (document.readyState !== 'loading') {
       return;
     }
 
-    // Segmented control: Route | Calendar
+    // Segmented control: Route | Todos | Calendar
     var html = '' +
       '<div style="display:flex;gap:0.3rem;margin-bottom:1rem;background:var(--card);border-radius:10px;padding:3px;">' +
         '<button id="v3-tour-seg-route" class="tab-btn ' + (tourState.subview === 'route' ? 'active' : '') + '" style="flex:1;text-align:center;">🗺️ Route</button>' +
+        '<button id="v3-tour-seg-todos" class="tab-btn ' + (tourState.subview === 'todos' ? 'active' : '') + '" style="flex:1;text-align:center;">📋 Todos</button>' +
         '<button id="v3-tour-seg-calendar" class="tab-btn ' + (tourState.subview === 'calendar' ? 'active' : '') + '" style="flex:1;text-align:center;">📅 Calendar</button>' +
       '</div>';
-
-    // Todos section
-    var todos = TourOS.getAllEntities('todos') || [];
-    html += '<div class="section-title">📋 Todos (' + todos.filter(function(t){return !t.completed;}).length + ' open)</div>';
-    if (todos.length === 0) {
-      html += '<div class="empty-state" style="padding:1rem;font-size:0.75rem;">No todos yet. Tap + to add one.</div>';
-    } else {
-      todos.forEach(function(todo) {
-        var prioColor = todo.priority === 'high' ? 'var(--red)' : (todo.priority === 'medium' ? 'var(--amber)' : 'var(--text-muted)');
-        var overdue = todo.due_date && todo.due_date < new Date().toISOString().slice(0,10) && !todo.completed;
-        html += '<div class="entity-card" style="opacity:' + (todo.completed ? '0.5' : '1') + ';">' +
-          '<div class="entity-hdr">' +
-            '<div>' +
-              '<div class="entity-name" style="' + (todo.completed ? 'text-decoration:line-through;' : '') + '">' + esc(todo.text) + '</div>' +
-              '<div class="entity-sub">' + esc(todo.category || 'ops') +
-              (todo.due_date ? ' · due ' + fmtDate(todo.due_date) : '') +
-              (overdue ? ' ⚠️ overdue' : '') + '</div>' +
-            '</div>' +
-            '<button class="venue-btn" style="font-size:0.6rem;min-height:44px;padding:4px 8px;" data-toggle-todo="' + esc(todo.id) + '">' +
-              (todo.completed ? '↩' : '✓') + '</button>' +
-          '</div>' +
-          (todo.priority ? '<div style="margin-top:0.2rem;"><span class="badge" style="background:' + prioColor + '22;color:' + prioColor + ';">' + esc(todo.priority) + '</span></div>' : '') +
-        '</div>';
-      });
-    }
-
-    // Spacer between todos and route
-    html += '<div style="height:0.5rem;"></div>';
 
     if (tourState.subview === 'calendar') {
       html += '<div class="empty-state">' +
@@ -5878,6 +5853,8 @@ if (document.readyState !== 'loading') {
         '<div>Coming in Phase 2</div>' +
         '<div style="font-size:0.65rem;margin-top:0.5rem;color:var(--text-faint)">Unified calendar for gigs, busking sessions, HC shows, and travel.</div>' +
       '</div>';
+    } else if (tourState.subview === 'todos') {
+      html += renderTourTodosView();
     } else {
       html += renderRouteTimeline();
     }
@@ -5886,9 +5863,14 @@ if (document.readyState !== 'loading') {
 
     // Bind segmented control
     var routeBtn = document.getElementById('v3-tour-seg-route');
+    var todosBtn = document.getElementById('v3-tour-seg-todos');
     var calBtn = document.getElementById('v3-tour-seg-calendar');
     if (routeBtn) routeBtn.addEventListener('click', function () {
       tourState.subview = 'route';
+      renderTour();
+    });
+    if (todosBtn) todosBtn.addEventListener('click', function () {
+      tourState.subview = 'todos';
       renderTour();
     });
     if (calBtn) calBtn.addEventListener('click', function () {
@@ -5920,6 +5902,139 @@ if (document.readyState !== 'loading') {
         }
       });
     });
+
+    // Bind todo filter chips
+    container.querySelectorAll('[data-todo-filter]').forEach(function(chip) {
+      chip.addEventListener('click', function() {
+        tourState.todoFilter = chip.getAttribute('data-todo-filter');
+        renderTour();
+      });
+    });
+
+    // Bind todo "jump to stop"
+    container.querySelectorAll('[data-jump-stop]').forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var stopId = el.getAttribute('data-jump-stop');
+        tourState.selectedStopId = stopId;
+        tourState.stopDetailTab = 'todos';
+        renderTour();
+      });
+    });
+  }
+
+  // ── Tour Todos View (overarching) ──────────────────────────────────────
+  function renderTourTodosView() {
+    var todos = TourOS.getAllEntities('todos') || [];
+    var today = new Date().toISOString().slice(0, 10);
+    var stops = TourOS.getAllEntities('tour_stops') || [];
+    var stopMap = {};
+    stops.forEach(function(s) { stopMap[s.id] = s; });
+
+    // Helper: resolve which tour stop a todo belongs to
+    function todoStopId(todo) {
+      if (todo.tour_stop_id) return todo.tour_stop_id;
+      if (todo.source_entity_type && todo.source_entity_id) {
+        var ent = TourOS.getEntity(todo.source_entity_type, todo.source_entity_id);
+        if (ent && ent.tour_stop_id) return ent.tour_stop_id;
+      }
+      return null;
+    }
+
+    // Filter
+    var filtered;
+    switch (tourState.todoFilter) {
+      case 'completed':
+        filtered = todos.filter(function(t) { return t.completed; });
+        break;
+      case 'overdue':
+        filtered = todos.filter(function(t) {
+          return !t.completed && t.due_date && t.due_date < today;
+        });
+        break;
+      case 'all':
+        filtered = todos.slice();
+        break;
+      default: // 'open'
+        filtered = todos.filter(function(t) { return !t.completed; });
+    }
+
+    // Sort: overdue first (by due date), then open (by due date), then completed
+    filtered.sort(function(a, b) {
+      var aOver = !a.completed && a.due_date && a.due_date < today ? 1 : 0;
+      var bOver = !b.completed && b.due_date && b.due_date < today ? 1 : 0;
+      if (aOver !== bOver) return bOver - aOver;
+      if (a.completed !== b.completed) return a.completed ? 1 : -1;
+      return (a.due_date || '9999').localeCompare(b.due_date || '9999');
+    });
+
+    var openCount = todos.filter(function(t) { return !t.completed; }).length;
+    var overdueCount = todos.filter(function(t) {
+      return !t.completed && t.due_date && t.due_date < today;
+    }).length;
+    var completedCount = todos.filter(function(t) { return t.completed; }).length;
+
+    var html = '';
+
+    // Title + count
+    html += '<div class="section-title">📋 Todos — ' + openCount + ' open';
+    if (overdueCount > 0) html += ' · <span style="color:var(--red);">' + overdueCount + ' overdue</span>';
+    html += '</div>';
+
+    // Filter chips
+    html += '<div class="ct-filter-bar" style="margin-bottom:0.8rem;">';
+    var filters = [
+      { id: 'open', label: 'Open', count: openCount },
+      { id: 'overdue', label: '⚠️ Overdue', count: overdueCount },
+      { id: 'completed', label: '✓ Done', count: completedCount },
+      { id: 'all', label: 'All', count: todos.length }
+    ];
+    filters.forEach(function(f) {
+      var active = tourState.todoFilter === f.id ? ' active' : '';
+      html += '<button class="ct-chip' + active + '" data-todo-filter="' + f.id + '">' + f.label +
+        '<span class="ct-chip-count">' + f.count + '</span></button>';
+    });
+    html += '</div>';
+
+    // Todo list
+    if (filtered.length === 0) {
+      html += '<div class="empty-state" style="padding:1.5rem;font-size:0.75rem;">' +
+        '<div style="font-size:1.5rem;margin-bottom:0.3rem">📋</div>' +
+        (tourState.todoFilter === 'open' ? 'No open todos. Tap + to add one.' :
+         tourState.todoFilter === 'overdue' ? 'No overdue todos. Nice work!' :
+         tourState.todoFilter === 'completed' ? 'No completed todos yet.' : 'No todos.') +
+      '</div>';
+    } else {
+      filtered.forEach(function(todo) {
+        var prioColor = todo.priority === 'high' ? 'var(--red)' : (todo.priority === 'medium' ? 'var(--amber)' : 'var(--text-muted)');
+        var overdue = todo.due_date && todo.due_date < today && !todo.completed;
+        var stopId = todoStopId(todo);
+        var stopName = stopId && stopMap[stopId] ? stopMap[stopId].name : null;
+
+        html += '<div class="entity-card" style="opacity:' + (todo.completed ? '0.5' : '1') + ';">' +
+          '<div class="entity-hdr">' +
+            '<div>' +
+              '<div class="entity-name" style="' + (todo.completed ? 'text-decoration:line-through;' : '') + '">' + esc(todo.text) + '</div>' +
+              '<div class="entity-sub">' + esc(todo.category || 'ops') +
+              (todo.due_date ? ' · due ' + fmtDate(todo.due_date) : '') +
+              (overdue ? ' ⚠️ overdue' : '') + '</div>' +
+            '</div>' +
+            '<button class="venue-btn" style="font-size:0.6rem;min-height:44px;padding:4px 8px;" data-toggle-todo="' + esc(todo.id) + '">' +
+              (todo.completed ? '↩' : '✓') + '</button>' +
+          '</div>';
+
+        // Badges row
+        var badges = '';
+        if (todo.priority) badges += '<span class="badge" style="background:' + prioColor + '22;color:' + prioColor + ';">' + esc(todo.priority) + '</span>';
+        if (stopName) badges += '<span class="badge" style="background:var(--cyan)22;color:var(--cyan);cursor:pointer;" data-jump-stop="' + esc(stopId) + '">📍 ' + esc(stopName) + '</span>';
+        if (todo.source_entity_type) badges += '<span class="badge" style="background:var(--magenta)22;color:var(--magenta);">' + esc(todo.source_entity_type.replace('_', ' ')) + '</span>';
+        if (badges) html += '<div style="margin-top:0.3rem;display:flex;gap:0.3rem;flex-wrap:wrap;">' + badges + '</div>';
+
+        html += '</div>';
+      });
+    }
+
+    return html;
   }
 
   // ── Route Timeline ─────────────────────────────────────────────────────
@@ -6024,11 +6139,12 @@ if (document.readyState !== 'loading') {
       '</div>' +
     '</div>';
 
-    // Tabs: Busking | Gigs | Financials
+    // Tabs: Busking | Gigs | Todos | Financials
     var activeTab = tourState.stopDetailTab;
     html += '<div class="tab-bar">' +
       '<button class="tab-btn busking ' + (activeTab === 'busking' ? 'active' : '') + '" data-tab="busking">🎸 Busking</button>' +
       '<button class="tab-btn gig ' + (activeTab === 'gigs' ? 'active' : '') + '" data-tab="gigs">🎤 Gigs</button>' +
+      '<button class="tab-btn ' + (activeTab === 'todos' ? 'active' : '') + '" data-tab="todos" style="border-color:var(--cyan);">📋 Todos</button>' +
       '<button class="tab-btn house ' + (activeTab === 'financials' ? 'active' : '') + '" data-tab="financials">💰 Financials</button>' +
     '</div>';
 
@@ -6037,6 +6153,8 @@ if (document.readyState !== 'loading') {
       html += renderStopBuskingTab(stop);
     } else if (activeTab === 'gigs') {
       html += renderStopGigsTab(stop);
+    } else if (activeTab === 'todos') {
+      html += renderStopTodosTab(stop);
     } else {
       html += renderStopFinancialsTab(stop);
     }
@@ -6181,6 +6299,77 @@ if (document.readyState !== 'loading') {
     return html;
   }
 
+  // ── Stop Detail: Todos Tab ─────────────────────────────────────────────
+  function renderStopTodosTab(stop) {
+    var todos = TourOS.getAllEntities('todos') || [];
+    var today = new Date().toISOString().slice(0, 10);
+
+    // Find todos linked to this stop:
+    // 1. todo.tour_stop_id === stop.id (direct)
+    // 2. todo.source_entity_type → entity.tour_stop_id === stop.id (indirect)
+    var stopTodos = todos.filter(function(t) {
+      if (t.tour_stop_id === stop.id) return true;
+      if (t.source_entity_type && t.source_entity_id) {
+        var ent = TourOS.getEntity(t.source_entity_type, t.source_entity_id);
+        if (ent && ent.tour_stop_id === stop.id) return true;
+      }
+      return false;
+    });
+
+    // Sort: overdue first, then open by due date, then completed
+    stopTodos.sort(function(a, b) {
+      var aOver = !a.completed && a.due_date && a.due_date < today ? 1 : 0;
+      var bOver = !b.completed && b.due_date && b.due_date < today ? 1 : 0;
+      if (aOver !== bOver) return bOver - aOver;
+      if (a.completed !== b.completed) return a.completed ? 1 : -1;
+      return (a.due_date || '9999').localeCompare(b.due_date || '9999');
+    });
+
+    var openCount = stopTodos.filter(function(t) { return !t.completed; }).length;
+
+    var html = '' +
+      '<div style="display:flex;gap:0.4rem;margin-bottom:0.8rem;">' +
+        '<button class="venue-btn" id="v3-add-stop-todo" style="flex:1;font-size:0.72rem;">📋 Add Todo for ' + esc(stop.name) + '</button>' +
+      '</div>';
+
+    html += '<div class="section-title">📋 ' + openCount + ' open · ' + stopTodos.length + ' total</div>';
+
+    if (stopTodos.length === 0) {
+      html += '<div class="empty-state">' +
+        '<div style="font-size:1.5rem;margin-bottom:0.3rem">📋</div>' +
+        '<div>No todos for ' + esc(stop.name) + ' yet.</div>' +
+        '<div style="font-size:0.65rem;margin-top:0.3rem;color:var(--text-faint)">Tap "Add Todo" to create one linked to this stop.</div>' +
+      '</div>';
+    } else {
+      stopTodos.forEach(function(todo) {
+        var prioColor = todo.priority === 'high' ? 'var(--red)' : (todo.priority === 'medium' ? 'var(--amber)' : 'var(--text-muted)');
+        var overdue = todo.due_date && todo.due_date < today && !todo.completed;
+
+        html += '<div class="entity-card" style="opacity:' + (todo.completed ? '0.5' : '1') + ';">' +
+          '<div class="entity-hdr">' +
+            '<div>' +
+              '<div class="entity-name" style="' + (todo.completed ? 'text-decoration:line-through;' : '') + '">' + esc(todo.text) + '</div>' +
+              '<div class="entity-sub">' + esc(todo.category || 'ops') +
+              (todo.due_date ? ' · due ' + fmtDate(todo.due_date) : '') +
+              (overdue ? ' ⚠️ overdue' : '') + '</div>' +
+            '</div>' +
+            '<button class="venue-btn" style="font-size:0.6rem;min-height:44px;padding:4px 8px;" data-toggle-todo="' + esc(todo.id) + '">' +
+              (todo.completed ? '↩' : '✓') + '</button>' +
+          '</div>';
+
+        // Badges
+        var badges = '';
+        if (todo.priority) badges += '<span class="badge" style="background:' + prioColor + '22;color:' + prioColor + ';">' + esc(todo.priority) + '</span>';
+        if (todo.source_entity_type) badges += '<span class="badge" style="background:var(--magenta)22;color:var(--magenta);">' + esc(todo.source_entity_type.replace('_', ' ')) + '</span>';
+        if (badges) html += '<div style="margin-top:0.3rem;display:flex;gap:0.3rem;flex-wrap:wrap;">' + badges + '</div>';
+
+        html += '</div>';
+      });
+    }
+
+    return html;
+  }
+
   // ── Stop Detail: Financials Tab ────────────────────────────────────────
   function renderStopFinancialsTab(stop) {
     var targets = stop.targets || {};
@@ -6303,6 +6492,17 @@ if (document.readyState !== 'loading') {
     var addSpotBtn = document.getElementById('v3-add-spot');
     if (addSpotBtn) addSpotBtn.addEventListener('click', function () {
       openAddBuskingSpotModal(tourState.selectedStopId);
+    });
+
+    // Add Stop-Todo button
+    var addStopTodoBtn = document.getElementById('v3-add-stop-todo');
+    if (addStopTodoBtn) addStopTodoBtn.addEventListener('click', function () {
+      // Pre-fill the create sheet with todo type and tour_stop_id
+      createSheetType = 'todo';
+      renderCreateSheet();
+      // Set the tour stop hidden field after form renders
+      var stopField = document.getElementById('cs-todo-stop');
+      if (stopField) stopField.value = tourState.selectedStopId;
     });
 
     // Spot card clicks
@@ -7817,6 +8017,11 @@ if (document.readyState !== 'loading') {
   }
 
   function renderTodoForm() {
+    var stops = TourOS.getAllEntities('tour_stops') || [];
+    var stopOpts = stops.map(function(s) {
+      return '<option value="' + esc(s.id) + '">' + esc(s.name) + ', ' + esc(s.state || '') + '</option>';
+    }).join('');
+
     return '' +
       '<div class="modal-hdr">' +
         '<div class="modal-title">📋 Add Todo</div>' +
@@ -7837,6 +8042,7 @@ if (document.readyState !== 'loading') {
         '<option value="low">Low</option>' +
       '</select></div>' +
       '<div class="modal-field"><label>Due Date</label><input type="date" id="cs-todo-due" /></div>' +
+      '<div class="modal-field"><label>Link to Tour Stop</label><select id="cs-todo-stop"><option value="">— None —</option>' + (stopOpts || '') + '</select></div>' +
       '<button class="modal-submit" data-cs-save>Save Todo</button>';
   }
 
@@ -7927,6 +8133,7 @@ if (document.readyState !== 'loading') {
         category: val('cs-todo-category'),
         priority: val('cs-todo-priority'),
         due_date: val('cs-todo-due') || null,
+        tour_stop_id: val('cs-todo-stop') || null,
         completed: false,
         completed_at: null,
         auto_generated: false,
