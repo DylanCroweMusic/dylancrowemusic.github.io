@@ -3081,7 +3081,7 @@ if (typeof window !== 'undefined') {
     (data.venues || []).forEach(v => {
       (v.stage_history || []).forEach(h => {
         items.push({
-          ts: h.date || h.timestamp,
+          ts: h.timestamp || h.date,
           icon: '📍',
           color: COLORS.venue,
           text: `${v.name} → ${h.stage}`
@@ -3091,7 +3091,7 @@ if (typeof window !== 'undefined') {
     (data.house_concerts || []).forEach(hc => {
       (hc.stage_history || []).forEach(h => {
         items.push({
-          ts: h.date || h.timestamp,
+          ts: h.timestamp || h.date,
           icon: '🏠',
           color: COLORS.house,
           text: `${hc.host_name} HC → ${h.stage}`
@@ -3976,7 +3976,8 @@ function v3_updateEntity(type, id, data) {
 function v3_advancePipeline(type, id, newStage, notes) {
   var raw = v3_getRawEntity(type, id);
   if (!raw) return;
-  var today = new Date().toISOString().slice(0, 10);
+  var now = new Date().toISOString();
+  var today = now.slice(0, 10);
   
   // Get current stage (normalized)
   var currentStage;
@@ -3997,6 +3998,7 @@ function v3_advancePipeline(type, id, newStage, notes) {
   raw.stage_history.push({
     stage: newStage,
     date: today,
+    timestamp: now,
     notes: notes || ''
   });
   
