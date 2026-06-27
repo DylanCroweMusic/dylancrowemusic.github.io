@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Tour OS v3 — Dylan Crowe Music</title>
@@ -13,7 +13,7 @@
       --bg-card: #1A1A3E;
       --bg-card-hover: #252555;
       --text: #F5F0E8;
-      --text-muted: #8888aa;
+      --text-muted: #a0a0c8;
       --cyan: #00B4D8;
       --cyan-bright: #00d2ff;
       --magenta: #D946EF;
@@ -165,7 +165,7 @@
       border: none;
       background: transparent;
       color: var(--text-muted);
-      font-size: 10px;
+      font-size: 12px;
       font-weight: 600;
       cursor: pointer;
       display: flex;
@@ -545,7 +545,7 @@
 
     /* ===== Section title ===== */
     .section-title {
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.1em;
       color: var(--text-muted);
@@ -564,7 +564,7 @@
     }
     .filter-bar select,
     .filter-bar input {
-      min-height: 36px;
+      min-height: 44px;
       padding: 6px 10px;
       background: var(--bg);
       border: 1px solid var(--border);
@@ -667,7 +667,7 @@
 
     /* ===== Buttons (venue-btn) ===== */
     .venue-btn {
-      min-height: 38px;
+      min-height: 44px;
       padding: 6px 12px;
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -725,7 +725,7 @@
     .modal-field select,
     .modal-field textarea {
       width: 100%;
-      min-height: 40px;
+      min-height: 44px;
       padding: 8px 10px;
       background: var(--bg);
       border: 1px solid var(--border);
@@ -934,7 +934,7 @@
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s;
-      min-height: 38px;
+      min-height: 44px;
     }
     .tab-btn.active {
       background: rgba(255,255,255,0.06);
@@ -1002,7 +1002,7 @@
       padding: 0.8rem;
     }
     .stat-label {
-      font-size: 0.6rem;
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--text-muted);
@@ -1014,7 +1014,7 @@
       margin: 0.15rem 0;
     }
     .stat-sub {
-      font-size: 0.62rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
     }
     .stat-bar {
@@ -1093,6 +1093,7 @@
 </head>
 <body>
   <div id="app">
+    <main>
     <!-- Header -->
     <header class="app-header">
       <div class="header-title">
@@ -1154,27 +1155,28 @@
 
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
-      <button class="nav-item active" data-tab="home">
+      <button class="nav-item active" data-tab="home" aria-label="Home — Command Center">
         <span class="nav-icon">🏠</span>
         <span>Home</span>
       </button>
-      <button class="nav-item" data-tab="pipeline">
+      <button class="nav-item" data-tab="pipeline" aria-label="Pipeline — Venue and House Concert CRM">
         <span class="nav-icon">📊</span>
         <span>Pipeline</span>
       </button>
-      <button class="nav-item" data-tab="tour">
+      <button class="nav-item" data-tab="tour" aria-label="Tour — Stops and Timeline">
         <span class="nav-icon">🗺️</span>
         <span>Tour</span>
       </button>
-      <button class="nav-item" data-tab="people">
+      <button class="nav-item" data-tab="people" aria-label="People — Contacts and Todos">
         <span class="nav-icon">👥</span>
         <span>People</span>
       </button>
-      <button class="nav-item" data-tab="money">
+      <button class="nav-item" data-tab="money" aria-label="Money — Income and Expenses">
         <span class="nav-icon">💰</span>
         <span>Money</span>
       </button>
     </nav>
+    </main>
   </div>
 
 <!-- ═══ V3 Seed Data ═══ -->
@@ -2687,6 +2689,7 @@ const TourOS = (function () {
         console.error('TourOS: Change callback error', e);
       }
     });
+    document.dispatchEvent(new CustomEvent('tour-os:data-changed', { detail: _data }));
   }
 
   // ===== Reset to seed data =====
@@ -3322,6 +3325,7 @@ if (typeof window !== 'undefined') {
       .cc-quick-btn {
         position: relative;
         z-index: 220;
+        min-height: 44px;
         padding: 0.85rem 0.5rem; border-radius: 12px; border: 1px solid;
         background: ${COLORS.card}; font-family: inherit; font-size: 0.72rem;
         font-weight: 700; color: ${COLORS.text}; cursor: pointer;
@@ -4990,8 +4994,11 @@ window.V3Pipe = {
   },
   
   setSearch: function(term) {
-    pipeState.searchTerm = term;
-    renderPipeline();
+    clearTimeout(pipeState._searchTimer);
+    pipeState._searchTimer = setTimeout(function() {
+      pipeState.searchTerm = term;
+      renderPipeline();
+    }, 200);
   },
   
   setShowAll: function(val) {
@@ -5033,13 +5040,15 @@ window.V3Pipe = {
       }
     }
     // Re-render the open modal
-    if (document.getElementById('vd-modal').classList.contains('show')) {
+    var vdModalEl = document.getElementById('vd-modal');
+    var hdModalEl = document.getElementById('hd-modal');
+    if (vdModalEl && vdModalEl.classList.contains('show')) {
       var vid = getCurrentModalEntityId('venues');
       if (vid) {
         var v = v3_getEntity('venues', vid);
         if (v) renderVenueDetailModal(v);
       }
-    } else if (document.getElementById('hd-modal').classList.contains('show')) {
+    } else if (hdModalEl && hdModalEl.classList.contains('show')) {
       var hid = getCurrentModalEntityId('house_concerts');
       if (hid) {
         var h = v3_getEntity('house_concerts', hid);
@@ -7614,7 +7623,7 @@ if (document.readyState !== 'loading') {
               (todo.due_date ? ' · due ' + fmtDate(todo.due_date) : '') +
               (overdue ? ' ⚠️ overdue' : '') + '</div>' +
             '</div>' +
-            '<button class="venue-btn" style="font-size:0.6rem;min-height:32px;padding:4px 8px;" data-toggle-todo="' + esc(todo.id) + '">' +
+            '<button class="venue-btn" style="font-size:0.6rem;min-height:44px;padding:4px 8px;" data-toggle-todo="' + esc(todo.id) + '">' +
               (todo.completed ? '↩' : '✓') + '</button>' +
           '</div>' +
           (todo.priority ? '<div style="margin-top:0.2rem;"><span class="badge" style="background:' + prioColor + '22;color:' + prioColor + ';">' + esc(todo.priority) + '</span></div>' : '') +
