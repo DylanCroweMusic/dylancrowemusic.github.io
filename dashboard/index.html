@@ -3672,14 +3672,25 @@ if (typeof window !== 'undefined') {
 
   // Re-render the active tab view when data changes (e.g. stage advancement
   // via the venue detail modal) so the board refreshes without a tab switch.
+  // Guard against re-entrancy: renderMoney() calls recalculateAll() which calls
+  // saveData() which dispatches this event again — without the guard this is
+  // an infinite loop that freezes the browser.
+  var _tabRenderInProgress = false;
   document.addEventListener('tour-os:data-changed', function() {
+    if (_tabRenderInProgress) return;
     var activeTab = document.querySelector('.nav-item.active');
     if (!activeTab) return;
     var tab = activeTab.getAttribute('data-tab');
-    if (tab === 'pipeline' && typeof renderPipeline === 'function') renderPipeline();
-    if (tab === 'people' && typeof renderPeople === 'function') renderPeople();
-    if (tab === 'money' && typeof renderMoney === 'function') renderMoney();
-    if (tab === 'tour' && typeof renderTour === 'function') renderTour();
+    _tabRenderInProgress = true;
+    try {
+      if (tab === 'pipeline' && typeof renderPipeline === 'function') renderPipeline();
+      if (tab === 'people' && typeof renderPeople === 'function') renderPeople();
+      if (tab === 'money' && typeof renderMoney === 'function') renderMoney();
+      if (tab === 'tour' && typeof renderTour === 'function') renderTour();
+    } catch (e) {
+      console.error('[Tab auto-refresh] render error:', e);
+    }
+    _tabRenderInProgress = false;
   });
 
 })();
