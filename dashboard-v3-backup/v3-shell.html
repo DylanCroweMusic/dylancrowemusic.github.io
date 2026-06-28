@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Tour OS v3 — Dylan Crowe Music</title>
+  <style>
+    /* ===== CSS Variables — Brand Colors ===== */
+    :root {
+      --bg: #0a0a1a;
+      --bg-card: #1A1A3E;
+      --bg-card-hover: #252555;
+      --text: #F5F0E8;
+      --text-muted: #8888aa;
+      --cyan: #00B4D8;
+      --cyan-bright: #00d2ff;
+      --magenta: #D946EF;
+      --amber: #D97706;
+      --green: #166534;
+      --green-bright: #22c55e;
+      --red: #ef4444;
+      --border: #2a2a4a;
+
+      /* Stream colors */
+      --stream-busking: #166534;
+      --stream-venue: #00B4D8;
+      --stream-house-concert: #D97706;
+
+      /* Layout */
+      --nav-height: 64px;
+      --header-height: 56px;
+      --max-width: 500px;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    /* ===== Reset ===== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: calc(var(--nav-height) + var(--safe-bottom) + 20px);
+    }
+
+    /* ===== App Container — Mobile-first, centered on desktop ===== */
+    #app {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
+      background: var(--bg);
+    }
+
+    /* ===== Header ===== */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--header-height);
+      background: rgba(10, 10, 26, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+    }
+
+    .app-header h1 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: var(--text);
+    }
+
+    .app-header .header-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .app-header .header-title .logo-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan);
+    }
+
+    .settings-btn {
+      width: 44px;
+      height: 44px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+    }
+
+    .settings-btn:hover, .settings-btn:active {
+      background: var(--bg-card-hover);
+      color: var(--text);
+    }
+
+    /* ===== View Container ===== */
+    .view-container {
+      display: none;
+      padding: 16px;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .view-container.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Bottom Navigation ===== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: var(--max-width);
+      height: calc(var(--nav-height) + var(--safe-bottom));
+      padding-bottom: var(--safe-bottom);
+      background: rgba(26, 26, 62, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      z-index: 200;
+    }
+
+    .nav-item {
+      flex: 1;
+      height: var(--nav-height);
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      transition: color 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .nav-item .nav-icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .nav-item.active {
+      color: var(--cyan);
+    }
+
+    .nav-item.active .nav-icon {
+      filter: drop-shadow(0 0 6px rgba(0, 180, 216, 0.5));
+    }
+
+    /* Center gap for FAB */
+    .nav-item:nth-child(3) {
+      position: relative;
+    }
+
+    /* ===== Floating Action Button (FAB) ===== */
+    .fab {
+      position: fixed;
+      bottom: calc(var(--nav-height) - 20px + var(--safe-bottom));
+      left: 50%;
+      transform: translateX(-50%);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      border: 3px solid var(--bg);
+      color: white;
+      font-size: 28px;
+      font-weight: 300;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 210;
+      box-shadow: 0 4px 16px rgba(0, 180, 216, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .fab:hover, .fab:active {
+      transform: translateX(-50%) scale(1.1);
+      box-shadow: 0 6px 24px rgba(0, 180, 216, 0.6);
+    }
+
+    /* ===== Card ===== */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card:hover {
+      background: var(--bg-card-hover);
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ===== Buttons ===== */
+    .btn {
+      min-height: 44px;
+      padding: 10px 20px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-card);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn:hover, .btn:active {
+      background: var(--bg-card-hover);
+      border-color: var(--cyan);
+    }
+
+    .btn-primary {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      color: var(--bg);
+    }
+
+    .btn-primary:hover, .btn-primary:active {
+      background: var(--cyan-bright);
+      border-color: var(--cyan-bright);
+    }
+
+    .btn-danger {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .btn-danger:hover, .btn-danger:active {
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    /* ===== Modal ===== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 300;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: var(--max-width);
+      max-height: 85vh;
+      overflow-y: auto;
+      background: var(--bg-card);
+      border-radius: 16px 16px 0 0;
+      border-top: 1px solid var(--border);
+      padding: 20px 16px calc(20px + var(--safe-bottom));
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .modal-close {
+      width: 44px;
+      height: 44px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+    }
+
+    .modal-close:hover, .modal-close:active {
+      background: var(--bg-card-hover);
+      color: var(--text);
+    }
+
+    /* ===== Form Elements ===== */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 15px;
+      font-family: inherit;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--cyan);
+    }
+
+    .form-textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    /* ===== Toast Notification ===== */
+    .toast {
+      position: fixed;
+      bottom: calc(var(--nav-height) + 20px + var(--safe-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--bg-card);
+      border: 1px solid var(--cyan);
+      color: var(--text);
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 400;
+      opacity: 0;
+      transition: all 0.3s ease;
+      max-width: 90%;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.success { border-color: var(--green-bright); }
+    .toast.error { border-color: var(--red); }
+    .toast.warning { border-color: var(--amber); }
+
+    /* ===== Utility ===== */
+    .text-muted { color: var(--text-muted); }
+    .text-cyan { color: var(--cyan); }
+    .text-magenta { color: var(--magenta); }
+    .text-amber { color: var(--amber); }
+    .text-green { color: var(--green-bright); }
+    .text-red { color: var(--red); }
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .mt-8 { margin-top: 8px; }
+    .mt-16 { margin-top: 16px; }
+    .mb-8 { margin-bottom: 8px; }
+    .mb-16 { margin-bottom: 16px; }
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .gap-8 { gap: 8px; }
+    .gap-12 { gap: 12px; }
+    .w-full { width: 100%;; }
+
+    /* ===== Badge ===== */
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-cyan { background: rgba(0, 180, 216, 0.2); color: var(--cyan); }
+    .badge-green { background: rgba(22, 101, 52, 0.3); color: var(--green-bright); }
+    .badge-amber { background: rgba(217, 119, 6, 0.2); color: var(--amber); }
+    .badge-red { background: rgba(239, 68, 68, 0.2); color: var(--red); }
+    .badge-muted { background: rgba(136, 136, 170, 0.2); color: var(--text-muted); }
+
+    /* ===== Progress Bar ===== */
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--magenta));
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    /* ===== Empty State ===== */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+
+    /* ===== Responsive desktop centering ===== */
+    @media (min-width: 501px) {
+      body {
+        background: #050510;
+      }
+      #app {
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-title">
+        <span class="logo-dot"></span>
+        <h1 id="header-title">Tour OS</h1>
+      </div>
+      <button class="settings-btn" id="settings-btn" aria-label="Settings">⚙️</button>
+    </header>
+
+    <!-- Tab Views -->
+    <div class="view-container active" id="view-home">
+      <!-- Home tab content injected by command_center.js -->
+      <div class="empty-state">
+        <div class="empty-state-icon">🏠</div>
+        <p>Home tab ready for content.</p>
+      </div>
+    </div>
+
+    <div class="view-container" id="view-pipeline">
+      <!-- Pipeline tab content injected by pipeline.js -->
+      <div class="empty-state">
+        <div class="empty-state-icon">📊</div>
+        <p>Pipeline tab ready for content.</p>
+      </div>
+    </div>
+
+    <div class="view-container" id="view-tour">
+      <!-- Tour tab content injected by finance_busking.js -->
+      <div class="empty-state">
+        <div class="empty-state-icon">🗺️</div>
+        <p>Tour tab ready for content.</p>
+      </div>
+    </div>
+
+    <div class="view-container" id="view-people">
+      <!-- People tab content injected by contacts_todos.js -->
+      <div class="empty-state">
+        <div class="empty-state-icon">👥</div>
+        <p>People tab ready for content.</p>
+      </div>
+    </div>
+
+    <div class="view-container" id="view-money">
+      <!-- Money tab content injected by finance_busking.js -->
+      <div class="empty-state">
+        <div class="empty-state-icon">💰</div>
+        <p>Money tab ready for content.</p>
+      </div>
+    </div>
+
+    <!-- Modal Container -->
+    <div class="modal-overlay" id="modal-overlay">
+      <div class="modal" id="modal">
+        <!-- Modal content injected dynamically -->
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Floating Action Button -->
+    <button class="fab" id="fab" aria-label="Create">+</button>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-tab="home">
+        <span class="nav-icon">🏠</span>
+        <span>Home</span>
+      </button>
+      <button class="nav-item" data-tab="pipeline">
+        <span class="nav-icon">📊</span>
+        <span>Pipeline</span>
+      </button>
+      <button class="nav-item" data-tab="tour">
+        <span class="nav-icon">🗺️</span>
+        <span>Tour</span>
+      </button>
+      <button class="nav-item" data-tab="people">
+        <span class="nav-icon">👥</span>
+        <span>People</span>
+      </button>
+      <button class="nav-item" data-tab="money">
+        <span class="nav-icon">💰</span>
+        <span>Money</span>
+      </button>
+    </nav>
+  </div>
+</body>
+</html>
