@@ -79,7 +79,13 @@ function _renderTourBanner() {
   const earnedPct = target > 0 ? Math.min(100, (earned / target) * 100) : 0;
   const targetStr = target > 0 ? formatAUD(target) : '$37,000.00';
 
-  const barColor = earnedPct >= 80 ? '#4cd980' : earnedPct >= 50 ? '#f5b042' : '#eb5757';
+  // Revenue bar color: cyan always — it's a progress indicator, not a pass/fail signal.
+  // Green when on-track (>50% of target), amber when building (10-50%), cyan when starting (<10%).
+  const barColor = earnedPct >= 50 ? '#4cd980' : earnedPct >= 10 ? '#f5b042' : '#00d4c8';
+
+  // Today's date formatted as "Mon 28 Jun"
+  const now = new Date();
+  const todayLabel = now.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
 
   return h('section', { class: 'home-tour-banner', style: _sectionStyle() }, [
     h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '10px', flexWrap: 'wrap', marginBottom: '14px' } }, [
@@ -88,6 +94,7 @@ function _renderTourBanner() {
         h('div', { style: { fontSize: '18px', fontWeight: '700', color: 'var(--text, #f1f1f5)', lineHeight: '1.2' } }, cfg.tour_name || 'Untitled Tour'),
       ]),
       h('div', { style: { flex: '0 0 auto', textAlign: 'right' } }, [
+        h('div', { style: { fontSize: '13px', fontWeight: '600', color: 'var(--text, #f1f1f5)', marginBottom: '2px' } }, todayLabel),
         h('div', { style: { fontSize: '11px', color: 'var(--text-muted, #7a7a85)' } }, `${cfg.tour_start_date || '—'} → ${cfg.tour_end_date || '—'}`),
       ]),
     ]),
@@ -222,24 +229,7 @@ function _renderTodoRow(todo) {
   const done = !!todo.completed;
   const overdue = todo.due_date && todo.due_date < today();
 
-  const checkbox = h('input', {
-    type: 'checkbox',
-    checked: done,
-    'aria-label': 'Mark complete',
-    on: { change: (ev) => {
-      const checked = ev.target.checked;
-      const now = new Date().toISOString();
-      crud.update('todos', todo.id, { completed: checked, completed_at: checked ? now : null })
-        .then(() => {
-          document.dispatchEvent(new CustomEvent('tour-os:crud-changed'));
-        })
-        .catch(() => {});
-      titleEl.style.textDecoration = checked ? 'line-through' : 'none';
-      titleEl.style.opacity = checked ? '.55' : '1';
-    } },
-    style: { width: '20px', height: '20px', minHeight: '44px', minWidth: '44px', flex: '0 0 auto', marginTop: '2px' },
-  });
-
+  // Declare titleEl first so the checkbox handler can reference it safely.
   const titleEl = h('div', {
     style: {
       flex: '1 1 auto', minWidth: '0', fontSize: '14px', color: 'var(--text, #f1f1f5)',
@@ -248,6 +238,30 @@ function _renderTodoRow(todo) {
       display: 'flex', alignItems: 'center',
     },
   }, todo.title || 'Untitled');
+
+  const checkbox = h('input', {
+    type: 'checkbox',
+    checked: done,
+    'aria-label': 'Mark complete',
+    on: { change: (ev) => {
+      const checked = ev.target.checked;
+      const now = new Date().toISOString();
+      titleEl.style.textDecoration = checked ? 'line-through' : 'none';
+      titleEl.style.opacity = checked ? '.55' : '1';
+      crud.update('todos', todo.id, { completed: checked, completed_at: checked ? now : null })
+        .then(() => {
+          document.dispatchEvent(new CustomEvent('tour-os:crud-changed'));
+        })
+        .catch((err) => {
+          console.error('Todo toggle failed:', err);
+          // Revert UI on failure
+          titleEl.style.textDecoration = done ? 'line-through' : 'none';
+          titleEl.style.opacity = done ? '.55' : '1';
+          ev.target.checked = done;
+        });
+    } },
+    style: { width: '20px', height: '20px', minHeight: '44px', minWidth: '44px', flex: '0 0 auto', marginTop: '2px' },
+  });
 
   const meta = [];
   if (todo.is_auto_generated) meta.push(renderBadge('auto'));
@@ -402,6 +416,78 @@ function _renderQuickAdd() {
   ]);
 }
 
+// ─── Upcoming gigs & HCs ─────────────────────────────────────────────────────
+
+function _renderUpcoming() {
+  const s = getState() || {};
+  const e = s.entities || {};
+  const todayStr = today();
+
+  // Collect upcoming gigs (booked/confirmed, date >= today)
+  const gigs = (e.gigs || []).filter((g) =>
+    (g.status || 'active') === 'active' &&
+    ['booked', 'confirmed'].includes(g.gig_status) &&
+    g.gig_date && g.gig_date >= todayStr
+  );
+
+  // Collect upcoming HCs (confirmed, date >= today)
+  const hcs = (e.house_concerts || []).filter((h) =>
+    (h.status || 'active') === 'active' &&
+    h.pipeline_status === 'confirmed' &&
+    h.hc_date && h.hc_date >= todayStr
+  );
+
+  // Merge into one list sorted by date
+  const items = [
+    ...gigs.map((g) => {
+      const venue = (e.venues || []).find((v) => v.id === g.venue_id);
+      return {
+        date: g.gig_date,
+        type: 'gig',
+        label: venue ? venue.name : 'Unknown venue',
+        sub: g.gig_status === 'confirmed' ? 'Confirmed' : 'Booked',
+        color: '#00B4D8',
+      };
+    }),
+    ...hcs.map((h) => {
+      const stop = (e.tour_stops || []).find((t) => t.id === h.tour_stop_id);
+      return {
+        date: h.hc_date,
+        type: 'hc',
+        label: stop ? stop.name : 'House concert',
+        sub: 'HC — Confirmed',
+        color: '#D97706',
+      };
+    }),
+  ].sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0).slice(0, 5);
+
+  return h('section', { class: 'home-upcoming', style: _sectionStyle() }, [
+    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' } }, [
+      h('div', { style: _cardTitleStyle(), margin: '0' }, 'Upcoming'),
+      h('span', { style: { fontSize: '11px', color: 'var(--text-muted, #7a7a85)' } }, `${items.length} booked`),
+    ]),
+    items.length > 0
+      ? h('div', {}, ...items.map((item) =>
+          h('div', {
+            style: { display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 4px', borderBottom: '1px solid var(--border, #222230)', minHeight: '44px' },
+          }, [
+            h('div', {
+              style: { flex: '0 0 auto', width: '4px', height: '36px', borderRadius: '2px', background: item.color },
+            }),
+            h('div', { style: { flex: '0 0 auto', minWidth: '52px' } }, [
+              h('div', { style: { fontSize: '14px', fontWeight: '700', color: 'var(--text, #f1f1f5)' } }, formatDate(item.date).split(' ').slice(0, 2).join(' ')),
+              h('div', { style: { fontSize: '10px', color: 'var(--text-muted, #7a7a85)' } }, item.date.slice(0, 4)),
+            ]),
+            h('div', { style: { flex: '1 1 auto', minWidth: '0' } }, [
+              h('div', { style: { fontSize: '14px', color: 'var(--text, #f1f1f5)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }, item.label),
+              h('div', { style: { fontSize: '11px', color: 'var(--text-muted, #7a7a85)' } }, item.sub),
+            ]),
+          ])
+        ))
+      : h('div', { style: { padding: '20px 8px', textAlign: 'center', color: 'var(--text-muted, #7a7a85)', fontSize: '13px' } }, 'No upcoming gigs or house concerts. 📭'),
+  ]);
+}
+
 // ─── Public: renderHome() ────────────────────────────────────────────────────
 
 export function renderHome() {
@@ -412,6 +498,7 @@ export function renderHome() {
     _renderTourBanner(),
     _renderGigsNeeded(),
     _renderFinancialSummary(),
+    _renderUpcoming(),
     _renderTodosSection(),
     _renderQuickAdd(),
   ]);
