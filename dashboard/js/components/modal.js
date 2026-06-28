@@ -76,8 +76,6 @@ export function openModal(contentNode, opts = {}) {
       padding: '16px',
       pointerEvents: 'auto',
       zIndex: String(1000 + _stack.length),
-      opacity: '0',
-      transition: 'opacity .15s ease',
     },
   }, [
     h('div', {
