@@ -6,8 +6,8 @@
  *
  * @module components/form
  */
-import { h } from '../utils/dom.js';
-import { generateId } from '../utils/id.js';
+import { h } from '../utils/dom.js?v=4';
+import { generateId } from '../utils/id.js?v=4';
 
 const INPUT_TYPES = new Set([
   'text', 'email', 'tel', 'url', 'number', 'date', 'time', 'datetime-local', 'password',

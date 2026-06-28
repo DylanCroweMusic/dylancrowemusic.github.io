@@ -10,7 +10,7 @@
 //   - busking_sessions.income_aud   (all logged sessions)
 // There is NO income_log entity (C1).
 
-import { getState } from './store.js';
+import { getState } from './store.js?v=4';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 

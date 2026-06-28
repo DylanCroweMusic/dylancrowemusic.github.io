@@ -6,12 +6,12 @@
 //
 // Dark theme, mobile-first, 44px touch targets. Built with h() from utils/dom.
 
-import { getState } from '../store.js';
-import * as calendar from '../calendar.js';
-import { renderCalendarView as renderCalendarGrid } from '../components/calendar_view.js';
-import { renderCard } from '../components/card.js';
-import { openModal } from '../components/modal.js';
-import { h } from '../utils/dom.js';
+import { getState } from '../store.js?v=4';
+import * as calendar from '../calendar.js?v=4';
+import { renderCalendarView as renderCalendarGrid } from '../components/calendar_view.js?v=4';
+import { renderCard } from '../components/card.js?v=4';
+import { openModal } from '../components/modal.js?v=4';
+import { h } from '../utils/dom.js?v=4';
 
 // Module-scoped anchor date (persists across re-renders within session).
 let _anchor = new Date();

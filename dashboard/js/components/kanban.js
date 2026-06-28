@@ -8,13 +8,13 @@
  *
  * @module components/kanban
  */
-import { h } from '../utils/dom.js';
-import * as crud from '../crud.js';
-import * as pipeline from '../pipeline.js';
-import { getState } from '../store.js';
-import { renderCard } from './card.js';
-import { renderBadge } from './badge.js';
-import { openModal } from './modal.js';
+import { h } from '../utils/dom.js?v=4';
+import * as crud from '../crud.js?v=4';
+import * as pipeline from '../pipeline.js?v=4';
+import { getState } from '../store.js?v=4';
+import { renderCard } from './card.js?v=4';
+import { renderBadge } from './badge.js?v=4';
+import { openModal } from './modal.js?v=4';
 
 const ENTITY_MAP = {
   venues: { entity: 'venue',  storeKey: 'venues',          label: 'Venues' },

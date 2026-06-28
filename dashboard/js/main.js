@@ -1,18 +1,18 @@
 // main.js — App entry point and wiring for Dylan Crowe Music Tour OS v4
 // This module boots the app: init DB → load seed → run todos → mount nav → render
 
-import { initDB } from './db.js';
-import { getState, update, setActiveView, setModal, setRenderFn } from './store.js';
-import * as crud from './crud.js';
-import { loadSeedIfEmpty } from './seed.js';
-import * as todos from './todos.js';
-import { renderNav } from './components/nav.js';
-import { openModal, closeModal } from './components/modal.js';
-import { renderHome } from './views/home.js';
-import { renderPipeline } from './views/pipeline.js';
-import { renderCalendarView } from './views/calendar.js';
-import { renderPeople } from './views/people.js';
-import { renderMoney } from './views/money.js';
+import { initDB } from './db.js?v=4';
+import { getState, update, setActiveView, setModal, setRenderFn } from './store.js?v=4';
+import * as crud from './crud.js?v=4';
+import { loadSeedIfEmpty } from './seed.js?v=4';
+import * as todos from './todos.js?v=4';
+import { renderNav } from './components/nav.js?v=4';
+import { openModal, closeModal } from './components/modal.js?v=4';
+import { renderHome } from './views/home.js?v=4';
+import { renderPipeline } from './views/pipeline.js?v=4';
+import { renderCalendarView } from './views/calendar.js?v=4';
+import { renderPeople } from './views/people.js?v=4';
+import { renderMoney } from './views/money.js?v=4';
 
 // ─── State ───────────────────────────────────────────────────────────
 let renderScheduled = false;

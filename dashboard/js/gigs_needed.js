@@ -7,13 +7,13 @@
 // All functions are PURE and SYNCHRONOUS, reading from store.getState()
 // via finance.js helpers.
 
-import { getState } from './store.js';
+import { getState } from './store.js?v=4';
 import {
   getTourProjectedIncome,
   getAvgGigPay,
   sessionsCommitted,
   sessionsNeeded,
-} from './finance.js';
+} from './finance.js?v=4';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function num(v) {

@@ -4,9 +4,9 @@
 // Each has a transition map. Any transition NOT in the map is rejected.
 // H1 reverse transitions (safety valves) included.
 
-import { read, readAll, update, create } from './crud.js';
-import { generateId } from './utils/id.js';
-import { reevaluateForEntity } from './todos.js';
+import { read, readAll, update, create } from './crud.js?v=4';
+import { generateId } from './utils/id.js?v=4';
+import { reevaluateForEntity } from './todos.js?v=4';
 
 // ─── Store name per entity type ──────────────────────────────────────────────
 const STORE_BY_TYPE = {

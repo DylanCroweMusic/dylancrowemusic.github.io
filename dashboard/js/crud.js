@@ -3,7 +3,7 @@
 // Config singleton enforcement (amendment H8). Hard delete (amendment C6).
 // Version++ enforced on every update (blueprint §13 invariant 7).
 
-import { get, getAll, put, hardDelete } from './db.js';
+import { get, getAll, put, hardDelete } from './db.js?v=4';
 
 // Entity types that support archive (busking_sessions and todos are atomic — no archive)
 const ARCHIVABLE = new Set([

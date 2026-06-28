@@ -9,14 +9,14 @@
 // reevaluateAll() and reevaluateForEntity() are async (they write via crud).
 // getActiveTodos() and getTodosForEntity() are sync (read from store state).
 
-import { getState } from './store.js';
-import { read, readAll, update, create } from './crud.js';
-import { generateId } from './utils/id.js';
+import { getState } from './store.js?v=4';
+import { read, readAll, update, create } from './crud.js?v=4';
+import { generateId } from './utils/id.js?v=4';
 import {
   getStopGigShortfall,
   getStopBuskingShortfall,
   getStopHCShortfall,
-} from './gigs_needed.js';
+} from './gigs_needed.js?v=4';
 
 // ─── Date helpers (inline; utils/dates.js may not be loaded yet) ─────────────
 function todayStr() {

@@ -6,7 +6,7 @@
  *
  * @module components/nav
  */
-import { h } from '../utils/dom.js';
+import { h } from '../utils/dom.js?v=4';
 
 const TABS = [
   { key: 'home',     label: 'Home',     icon: '🏠' },

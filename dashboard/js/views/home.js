@@ -6,19 +6,19 @@
 //
 // Dark theme, mobile-first, 44px touch targets. Built with h() from utils/dom.
 
-import { getState } from '../store.js';
-import * as finance from '../finance.js';
-import * as gigsNeeded from '../gigs_needed.js';
-import * as todos from '../todos.js';
-import * as crud from '../crud.js';
-import { renderForm } from '../components/form.js';
-import { openModal, closeModal } from '../components/modal.js';
-import { renderBadge } from '../components/badge.js';
-import { renderTodoList } from '../components/todo_list.js';
-import { h } from '../utils/dom.js';
-import { formatAUD } from '../utils/money.js';
-import { formatDate, today } from '../utils/dates.js';
-import { generateId } from '../utils/id.js';
+import { getState } from '../store.js?v=4';
+import * as finance from '../finance.js?v=4';
+import * as gigsNeeded from '../gigs_needed.js?v=4';
+import * as todos from '../todos.js?v=4';
+import * as crud from '../crud.js?v=4';
+import { renderForm } from '../components/form.js?v=4';
+import { openModal, closeModal } from '../components/modal.js?v=4';
+import { renderBadge } from '../components/badge.js?v=4';
+import { renderTodoList } from '../components/todo_list.js?v=4';
+import { h } from '../utils/dom.js?v=4';
+import { formatAUD } from '../utils/money.js?v=4';
+import { formatDate, today } from '../utils/dates.js?v=4';
+import { generateId } from '../utils/id.js?v=4';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 

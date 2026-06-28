@@ -13,7 +13,7 @@
  *
  * @module components/badge
  */
-import { h } from '../utils/dom.js';
+import { h } from '../utils/dom.js?v=4';
 
 const PIPELINE_COLORS = {
   not_contacted: { bg: 'rgba(150,150,160,.18)', color: '#9a9aa5', label: 'Not contacted' },

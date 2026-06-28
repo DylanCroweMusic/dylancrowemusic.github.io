@@ -8,7 +8,7 @@
 // Tour stops render as a single chip on arrival date (H9 simplification),
 // carrying an `end` field for the departure date.
 
-import { getState } from './store.js';
+import { getState } from './store.js?v=4';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function active(arr) {

@@ -9,10 +9,10 @@
  *
  * @module components/calendar_view
  */
-import { h } from '../utils/dom.js';
-import { openModal } from './modal.js';
-import { renderCard } from './card.js';
-import * as calendar from '../calendar.js';
+import { h } from '../utils/dom.js?v=4';
+import { openModal } from './modal.js?v=4';
+import { renderCard } from './card.js?v=4';
+import * as calendar from '../calendar.js?v=4';
 
 const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 

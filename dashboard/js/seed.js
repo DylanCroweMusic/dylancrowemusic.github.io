@@ -5,8 +5,8 @@
 //   C2 — todo auto_rule slugs match blueprint §5.1 exactly
 //   C4 — hc_03.host_contact_id null is OK
 
-import { get, bulkPut, getAll } from './db.js';
-import { STORES } from './migrations.js';
+import { get, bulkPut, getAll } from './db.js?v=4';
+import { STORES } from './migrations.js?v=4';
 
 // ─── Seed Data ──────────────────────────────────────────────────────────
 

@@ -6,7 +6,7 @@
  *
  * @module components/modal
  */
-import { h } from '../utils/dom.js';
+import { h } from '../utils/dom.js?v=4';
 
 const _stack = [];
 

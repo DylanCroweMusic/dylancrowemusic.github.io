@@ -2,7 +2,7 @@
 // Exports: getAll, get, put, hardDelete, bulkPut, query, getByIndex, getByDateRange, initDB.
 // Blueprint §3, amendments C6 (hard delete, no soft-delete status='deleted').
 
-import { DB_NAME, DB_VERSION, runMigrations } from './migrations.js';
+import { DB_NAME, DB_VERSION, runMigrations } from './migrations.js?v=4';
 
 let _db = null;
 

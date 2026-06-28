@@ -9,11 +9,11 @@
  *
  * @module components/card
  */
-import { h } from '../utils/dom.js';
-import * as crud from '../crud.js';
-import * as pipeline from '../pipeline.js';
-import { openModal, closeModal } from './modal.js';
-import { renderBadge } from './badge.js';
+import { h } from '../utils/dom.js?v=4';
+import * as crud from '../crud.js?v=4';
+import * as pipeline from '../pipeline.js?v=4';
+import { openModal, closeModal } from './modal.js?v=4';
+import { renderBadge } from './badge.js?v=4';
 
 // Map entityType (used by kanban/card) → IndexedDB store name
 const STORE_BY_TYPE = {
