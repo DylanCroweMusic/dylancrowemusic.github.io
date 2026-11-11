@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Tip Dylan Crowe Music 🚐 Your tips buy our bus!</title>
-<meta name="description" content="Tip Dylan Crowe Music, a touring busker in Australia with his dog Maverick. Pay by card, Apple Pay, Google Pay or PayID. Your tips buy our bus!">
+<title>Tip Dylan Crowe Music 🚐 Tips go toward our tour bus</title>
+<meta name="description" content="Tip Dylan Crowe Music, a touring busker in Australia with his dog Maverick. Pay by card, Apple Pay, Google Pay or PayID. Tips go toward our tour bus">
 <meta name="theme-color" content="#1A1A3E">
 <link rel="canonical" href="https://dylancrowemusic.github.io/tip/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Dylan Crowe Music">
-<meta property="og:title" content="Tip Dylan Crowe Music 🚐 Your tips buy our bus!">
+<meta property="og:title" content="Tip Dylan Crowe Music 🚐 Tips go toward our tour bus">
 <meta property="og:description" content="Enjoyed the music? Tip by card, Apple Pay, Google Pay or PayID. Thanks from Dylan &amp; Maverick 🐾">
 <meta property="og:url" content="https://dylancrowemusic.github.io/tip/">
 <meta property="og:image" content="https://dylancrowemusic.github.io/tip/raven.jpg">
@@ -38,18 +38,29 @@ h1{font-size:1.75rem;font-weight:800;letter-spacing:-.01em}
 .how{margin-top:10px;font-size:1rem;font-weight:600;color:#222}
 .thanks{margin-top:22px;font-size:1.05rem;color:#E6E6F5}
 .thanks b{color:#FFD27A}
-footer{margin-top:26px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+footer{margin-top:8px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
 footer a{color:#7FE3F5;font-weight:700;text-decoration:none;padding:10px 12px;border:1px solid #3A3A6E;border-radius:10px;font-size:.95rem}
 footer a:hover{border-color:#00B4D8}
 :focus-visible{outline:3px solid #FFD27A;outline-offset:3px}
+.id{font-size:1rem;color:#C9CBE8;margin:6px auto 20px;max-width:330px}
+.tag{font-size:1.05rem;font-weight:700;color:#FFD27A;margin:0 0 14px}
+.more{display:inline-block;margin-top:22px;color:#7FE3F5;font-weight:700;text-decoration:none;font-size:1rem;padding:10px 14px;background:none;border:0;cursor:pointer;font-family:inherit}
+#learn{text-align:left;margin-top:14px;border-top:1px solid #33336A}
+#learn[hidden]{display:none}
+#learn section{padding:18px 2px;border-bottom:1px solid #33336A}
+#learn h3{font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:6px}
+#learn h3 span{color:#00B4D8;margin-right:6px}
+#learn p{color:#D6D7EE;font-size:1rem;line-height:1.5}
+.book{display:block;margin:20px 0 0;text-align:center;padding:14px;border:2px solid #D946EF;border-radius:12px;color:#fff;font-weight:800;text-decoration:none}
+.thanks{margin-top:22px;font-size:1rem;color:#C9CBE8}
 </style>
 </head>
 <body>
 <main>
 <img class="logo" src="raven.jpg" width="132" height="132" alt="Dylan Crowe Music raven logo">
 <h1>Dylan Crowe Music</h1>
-<p class="tag">Your tips buy our bus 🚐 thank you!</p>
-<p class="sub">Busking around Australia with my dog Maverick 🐾</p>
+<p class="id">Dylan Crowe · guitarist &amp; singer busking around Australia with Maverick</p>
+<p class="tag">Your tips go toward our tour bus 🚐</p>
 
 <a class="btn primary" id="square" href="https://checkout.square.site/merchant/GAXBQ5X8N4YDC/checkout/NI3A3PWREGXZNS6V7KOWDBPV" rel="noopener">💳 Tip with card / Apple Pay / Google Pay</a>
 
@@ -62,12 +73,20 @@ footer a:hover{border-color:#00B4D8}
 <p class="how">Open your bank app → Pay → PayID → paste</p>
 </section>
 
-<p class="thanks">Every tip keeps <b>Maverick</b> and me on the road. Thank you! 💛</p>
+<p class="thanks">Thank you for stopping to listen 💛</p>
 
+<button class="more" id="morebtn" type="button" aria-expanded="false" aria-controls="learn">Learn more ↓</button>
+<div id="learn" hidden>
+<section><h3><span>●</span>The bus</h3><p>I'm buying a Toyota Coaster bus to live and tour in. It's being fitted out as a home on the road and a mobile recording studio. Your tips go straight toward it.</p></section>
+<section><h3><span>●</span>Maverick</h3><p>Maverick is my dog and touring partner: a red-brown and white Border Collie type with a long coat and white paws. He comes along to every show.</p></section>
+<section><h3><span>●</span>Dylan</h3><p>I'm a touring busker doing loops of Australia: WA, Adelaide, the Great Ocean Road, Melbourne, the east coast and the Sunshine Coast.</p></section>
+<section><h3><span>●</span>Follow</h3>
 <footer>
 <a href="https://instagram.com/dylan_crowe_music" rel="noopener">Instagram @dylan_crowe_music</a>
 <a href="https://www.youtube.com/@dylancrowemusic" rel="noopener">YouTube @dylancrowemusic</a>
 </footer>
+<a class="book" href="mailto:dylancrowemusic@gmail.com?subject=Booking%20enquiry">Book Dylan for a gig</a></section>
+</div>
 </main>
 <script>
 (function(){
@@ -82,6 +101,8 @@ b.addEventListener('click',function(){
 if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(ID).then(function(){done(true)},fallback)}else{fallback()}
 });
 })();
+(function(){var m=document.getElementById('morebtn'),l=document.getElementById('learn');
+m.addEventListener('click',function(){var o=l.hidden;l.hidden=!o;m.setAttribute('aria-expanded',o);m.textContent=o?'Show less ↑':'Learn more ↓';if(o)l.scrollIntoView({behavior:'smooth',block:'start'})});})();
 </script>
 </body>
 </html>
