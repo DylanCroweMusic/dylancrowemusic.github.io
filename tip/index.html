@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tip Dylan Crowe Music 🚐 Your tips buy our bus!</title>
+<meta name="description" content="Tip Dylan Crowe Music, a touring busker in Australia with his dog Maverick. Pay by card, Apple Pay, Google Pay or PayID. Your tips buy our bus!">
+<meta name="theme-color" content="#1A1A3E">
+<link rel="canonical" href="https://dylancrowemusic.github.io/tip/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dylan Crowe Music">
+<meta property="og:title" content="Tip Dylan Crowe Music 🚐 Your tips buy our bus!">
+<meta property="og:description" content="Enjoyed the music? Tip by card, Apple Pay, Google Pay or PayID. Thanks from Dylan &amp; Maverick 🐾">
+<meta property="og:url" content="https://dylancrowemusic.github.io/tip/">
+<meta property="og:image" content="https://dylancrowemusic.github.io/tip/raven.jpg">
+<meta property="og:image:width" content="320">
+<meta property="og:image:height" content="320">
+<meta property="og:locale" content="en_AU">
+<meta name="twitter:card" content="summary">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{min-height:100vh;background:#1A1A3E;color:#fff;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.4;display:flex;justify-content:center;padding:max(20px,env(safe-area-inset-top)) 18px max(24px,env(safe-area-inset-bottom))}
+main{width:100%;max-width:440px;text-align:center}
+.logo{width:132px;height:132px;border-radius:50%;display:block;margin:4px auto 12px;border:3px solid #00B4D8;box-shadow:0 0 0 3px #D946EF}
+h1{font-size:1.75rem;font-weight:800;letter-spacing:-.01em}
+.tag{font-size:1.2rem;font-weight:700;color:#FFD27A;margin:6px 0 4px}
+.sub{font-size:1rem;color:#E6E6F5;margin-bottom:22px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:64px;padding:14px 18px;border-radius:14px;font-size:1.2rem;font-weight:800;text-decoration:none;border:0;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent}
+.primary{background:#00B4D8;color:#0B0B22;box-shadow:0 4px 0 #007A94}
+.primary:active{transform:translateY(2px);box-shadow:0 2px 0 #007A94}
+.card{margin-top:22px;background:#fff;color:#111;border-radius:16px;padding:18px 16px;text-align:left}
+.card h2{font-size:1.05rem;font-weight:800;color:#1A1A3E;margin-bottom:10px}
+.payid{display:flex;gap:10px;align-items:stretch}
+.num{flex:1;display:flex;align-items:center;justify-content:center;min-height:56px;border:2px solid #1A1A3E;border-radius:12px;font-size:1.45rem;font-weight:800;letter-spacing:.03em;color:#111;user-select:all;-webkit-user-select:all;white-space:nowrap}
+.copy{width:auto;min-width:104px;min-height:56px;background:#D946EF;color:#fff;font-size:1.1rem}
+.copy.ok{background:#166534}
+.how{margin-top:10px;font-size:1rem;font-weight:600;color:#222}
+.name{margin-top:4px;font-size:.9rem;color:#444}
+.thanks{margin-top:22px;font-size:1.05rem;color:#E6E6F5}
+.thanks b{color:#FFD27A}
+footer{margin-top:26px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+footer a{color:#7FE3F5;font-weight:700;text-decoration:none;padding:10px 12px;border:1px solid #3A3A6E;border-radius:10px;font-size:.95rem}
+footer a:hover{border-color:#00B4D8}
+:focus-visible{outline:3px solid #FFD27A;outline-offset:3px}
+</style>
+</head>
+<body>
+<main>
+<img class="logo" src="raven.jpg" width="132" height="132" alt="Dylan Crowe Music raven logo">
+<h1>Dylan Crowe Music</h1>
+<p class="tag">Your tips buy our bus 🚐 thank you!</p>
+<p class="sub">Busking around Australia with my dog Maverick 🐾</p>
+
+<a class="btn primary" id="square" href="https://checkout.square.site/merchant/GAXBQ5X8N4YDC/checkout/NI3A3PWREGXZNS6V7KOWDBPV" rel="noopener">💳 Tip with card / Apple Pay / Google Pay</a>
+
+<section class="card" aria-labelledby="pid">
+<h2 id="pid">Or PayID (bank transfer)</h2>
+<div class="payid">
+<div class="num" id="num">0411 926 271</div>
+<button class="btn copy" id="copy" type="button" aria-live="polite">Copy</button>
+</div>
+<p class="how">Open your bank app → Pay → PayID → paste</p>
+<p class="name">Mobile PayID · Dylan Crowe</p>
+</section>
+
+<p class="thanks">Every tip keeps <b>Maverick</b> and me on the road. Thank you! 💛</p>
+
+<footer>
+<a href="https://instagram.com/dylan_crowe_music" rel="noopener">Instagram @dylan_crowe_music</a>
+<a href="https://www.youtube.com/@dylancrowemusic" rel="noopener">YouTube @dylancrowemusic</a>
+</footer>
+</main>
+<script>
+(function(){
+var ID='0411926271',b=document.getElementById('copy'),t;
+function done(ok){b.textContent=ok?'Copied ✓':'Select & copy';b.classList.toggle('ok',ok);clearTimeout(t);t=setTimeout(function(){b.textContent='Copy';b.classList.remove('ok')},2500)}
+function fallback(){
+var a=document.createElement('textarea');a.value=ID;a.setAttribute('readonly','');a.style.position='fixed';a.style.top='0';a.style.opacity='0';document.body.appendChild(a);
+a.focus();a.select();a.setSelectionRange(0,ID.length);var ok=false;try{ok=document.execCommand('copy')}catch(e){}document.body.removeChild(a);
+if(!ok){var r=document.createRange();r.selectNodeContents(document.getElementById('num'));var s=window.getSelection();s.removeAllRanges();s.addRange(r)}
+done(ok)}
+b.addEventListener('click',function(){
+if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(ID).then(function(){done(true)},fallback)}else{fallback()}
+});
+})();
+</script>
+</body>
+</html>
